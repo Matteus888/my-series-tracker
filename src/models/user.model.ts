@@ -4,6 +4,7 @@ export interface IUser extends Document {
   email: string;
   name?: string;
   image?: string;
+  passwordHash?: string;
   watchlist: mongoose.Types.ObjectId[];
   favorites: mongoose.Types.ObjectId[];
   createdAt?: Date;
@@ -19,6 +20,7 @@ const userSchema = new Schema<IUser>(
     },
     name: String,
     image: String,
+    passwordHash: String,
     watchlist: [
       {
         type: mongoose.Schema.Types.ObjectId,
