@@ -4,6 +4,12 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 const eslintConfig = defineConfig([
   ...nextVitals,
   // Override default ignores of eslint-config-next.
+  {
+    rules: {
+      semi: ["error", "always"], // Exige des points-virgules
+      indent: ["error", 2], // Indentation de 2 espaces
+    },
+  },
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
