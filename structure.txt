@@ -1,0 +1,52 @@
+my-serie-tracker/
+├── public/                # Fichiers statiques (images, favicon, etc.)
+├── src/
+│   ├── app/
+│   │   ├── api/           # API routes (backend)
+│   │   │   ├── tmdb/      # Endpoints pour interagir avec TMDb
+│   │   │   ├── series/    # Endpoints pour gérer les séries en base
+│   │   │   └── auth/      # Endpoints pour l'authentification
+│   │   │
+│   │   ├── dashboard/     # Page du tableau de bord (ex : séries en cours)
+│   │   ├── favorites/     # Page des séries favorites
+│   │   ├── login/         # Page de connexion
+│   │   ├── series/        # Pages liées aux séries (détails, recherche)
+│   │   ├── watchlist/     # Page de la watchlist
+│   │   │
+│   │   ├── error.js       # Page d'erreur globale
+│   │   ├── layout.js      # Layout global (header, footer, etc.)
+│   │   ├── not-found.js   # Page 404
+│   │   └── page.js        # Page d'accueil
+│   │
+│   ├── components/        # Composants réutilisables
+│   │   ├── ui/            # Boutons, cartes, modales, etc.
+│   │   ├── series/        # SeriesCard, EpisodeList, etc.
+│   │   └── layout/        # Header, Footer, Navbar
+│   │
+│   ├── lib/               # Logique métier et utilitaires
+│   │   ├── api/           # Fonctions pour appeler TMDb et MongoDB
+│   │   │   ├── tmdb.js    # Fonctions pour interagir avec TMDb
+│   │   │   └── series.js  # Fonctions pour interagir avec MongoDB (séries)
+│   │   │
+│   │   ├── auth/          # Logique d'authentification
+│   │   ├── db/            # Connexion et requêtes MongoDB
+│   │   │   └── connect.js # Fonction pour se connecter à MongoDB
+│   │   │
+│   │   └── utils/         # Fonctions utilitaires (formats, dates, etc.)
+│   │
+│   ├── models/            # Schémas MongoDB (en JavaScript)
+│   │   ├── user.js        # Modèle utilisateur
+│   │   ├── series.js      # Modèle série
+│   │   └── episode.js     # Modèle épisode
+│   │
+│   ├── styles/            # Fichiers CSS/SCSS
+│   │   ├── globals.css    # Styles globaux
+│   │   ├── variables.scss # Variables (couleurs, polices, etc.)
+│   │   └── components/    # Styles par composant
+│   │
+│   ├── hooks/             # Hooks personnalisés (ex : useSeries, useAuth)
+│   └── context/           # Contextes React (ex : AuthContext)
+│
+├── .env.local             # Variables d'environnement
+├── package.json
+└── README.md              # Documentation du projet
