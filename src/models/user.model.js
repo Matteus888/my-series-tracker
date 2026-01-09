@@ -1,0 +1,188 @@
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import validator from "validator";
+
+const userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: [true, "Username is required."],
+      unique: true,
+      trim: true,
+      minlength: [3, "Username must be at least 3 characters long."],
+      maxlength: [30, "Username must not exceed 30 characters."],
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required."],
+      unique: true,
+      trim: true,
+      lowercase: true,
+      validate: {
+        validator: (value) => validator.isEmail(value),
+        message: "Please enter a valid email address.",
+      },
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required."],
+      minlength: [8, "Password must be at least 8 characters long."],
+      select: false, // Ne jamais retourner le mdp dans les requêtes
+    },
+    firstname: {
+      type: String,
+      trim: true,
+      maxlength: [50, "Firstname must not exceed 50 characters."],
+    },
+    lastname: {
+      type: String,
+      trim: true,
+      maxlength: [50, "Lastname must not exceed 50 characters."],
+    },
+    birthDate: {
+      type: Date,
+      validate: {
+        validator: function (value) {
+          return !value || value <= new Date();
+        },
+        message: "Birth date cannot be in the future.",
+      },
+    },
+    gender: {
+      type: String,
+      enum: {
+        values: ["male", "female", "other", "prefer-not-to-say"],
+        message: "Specified gender is invalid.",
+      },
+      default: "prefer-not-to-say",
+    },
+    profilePicture: {
+      type: String, // URL de l'image
+      default: "/images/default-profile.png", // Chemin vers une image par défaut
+      validate: {
+        validator: function (value) {
+          return (
+            validator.isURL(value, {
+              protocols: ["http", "https"],
+              require_protocol: true,
+            }) || value === "/images/default-profile.png"
+          );
+        },
+        message: "Profile picture URL is invalid.",
+      },
+    },
+    trackedSeries: [
+      {
+        seriesId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Series",
+          required: [true, "Serie ID is required."],
+        },
+        status: {
+          type: String,
+          enum: {
+            values: [
+              "watching",
+              "completed",
+              "on_hold",
+              "dropped",
+              "plan_to_watch",
+            ],
+            message: "TSerie status is invalid.",
+          },
+          default: "plan_to_watch",
+        },
+        lastWatched: {
+          season: {
+            type: Number,
+            default: 1,
+            min: [1, "Season must be greater than or equal to 1."],
+          },
+          episode: {
+            type: Number,
+            default: 1,
+            min: [1, "Episode must be greater than or equal to 1."],
+          },
+        },
+        isFavorite: {
+          type: Boolean,
+          default: false,
+        },
+        rating: {
+          type: Number,
+          min: [1, "Minimum grade is 1."],
+          max: [10, "Maximum grade is 10."],
+        },
+        addedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+    customLists: [
+      {
+        name: {
+          type: String,
+          required: [true, "List name is required."],
+          trim: true,
+          maxlength: [50, "List name must not exceed 50 characters."],
+        },
+        description: {
+          type: String,
+          trim: true,
+          maxlength: [200, "Description must not exceed 200 characters."],
+        },
+        series: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Series",
+          },
+        ],
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
+    lastLogin: {
+      type: Date,
+    },
+    role: {
+      type: String,
+      enum: {
+        values: ["user", "admin"],
+        message: "Specified role is invalid.",
+      },
+      default: "user",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+// Hashage mdp avant sauvegarde
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+
+// Comparaison des mdp
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// Index pour optimiser les requêtes
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ username: 1 }, { unique: true });
+
+export const User = mongoose.models.User || mongoose.model("User", userSchema);
