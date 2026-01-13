@@ -97,10 +97,6 @@ const seriesSchema = new mongoose.Schema(
   }
 );
 
-// Index pour optimiser les requêtes
-seriesSchema.index({ tmdbId: 1 }, { unique: true });
-seriesSchema.index({ title: "text", originalTitle: "text" }); // Recherche full-text sur les titres
-
 // Construction de l'URL complète des images via TMDB
 seriesSchema.methods.getPosterUrl = function (size = "w500") {
   return this.posterPath ? `htpps://image.tmdb.org/t/p/${size}${this.posterPath}` : null;

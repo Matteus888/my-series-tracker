@@ -81,13 +81,7 @@ const userSchema = new mongoose.Schema(
         status: {
           type: String,
           enum: {
-            values: [
-              "watching",
-              "completed",
-              "on_hold",
-              "dropped",
-              "plan_to_watch",
-            ],
+            values: ["watching", "completed", "on_hold", "dropped", "plan_to_watch"],
             message: "TSerie status is invalid.",
           },
           default: "plan_to_watch",
@@ -169,20 +163,9 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Hashage mdp avant sauvegarde
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 12);
-  next();
-});
-
 // Comparaison des mdp
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
-
-// Index pour optimiser les requêtes
-userSchema.index({ email: 1 }, { unique: true });
-userSchema.index({ username: 1 }, { unique: true });
 
 export const User = mongoose.models.User || mongoose.model("User", userSchema);
