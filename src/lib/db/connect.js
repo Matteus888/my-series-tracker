@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) {
-  throw new Error("MONGODB_URI must be defined in .env.local");
+if (!MONGODB_URI && process.env.NODE_ENV !== "test") {
+  throw new Error("Please define the MONGODB_URI environment variable");
 }
 
 let cached = global.mongoose;
@@ -18,16 +18,25 @@ async function dbConnect() {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(MONGODB_URI, {
-        bufferCommands: false,
-        connectTimeoutMS: 5000,
-        socketTimeoutMS: 30000,
-      })
-      .then((mongoose) => {
-        console.log("✅ Connected to my-series-tracker database");
+    const opts = {
+      bufferCommands: false,
+    };
+
+    if (process.env.NODE_ENV === "test") {
+      cached.promise = Promise.resolve({
+        connection: {
+          collections: {},
+        },
+      });
+    } else {
+      cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
         return mongoose;
       });
+    }
+
+    // cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    //   return mongoose;
+    // });
   }
   cached.conn = await cached.promise;
   return cached.conn;
