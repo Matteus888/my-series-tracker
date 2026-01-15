@@ -1,4 +1,3 @@
-// src/lib/db/test-utils.js
 import mongoose from "mongoose";
 
 const connectTestDB = async () => {

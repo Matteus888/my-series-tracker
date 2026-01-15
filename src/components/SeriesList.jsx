@@ -16,7 +16,9 @@ export default function SeriesList({ series }) {
               <div className="card-body d-flex">
                 <div className="me-3 flex-shrink-0">
                   <Image
-                    src={serie.poster_path ? `https://image.tmdb.org/t/p/w500${serie.poster_path}` : "/placeholder.jpg"}
+                    src={
+                      serie.poster_path ? `https://image.tmdb.org/t/p/w500${serie.poster_path}` : "/placeholder.webp"
+                    }
                     alt={serie.name}
                     width={80}
                     height={120}

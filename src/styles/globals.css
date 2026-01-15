@@ -13,10 +13,10 @@
 
 html,
 body {
-  height: 100%;
+  width: 100%;
   max-width: 100vw;
   overflow-x: hidden;
-  overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -38,6 +38,49 @@ a {
   text-decoration: none;
 }
 
+/* Search bar */
+.spinner-slot {
+  width: 24px; /* largeur fixe du spinner */
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+}
+
+.spinner-slot.visible {
+  visibility: visible;
+}
+
+.result-slot {
+  min-height: 28px; /* hauteur du badge */
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sticky-bar {
+  transition: padding 0.2s ease;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.sticky-bar.shrink {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+.sticky-bar h1 {
+  transition: font-size 0.2s ease;
+  font-size: 1.5rem;
+}
+.sticky-bar.shrink h1 {
+  font-size: 1.25rem !important;
+}
+
+/* Theme */
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
