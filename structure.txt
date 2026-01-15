@@ -5,3 +5,10 @@
 4. Intégration TMDb,Récupérer et afficher les données des séries depuis TMDb.,⭐⭐
 5. Déploiement,Déployer l’appli sur Vercel et configurer MongoDB Atlas pour la production.,⭐⭐
 6. Fonctionnalités avancées,Ajouter des notations, recommandations, statistiques, etc.,⭐
+
+Semaine 1-2 : Intégrer l'API TMDb et créer la fonctionnalité de recherche de séries.
+Semaine 3 : Ajouter la gestion des séries suivies et des épisodes.
+Semaine 4 : Créer les pages de profil et de statistiques.
+Semaine 5 : Ajouter les notifications et les recommandations.
+Semaine 6 : Améliorer l'interface utilisateur et écrire des tests supplémentaires.
+Semaine 7 : Déployer l'application et configurer le CI/CD.
