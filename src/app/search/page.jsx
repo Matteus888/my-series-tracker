@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { searchSeries } from "@/lib/tmdb";
 import SeriesList from "@/components/SeriesList";
+import { useSearch } from "@/context/SearchContext";
 
 export default function SearchPage() {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const { query, setQuery, results, setResults, loading, setLoading } = useSearch();
 
   // Recherche live avec debounce
   useEffect(() => {

@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Geist, Geist_Mono } from "next/font/google";
+import { SearchProvider } from "@/context/SearchContext";
 import "../styles/globals.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -21,7 +22,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <SearchProvider>{children}</SearchProvider>
+      </body>
     </html>
   );
 }
