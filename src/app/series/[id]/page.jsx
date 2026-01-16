@@ -1,5 +1,5 @@
 import Image from "next/image";
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/ui/BackButton";
 import { getSeriesDetails } from "@/lib/tmdb";
 import { formatDate } from "@/lib/utils/date";
 

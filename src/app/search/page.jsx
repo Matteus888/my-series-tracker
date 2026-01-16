@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { searchSeries } from "@/lib/tmdb";
-import SeriesList from "@/components/SeriesList";
+import SeriesList from "@/components/series/SeriesList";
 import { useSearch } from "@/context/SearchContext";
 
 export default function SearchPage() {
@@ -32,7 +32,7 @@ export default function SearchPage() {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [query]);
+  }, [query, setResults, setLoading]);
 
   // Effet scroll pour rétrécir la barre
   useEffect(() => {

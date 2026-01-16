@@ -80,6 +80,17 @@ a {
   font-size: 1.25rem !important;
 }
 
+.list-group {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.custom-focus:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.1rem rgba(40, 167, 69, 0.25);
+  border-width: 1px;
+}
+
 /* Theme */
 @media (prefers-color-scheme: dark) {
   html {
