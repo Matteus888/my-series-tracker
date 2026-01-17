@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { searchSeries } from "@/lib/tmdb";
+import { searchSeries } from "@/lib/api/tmdb.api";
 import SerieCard from "@/components/series/SerieCard";
 
 export default function SearchPage() {

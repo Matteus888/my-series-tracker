@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db/connect";
+import dbConnect from "@/lib/db/db.connect";
 
 export async function GET() {
   try {
@@ -12,9 +12,7 @@ export async function GET() {
         dbName: mongoose.connection.db.databaseName,
       });
     } else {
-      throw new Error(
-        `MongoDB connection failed with state: ${mongoose.connection.readyState}`
-      );
+      throw new Error(`MongoDB connection failed with state: ${mongoose.connection.readyState}`);
     }
   } catch (error) {
     console.error("❌ MongoDB connection error:", error);

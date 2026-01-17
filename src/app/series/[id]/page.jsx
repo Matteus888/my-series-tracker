@@ -1,6 +1,6 @@
 import Image from "next/image";
 import BackButton from "@/components/ui/BackButton";
-import { getSeriesDetails } from "@/lib/tmdb";
+import { getSeriesDetails } from "@/lib/api/tmdb.api";
 import { formatDate } from "@/lib/utils/date";
 
 export default async function SeriesPage({ params }) {
