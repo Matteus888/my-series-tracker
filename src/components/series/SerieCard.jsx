@@ -1,10 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useSearch } from "@/context/SearchContext";
 import { formatDate } from "@/lib/utils/date";
 
 export default function SerieCard({ serie }) {
+  const { setIsOpen } = useSearch();
+
+  const handleClick = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <Link href={`/series/${serie.id}`} className="text-decoration-none text-dark">
+    <Link href={`/series/${serie.id}`} className="text-decoration-none text-dark" onClick={handleClick}>
       <div className="list-group-item list-group-item-action border-0 border-bottom p-0" style={{ height: "60px" }}>
         <div className="d-flex align-items-center">
           <div className="me-3" style={{ width: "40px", height: "60px", flexShrink: 0 }}>

@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useSearch } from "@/context/SearchContext";
 import { searchSeries } from "@/lib/tmdb";
 import SerieCard from "../series/SerieCard";
 
 export default function Header() {
-  const { query, setQuery, results, setResults, loading, setLoading } = useSearch();
-  const [isOpen, setIsOpen] = useState(false);
+  const { query, setQuery, results, setResults, loading, setLoading, isOpen, setIsOpen } = useSearch();
   const searchInputRef = useRef(null);
+  const router = useRouter();
 
   // Recherche live avec debounce
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function Header() {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [query, setResults, setLoading]);
+  }, [query, setResults, setLoading, setIsOpen]);
 
   // Fermeture de la liste si on clique en dehors
   useEffect(() => {
@@ -49,17 +50,26 @@ export default function Header() {
     };
   }, []);
 
+  // Redirection page search quand "Enter"
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && query.trim()) {
+      router.push(`/search?query=${encodeURIComponent(query)}`);
+      setIsOpen(false);
+    }
+  };
+
   return (
     <header className="bg-light p-1 border-bottom position-sticky top-0" style={{ zIndex: 1020 }}>
       <div className="container d-flex justify-content-start">
         <div className="position-relative" ref={searchInputRef} style={{ width: "35%" }}>
           <input
             type="text"
-            className="form-control custom-focus pe-5"
+            className="form-control custom-focus pe-5 py-1"
             placeholder="Search for a serie..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setIsOpen(!!results.length)}
+            onKeyDown={handleKeyDown}
           />
           {loading && (
             <div className="position-absolute top-50 end-0 translate-middle-y me-2">

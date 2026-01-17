@@ -8,9 +8,10 @@ export const SearchProvider = ({ children }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <SearchContext.Provider value={{ query, setQuery, results, setResults, loading, setLoading }}>
+    <SearchContext.Provider value={{ query, setQuery, results, setResults, loading, setLoading, isOpen, setIsOpen }}>
       {children}
     </SearchContext.Provider>
   );

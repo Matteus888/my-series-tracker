@@ -1,97 +1,49 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { searchSeries } from "@/lib/tmdb";
-import SeriesList from "@/components/series/SeriesList";
-import { useSearch } from "@/context/SearchContext";
+import SerieCard from "@/components/series/SerieCard";
 
 export default function SearchPage() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query");
 
-  const { query, setQuery, results, setResults, loading, setLoading } = useSearch();
-
-  // Recherche live avec debounce
   useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
-      setLoading(false);
-      return;
+    if (query) {
+      const fetchResults = async () => {
+        setLoading(true);
+        try {
+          const series = await searchSeries(query);
+          setResults(series);
+        } catch (err) {
+          console.error(err);
+          setResults([]);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchResults();
     }
-
-    const timeoutId = setTimeout(async () => {
-      setLoading(true);
-      try {
-        const series = await searchSeries(query);
-        setResults(series);
-      } catch (err) {
-        console.error(err);
-        setResults([]);
-      } finally {
-        setLoading(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [query, setResults, setLoading]);
-
-  // Effet scroll pour rétrécir la barre
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const headerHeight = isScrolled ? 75 : 104;
+  }, [query]);
 
   return (
-    <>
-      {/* Fixed bar avec recherche dynamique */}
-      <div className={`fixed-top bg-white shadow-sm sticky-bar ${isScrolled ? "shrink" : ""}`} style={{ zIndex: 1030 }}>
-        <div className="container py-3">
-          <div className="d-flex flex-column gap-2">
-            <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3">
-              <h1 className="h3 fw-bold mb-0 flex-shrink-0">Search for a series</h1>
-              <div className="flex-grow-1">
-                <div className="d-flex align-items-center gap-2">
-                  <input
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Start typing a series..."
-                    className="form-control"
-                  />
-                  {/* Loader animé */}
-                  <div className={`spinner-slot ${loading ? "visible" : ""}`}>
-                    <div className="spinner-border spinner-border-sm text-primary" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </div>
-                  </div>
-                </div>
-                {/* Badge résultat */}
-                <div className="result-slot">
-                  {query && !loading && results.length > 0 && (
-                    <span className="badge bg-primary d-flex align-items-center">
-                      <i className="bi bi-search me-1 fs-6"></i>
-                      <span className="fs-7 fw-normal">{results.length} series found</span>
-                    </span>
-                  )}
-                </div>
-              </div>
+    <div className="container mt-4" style={{ minHeight: "calc(100vh - 100px)" }}>
+      <h1 className="mb-4">Results for &quot;{query}&quot;</h1>
+      {loading && <div className="text-center my-3">Loading...</div>}
+      {results.length > 0 ? (
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+          {results.map((serie) => (
+            <div key={serie.id} className="col mb-4">
+              <SerieCard serie={serie} />
             </div>
-          </div>
+          ))}
         </div>
-      </div>
-
-      {/* Spacer */}
-      <div style={{ height: headerHeight }} />
-
-      {/* Liste de séries */}
-      <div className="container py-4">
-        {loading && !results.length ? <p className="text-center">Loading...</p> : <SeriesList series={results} />}
-      </div>
-    </>
+      ) : (
+        !loading && <p>No result found.</p>
+      )}
+    </div>
   );
 }
