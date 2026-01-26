@@ -1,36 +1,29 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useSearch } from "@/context/SearchContext";
-import { formatDate } from "@/lib/utils/date";
 
 export default function SerieCard({ serie }) {
-  const { setIsOpen } = useSearch();
-
-  const handleClick = () => {
-    setIsOpen(false);
-  };
-
   return (
-    <Link href={`/series/${serie.id}`} className="text-decoration-none text-dark" onClick={handleClick}>
-      <div className="list-group-item list-group-item-action border-0 border-bottom p-0" style={{ height: "60px" }}>
-        <div className="d-flex align-items-center">
-          <div className="me-3" style={{ width: "40px", height: "60px", flexShrink: 0 }}>
+    <div className="col mb-4">
+      <div className="card h-100 border-0 shadow-sm">
+        <Link href={`/series/${serie.id}`} className="text-decoration-none text-dark">
+          <div style={{ height: "250px", overview: "hidden" }}>
             <Image
-              src={serie.poster_path ? `https://image.tmdb.org/t/p/w92${serie.poster_path}` : "/placeholder.webp"}
+              src={serie.poster_path ? `https://image.tmdb.org/t/p/w500${serie.poster_path}` : "/placeholder.webp"}
               alt={serie.name}
-              width={40}
-              height={60}
-              className="img-fluid object-fit-contain"
+              width={500}
+              height={750}
+              className="card-img-top img-fluid object-fit-cover"
             />
           </div>
-          <div className="" style={{ height: "60px" }}>
-            <h6 className="mb-0 small">{serie.name}</h6>
-            <p className="mb-0 smaller text-muted" style={{ fontSize: "0.75rem" }}>
-              {formatDate(serie.first_air_date)}
-            </p>
+          <div className="card-body p-3">
+            <h5 className="card-title mb-1">{serie.name}</h5>
           </div>
+        </Link>
+        <div className="card-footer bg-white border-top-0 p-3 d-flex justify-content-between align-items-center">
+          <button className="btn btn-sm btn-outline-primary">Add to favorites</button>
+          <span className="text-muted small">{serie.first_air_date?.substring(0, 4)}</span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

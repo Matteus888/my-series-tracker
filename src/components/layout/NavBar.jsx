@@ -8,8 +8,8 @@ export default function NavBar() {
       <div className="container-fluid">
         <ul className="navbar-nav me-auto">
           <li className="nav-item">
-            <Link className="nav-link p-1" href="/">
-              Home
+            <Link className="nav-link p-1" href="/dashboard">
+              Dashboard
             </Link>
           </li>
           <li className="nav-item">

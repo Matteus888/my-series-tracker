@@ -36,7 +36,7 @@ const seriesSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function (value) {
-          return value ? value.startsWith("/") : true,
+          return value ? value.startsWith("/") : true;
         },
         message: "Backdrop path must be valid.",
       },
@@ -106,4 +106,4 @@ seriesSchema.methods.getBackdropUrl = function (size = "w1280") {
   return this.backdropPath ? `https://image.tmdb.org/t/p/${size}${this.backdropPath}` : null;
 };
 
-export const Series = mongoose.models.Series || mongoose.model('Series', seriesSchema);
+export const Series = mongoose.models.Series || mongoose.model("Series", seriesSchema);

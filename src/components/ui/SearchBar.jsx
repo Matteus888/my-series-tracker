@@ -3,8 +3,9 @@
 import { useEffect, useRef } from "react";
 import { useSearch } from "@/context/SearchContext";
 import { searchSeries } from "@/lib/api/tmdb.api";
-import SerieCard from "../series/SerieCard";
 import { useRouter } from "next/navigation";
+import DynamicSerieCard from "../series/DynamicSerieCard";
+import DynamicSearchResultSkeleton from "./DynamicSearchResultSkeleton";
 
 export default function SearchBar() {
   const { query, setQuery, results, setResults, loading, setLoading, isOpen, setIsOpen } = useSearch();
@@ -15,19 +16,20 @@ export default function SearchBar() {
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
-      setLoading(false);
+      setIsOpen(false);
       return;
     }
 
     const timeoutId = setTimeout(async () => {
       setLoading(true);
       try {
-        const series = await searchSeries(query);
-        setResults(series.slice(0, 10));
+        const data = await searchSeries(query, 1);
+        setResults(data.results.slice(0, 10));
         setIsOpen(true);
       } catch (err) {
         console.error(err);
         setResults([]);
+        setIsOpen(false);
       } finally {
         setLoading(false);
       }
@@ -59,14 +61,14 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="position-relative" ref={searchInputRef} style={{ width: "35%" }}>
+    <div className="position-relative me-3 flex-grow-1" ref={searchInputRef} style={{ minWidth: "350px" }}>
       <input
         type="text"
         className="form-control custom-focus pe-5 py-1"
         placeholder="Search for a serie..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        onFocus={() => setIsOpen(!!results.length)}
+        onFocus={() => query.trim() && setIsOpen(!!results.length)}
         onKeyDown={handleKeyDown}
       />
       {loading && (
@@ -76,18 +78,25 @@ export default function SearchBar() {
           </div>
         </div>
       )}
-      {isOpen && results.length > 0 && (
+      {isOpen && (
         <div
-          className="mt-2 ms-1 position-absolute bg-white shadow-lg p-0"
+          className="position-absolute start-0 bg-white shadow-lg p-0"
           style={{
             zIndex: 1050,
             width: "97%",
+            maxHeight: "400px",
+            overflowY: "auto",
+            top: "100%",
           }}
         >
-          <div className="list-group" style={{ maxHeight: "none", overflow: "visible" }}>
-            {results.map((serie) => (
-              <SerieCard key={serie.id} serie={serie} />
-            ))}
+          <div className="list-group m-0 p-0" style={{ width: "100%" }}>
+            {loading ? (
+              Array.from({ length: 5 }).map((_, index) => <DynamicSearchResultSkeleton key={index} />)
+            ) : results.length > 0 ? (
+              results.map((serie) => <DynamicSerieCard key={serie.id} serie={serie} />)
+            ) : (
+              <div className="p-3 text-center">No result found.</div>
+            )}
           </div>
         </div>
       )}

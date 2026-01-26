@@ -8,7 +8,7 @@ export default function Home() {
           <Image src="/next.svg" alt="Next.js logo" width={100} height={20} priority />
         </div>
         <div className="mb-5">
-          <h1 className="fw-semibold mb-3">To get started on my-series-tracker, edit the page.js file.</h1>
+          <h1 className="fw-semibold mb-3">my-series-tracker</h1>
           <p className="text-muted fs-5">
             Looking for a starting point or more instructions? Head over to{" "}
             <a

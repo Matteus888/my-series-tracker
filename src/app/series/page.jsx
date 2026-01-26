@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getAllSeries } from "@/lib/api/tmdb.api";
-import SerieCard from "@/components/series/SerieCard";
+import SerieCard from "@/components/series/DynamicSerieCard";
 
 export default function AllSeriesPage() {
   const [series, setSeries] = useState([]);
