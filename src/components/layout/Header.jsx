@@ -7,7 +7,16 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <header className="bg-light p-1 border-bottom position-sticky top-0" style={{ zIndex: 1020 }}>
+    <header
+      className="position-sticky top-0 w-100"
+      style={{
+        zIndex: 1020,
+        background: "rgba(255, 255, 255, 0.9)",
+        backdropFilter: "blur(5px)",
+        padding: "0.5rem 0",
+        borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+      }}
+    >
       <div className="container d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center">
           <Link className="navbar-brand me-3" href="/">

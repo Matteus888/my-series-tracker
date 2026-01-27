@@ -16,7 +16,7 @@ export const getAllSeries = async () => {
   }
 };
 
-export const searchSeries = async (query, page = 1) => {
+export const searchSeries = async (query, page = 1, perPage = 20) => {
   try {
     const response = await fetch(
       `${TMDB_BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&page=${page}`,

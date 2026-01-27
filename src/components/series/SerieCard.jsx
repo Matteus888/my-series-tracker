@@ -1,27 +1,52 @@
 import Link from "next/link";
 import Image from "next/image";
+import { FaHeart, FaBookmark, FaCheck } from "react-icons/fa";
 
 export default function SerieCard({ serie }) {
   return (
-    <div className="col mb-4">
-      <div className="card h-100 border-0 shadow-sm">
-        <Link href={`/series/${serie.id}`} className="text-decoration-none text-dark">
-          <div style={{ height: "250px", overview: "hidden" }}>
-            <Image
-              src={serie.poster_path ? `https://image.tmdb.org/t/p/w500${serie.poster_path}` : "/placeholder.webp"}
-              alt={serie.name}
-              width={500}
-              height={750}
-              className="card-img-top img-fluid object-fit-cover"
-            />
+    <div className="col p-0 m-0 d-flex" style={{ minWidth: "16.6667%", height: "100%", flex: "1 0 auto" }}>
+      <div className="card h-100 m-0 border border-dark rounded-0 d-flex flex-column" style={{ width: "100%" }}>
+        <div
+          className="position-relative w-100 flex-grow-0"
+          style={{ aspectRatio: "2/3", overflow: "hidden", backgroundColor: "#f0f0f0" }}
+        >
+          <Link href={`/series/${serie.id}`} className="text-decoration-none text-dark d-block">
+            {serie.poster_path ? (
+              <Image
+                src={`https://image.tmdb.org/t/p/w500${serie.poster_path}`}
+                alt={serie.name}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="img-fluid"
+                style={{ objectFit: "contain" }}
+                priority={true}
+              />
+            ) : (
+              <div
+                className="d-flex align-items-center justify-content-center h-100 w-100 bg-light text-dark"
+                style={{ fontSize: "1.2rem", textAlign: "center" }}
+              >
+                {serie.name}
+              </div>
+            )}
+          </Link>
+        </div>
+        <div
+          className="card-footer bg-white border-top border-dark p-1 d-flex justify-content-between align-items-center flex-shrink-0"
+          style={{ height: "40px", width: "100%", minWidth: "100%" }}
+        >
+          <div className="d-flex gap-1">
+            <button className="btn btn-sm btn-outline-danger p-1">
+              <FaCheck />
+            </button>
+            <button className="btn btn-sm btn-outline-primary p-1">
+              <FaBookmark />
+            </button>
           </div>
-          <div className="card-body p-3">
-            <h5 className="card-title mb-1">{serie.name}</h5>
+          <div className="d-flex align-items-center gap-1">
+            <FaHeart className="text-warning" />
+            <span className="small">{Math.round(serie.vote_average * 10)}%</span>
           </div>
-        </Link>
-        <div className="card-footer bg-white border-top-0 p-3 d-flex justify-content-between align-items-center">
-          <button className="btn btn-sm btn-outline-primary">Add to favorites</button>
-          <span className="text-muted small">{serie.first_air_date?.substring(0, 4)}</span>
         </div>
       </div>
     </div>

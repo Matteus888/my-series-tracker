@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <SearchProvider>
           <Header />
-          <main className="container mt-4">{children}</main>
+          <main className="mx-0">{children}</main>
         </SearchProvider>
       </body>
     </html>
