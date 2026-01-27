@@ -22,7 +22,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
           </li>
           <li className="page-item disabled">
             <span className="page-link">
-              Page {currentPage} on {totalPages}
+              Page {currentPage} of {totalPages}
             </span>
           </li>
           <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>

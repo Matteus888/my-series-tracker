@@ -16,21 +16,22 @@ export const getAllSeries = async () => {
   }
 };
 
-export const searchSeries = async (query, page = 1, perPage = 20) => {
+export const searchSeries = async (query, page = 1) => {
   try {
     const response = await fetch(
-      `${TMDB_BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&page=${page}`,
+      `${TMDB_BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&page=${page}&include_adult=false`,
     );
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
     return {
       results: data.results,
+      totalResults: data.total_results,
       totalPages: data.total_pages,
       currentPage: data.page,
     };
   } catch (error) {
     console.error("Error searching series:", error);
-    return { results: [], totalPages: 0, currentPage: 1 };
+    return { results: [], totalResults: 0, totalPages: 0, currentPage: 1 };
   }
 };
 

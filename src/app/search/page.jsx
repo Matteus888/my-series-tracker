@@ -31,10 +31,15 @@ export default function SearchPage() {
         try {
           const tmdbPage1 = currentPage * 2 - 1;
           const tmdbPage2 = currentPage * 2;
+
           const [page1, page2] = await Promise.all([searchSeries(query, tmdbPage1), searchSeries(tmdbPage2)]);
+
           const combinedResults = [...page1.results, ...page2.results.slice(0, 4)];
           setResults(combinedResults);
-          setTotalPages(Math.ceil(page2.totalPages / 2));
+
+          const totalResults = page1.totalResults;
+          const calculatedTotalPages = Math.ceil(totalResults / 24);
+          setTotalPages(calculatedTotalPages);
         } catch (err) {
           console.error(err);
           setResults([]);
@@ -57,7 +62,6 @@ export default function SearchPage() {
       <div className="row mx-0">
         {/* Espace réservé pour le futur sous-menu de filtres */}
         <div className="col-md-2 d-none d-md-block px-0">{/* Futur composant de filtres */}</div>
-        {/* Contenu principal avec les cartes */}
         <div className="col-md-10 px-0">
           <h1 className="mb-4">Results for &quot;{query}&quot;</h1>
           {loading ? (
