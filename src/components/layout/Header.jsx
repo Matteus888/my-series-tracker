@@ -11,14 +11,14 @@ export default function Header() {
       className="position-sticky top-0 w-100"
       style={{
         zIndex: 1020,
-        background: "rgba(255, 255, 255, 0.9)",
+        background: "var(--card-bg)",
         backdropFilter: "blur(5px)",
         padding: "0.5rem 0",
         borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
       }}
     >
-      <div className="container d-flex align-items-center justify-content-between">
-        <div className="d-flex align-items-center">
+      <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center ms-3">
           <Link className="navbar-brand me-3" href="/">
             <Image src="/globe.svg" alt="Logo" width={30} height={30} />
           </Link>

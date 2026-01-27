@@ -68,7 +68,7 @@ a {
   transition: padding 0.2s ease;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  background-color: var(--card-bg);
+  /* background-color: var(--card-bg); */
   border-bottom: 1px solid var(--border);
 }
 .sticky-bar.shrink {
@@ -132,7 +132,7 @@ a {
 
 /* Inputs */
 .form-control {
-  background-color: var(--card-bg);
+  background-color: var(--background);
   color: var(--foreground);
   border: 1px solid var(--border);
 }
@@ -142,4 +142,9 @@ a {
   color: var(--foreground);
   border-color: var(--primary);
   box-shadow: 0 0 0 0.1rem rgba(40, 167, 69, 0.25);
+}
+
+/* Navbar */
+.nav-link {
+  color: var(--foreground);
 }
