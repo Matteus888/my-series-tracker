@@ -1,6 +1,7 @@
 /* Boostrap directives + styles globaux */
 :root {
-  --background: #0a0a0a;
+  --background-primary: #0a0a0a;
+  --background-secondary: #1a1a1a;
   --foreground: #ededed;
   --check: #0082ce;
   --bookmark: #16a085;
@@ -19,7 +20,7 @@ body {
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: var(--background-primary);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -59,16 +60,12 @@ a {
 .search-input {
   flex: 1 1 auto;
   min-width: 0;
-  background-color: var(--card-bg);
-  color: var(--foreground);
-  border: 1px solid var(--border);
 }
 
 .sticky-bar {
   transition: padding 0.2s ease;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  /* background-color: var(--card-bg); */
   border-bottom: 1px solid var(--border);
 }
 .sticky-bar.shrink {
@@ -92,20 +89,34 @@ a {
 }
 
 .custom-focus:focus {
-  border-color: var(--primary);
+  border-color: red;
   box-shadow: 0 0 0 0.1rem rgba(40, 167, 69, 0.25);
   border-width: 1px;
 }
 
-/* Cartes (ex: SerieCard) */
+/* Cards */
 .card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border);
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+  border-right: none;
+  border-bottom: none;
   color: var(--foreground);
 }
 
-.card:hover {
-  background-color: var(--hover-bg);
+.cards-container {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.card-footer {
+  background-color: var(--background-secondary);
+  border-color: var(--border);
+}
+
+.hover-card:hover .hover-footer,
+.hover-footer:hover {
+  background-color: var(--hover-bg) !important;
   transition: background-color 0.2s ease;
 }
 
@@ -146,5 +157,39 @@ a {
 
 /* Navbar */
 .nav-link {
+  color: var(--foreground);
+}
+
+.nav-link:hover {
+  color: var(--check);
+}
+
+/* Pagination */
+.pagination-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  color: var(--foreground);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.pagination-link:hover:not(.pagination-link-disabled) {
+  color: var(--check);
+}
+
+.pagination-link-active {
+  color: var(--check);
+  font-size: 1.2rem;
+}
+
+.pagination-link-disabled {
+  color: var(--hover-bg);
+  pointer-events: none;
+}
+
+.pagination-ellipsis {
   color: var(--foreground);
 }

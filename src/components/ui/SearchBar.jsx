@@ -61,7 +61,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="position-relative me-3 flex-grow-1" ref={searchInputRef} style={{ minWidth: "350px" }}>
+    <div className="position-relative me-3 flex-grow-1" ref={searchInputRef} style={{ minWidth: "300px" }}>
       <input
         type="text"
         className="form-control custom-focus pe-5 py-1"

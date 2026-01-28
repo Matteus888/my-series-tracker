@@ -3,13 +3,10 @@ import Image from "next/image";
 
 export default function SerieCard({ serie }) {
   return (
-    <div className="col p-0 m-0 d-flex" style={{ minWidth: "16.6667%", height: "100%", flex: "1 0 auto" }}>
-      <div className="card h-100 m-0 rounded-0 d-flex flex-column" style={{ width: "100%" }}>
-        <div
-          className="position-relative w-100 flex-grow-0 d-flex"
-          style={{ aspectRatio: "2/3", overflow: "hidden", backgroundColor: "var(--background)" }}
-        >
-          <Link href={`/series/${serie.id}`} className="position-relative text-decoration-none d-flex w-100">
+    <div className="col p-0 m-0 h-100 d-flex" style={{ minWidth: "16.6667%", flex: "1 0 auto" }}>
+      <div className="card hover-card h-100 w-100 m-0 rounded-0 d-flex flex-column">
+        <div className="position-relative w-100 flex-grow-0 d-flex" style={{ aspectRatio: "2/3", overflow: "hidden" }}>
+          <Link href={`/series/${serie.id}`} className="position-relative d-flex w-100">
             {serie.poster_path ? (
               <Image
                 src={`https://image.tmdb.org/t/p/w500${serie.poster_path}`}
@@ -17,7 +14,6 @@ export default function SerieCard({ serie }) {
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="img-fluid position-relative"
-                style={{ objectFit: "contain" }}
                 priority={true}
               />
             ) : (
@@ -26,8 +22,8 @@ export default function SerieCard({ serie }) {
           </Link>
         </div>
         <div
-          className="card-footer border-top border-dark p-0 d-flex justify-content-between align-items-center flex-shrink-0"
-          style={{ height: "40px", width: "100%", minWidth: "100%" }}
+          className="card-footer hover-footer border-top-0 rounded-0 p-0 d-flex justify-content-between align-items-center flex-shrink-0"
+          style={{ height: "40px", minWidth: "100%" }}
         >
           <div className="d-flex h-100">
             <button

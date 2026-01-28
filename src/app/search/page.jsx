@@ -62,22 +62,24 @@ export default function SearchPage() {
       <div className="row mx-0">
         {/* Espace réservé pour le futur sous-menu de filtres */}
         <div className="col-md-2 d-none d-md-block px-0">{/* Futur composant de filtres */}</div>
-        <div className="col-md-10 px-0">
+        <div className="col-md-10 p-0">
           <h1 className="mb-4">Results for &quot;{query}&quot;</h1>
           {loading ? (
-            <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-0 mx-0">
+            <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-0 mx-0 align-items-stretch">
               {Array.from({ length: 24 }).map((_, index) => (
                 <SerieCardSkeleton key={index} />
               ))}
             </div>
           ) : results.length > 0 ? (
             <>
-              <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-0 mx-0 align-items-stretch">
-                {results.map((serie) => (
-                  <div key={serie.id} className="col p-0" style={{ flex: "0 0 auto", width: "16.6667%" }}>
-                    <SerieCard serie={serie} />
-                  </div>
-                ))}
+              <div className="cards-container">
+                <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-0 mx-0 align-items-stretch">
+                  {results.map((serie) => (
+                    <div key={serie.id} className="col p-0">
+                      <SerieCard serie={serie} />
+                    </div>
+                  ))}
+                </div>
               </div>
               <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage} />
             </>

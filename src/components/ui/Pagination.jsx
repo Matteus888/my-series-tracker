@@ -1,11 +1,15 @@
+import Link from "next/link";
+
 export default function Pagination({ currentPage, totalPages, onPageChange }) {
-  const handlePrevious = () => {
+  const handlePrevious = (e) => {
+    e.preventDefault();
     if (currentPage > 1) {
       onPageChange(currentPage - 1);
     }
   };
 
-  const handleNext = () => {
+  const handleNext = (e) => {
+    e.preventDefault();
     if (currentPage < totalPages) {
       onPageChange(currentPage + 1);
     }
@@ -48,40 +52,49 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
   const pageNumbers = getPageNumbers();
 
   return (
-    <div className="d-flex justify-content-between align-items-center my-4 w-100 px-3">
-      <button
-        className="btn btn-outline-secondary d-flex align-items-center gap-1"
+    <div
+      className="d-flex justify-content-between align-items-center w-100"
+      style={{ height: "40px", fontSize: "0.8rem" }}
+    >
+      <Link
+        href="#"
+        className={`pagination-link ${currentPage === 1 ? "pagination-link-disabled" : ""}`}
         onClick={handlePrevious}
-        disabled={currentPage === 1}
+        aria-disabled={currentPage === 1}
       >
         <i className="bi bi-arrow-left"></i>
         <span>Previous page</span>
-      </button>
-      <div className="d-flex gap-2">
+      </Link>
+      <div className="d-inline-flex gap-1 h-100 align-items-center">
         {pageNumbers.map((pageNumber, index) =>
           pageNumber === "..." ? (
-            <span key={index} className="text-secondary">
-              ...
+            <span key={index} className="pagination-ellipsis">
+              ···
             </span>
           ) : (
-            <button
+            <Link
               key={index}
-              className={`btn ${currentPage === pageNumber ? "btn-primary" : "btn-outline-secondary"}`}
-              onClick={() => onPageChange(pageNumber)}
+              href="#"
+              className={`pagination-link ${currentPage === pageNumber ? "pagination-link-active" : ""}`}
+              onClick={(e) => {
+                e.preventDefault();
+                onPageChange(pageNumber);
+              }}
             >
               {pageNumber}
-            </button>
+            </Link>
           ),
         )}
       </div>
-      <button
-        className="btn btn-outline-secondary d-flex align-items-center gap-1"
+      <Link
+        href="#"
+        className={`pagination-link ${currentPage === totalPages ? "pagination-link-disabled" : ""}`}
         onClick={handleNext}
-        disabled={currentPage === totalPages}
+        aria-disabled={currentPage === totalPages}
       >
-        <i className="bi bi-arrow-right"></i>
         <span>Next page</span>
-      </button>
+        <i className="bi bi-arrow-right"></i>
+      </Link>
     </div>
   );
 }
