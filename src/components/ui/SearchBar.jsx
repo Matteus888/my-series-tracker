@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { useSearch } from "@/context/SearchContext";
 import { searchSeries } from "@/lib/api/tmdb.api";
 import { useRouter } from "next/navigation";
-import DynamicSerieCard from "../series/DynamicSerieCard";
+import DynamicSearchResult from "../series/DynamicSearchResult";
 import DynamicSearchResultSkeleton from "./DynamicSearchResultSkeleton";
 
 export default function SearchBar() {
@@ -71,29 +71,23 @@ export default function SearchBar() {
         onFocus={() => query.trim() && setIsOpen(!!results.length)}
         onKeyDown={handleKeyDown}
       />
-      {loading && (
-        <div className="position-absolute top-50 end-0 translate-middle-y me-2">
-          <div className="spinner-border spinner-border-sm text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      )}
       {isOpen && (
         <div
-          className="position-absolute start-0 bg-white shadow-lg p-0"
+          className="position-absolute p-0"
           style={{
             zIndex: 1050,
-            width: "97%",
-            maxHeight: "400px",
-            overflowY: "auto",
+            width: "calc(100% - 15px)",
+            maxHeight: "660px",
             top: "100%",
+            left: "50%",
+            transform: "translateX(-50%)",
           }}
         >
-          <div className="list-group m-0 p-0" style={{ width: "100%" }}>
+          <div className="list-group m-0 p-0 border-0 rounded-0 w-100">
             {loading ? (
               Array.from({ length: 5 }).map((_, index) => <DynamicSearchResultSkeleton key={index} />)
             ) : results.length > 0 ? (
-              results.map((serie) => <DynamicSerieCard key={serie.id} serie={serie} />)
+              results.map((serie) => <DynamicSearchResult key={serie.id} serie={serie} />)
             ) : (
               <div className="p-3 text-center">No result found.</div>
             )}

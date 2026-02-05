@@ -45,6 +45,7 @@ a {
   align-items: center;
   justify-content: center;
   visibility: hidden;
+  color: white;
 }
 
 .spinner-slot.visible {
