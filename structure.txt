@@ -12,3 +12,11 @@ Semaine 4 : Créer les pages de profil et de statistiques.
 Semaine 5 : Ajouter les notifications et les recommandations.
 Semaine 6 : Améliorer l'interface utilisateur et écrire des tests supplémentaires.
 Semaine 7 : Déployer l'application et configurer le CI/CD.
+
+
+Cas d’usage pour ton projet
+
+Backdrops : Parfaits pour ta carte en 16:9 (bannière horizontale).
+Posters : Pour les cartes verticales (comme ton SerieCard actuel).
+Stills : Pour une galerie ou un carrousel de scènes.
+Logos : Pour un en-tête élégant ou une marque visuelle.
