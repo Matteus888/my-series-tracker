@@ -3,7 +3,7 @@
   --background-primary: #0a0a0a;
   --background-secondary: #1a1a1a;
   --foreground: #ededed;
-  --check: #0082ce;
+  --blue: #0082ce;
   --bookmark: #16a085;
   --border: #333333; /* Bordures sombres */
   --card-bg: #1a1a1a; /* Fond des cartes légèrement plus clair */
@@ -37,62 +37,20 @@ a {
   text-decoration: none;
 }
 
-/* Search bar */
-.spinner-slot {
-  width: 24px; /* largeur fixe du spinner */
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  visibility: hidden;
-  color: white;
+.form-control.custom-search-input {
+  background-color: white;
+  border: 2px solid var(--border);
+  height: 35px;
+  transition: all 0.3s ease;
 }
 
-.spinner-slot.visible {
-  visibility: visible;
-}
-
-.result-slot {
-  min-height: 28px; /* hauteur du badge */
-  display: flex;
-  align-items: center;
-}
-
-.search-input {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.sticky-bar {
-  transition: padding 0.2s ease;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border);
-}
-.sticky-bar.shrink {
-  padding-top: 0.5rem !important;
-  padding-bottom: 0.5rem !important;
-}
-.sticky-bar h1 {
-  transition: font-size 0.2s ease;
-  font-size: 1.5rem;
-  color: var(--foreground);
-}
-.sticky-bar.shrink h1 {
-  font-size: 1.25rem !important;
-}
-
-.list-group {
-  max-height: none;
-  overflow: visible;
-  background-color: var(--card-bg);
-  border: 1px solid var(--border);
-}
-
-.custom-focus:focus {
-  border-color: red;
-  box-shadow: 0 0 0 0.1rem rgba(40, 167, 69, 0.25);
-  border-width: 1px;
+.form-control.custom-search-input:focus {
+  background-color: white;
+  color: var(--background-primary);
+  border: none;
+  outline: 2px solid var(--blue);
+  outline-offset: 0px;
+  box-shadow: none !important;
 }
 
 /* Cards */
@@ -127,7 +85,7 @@ a {
 }
 
 .check {
-  color: var(--check);
+  color: var(--blue);
 }
 
 .bookmark {
@@ -135,7 +93,7 @@ a {
 }
 
 .check:hover {
-  background-color: var(--check);
+  background-color: var(--blue);
 }
 
 .bookmark:hover {
@@ -162,7 +120,7 @@ a {
 }
 
 .nav-link:hover {
-  color: var(--check);
+  color: var(--blue);
 }
 
 /* Pagination */
@@ -178,11 +136,11 @@ a {
 }
 
 .pagination-link:hover:not(.pagination-link-disabled) {
-  color: var(--check);
+  color: var(--blue);
 }
 
 .pagination-link-active {
-  color: var(--check);
+  color: var(--blue);
   font-size: 1.2rem;
 }
 

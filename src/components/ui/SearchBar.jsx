@@ -64,7 +64,7 @@ export default function SearchBar() {
     <div className="position-relative me-3 flex-grow-1" ref={searchInputRef} style={{ minWidth: "300px" }}>
       <input
         type="text"
-        className="form-control custom-focus pe-5 py-1"
+        className={`form-control custom-search-input px-2 py-1 ${isOpen ? "rounded-bottom-0" : "rounded"}`}
         placeholder="Search for a serie..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -76,14 +76,12 @@ export default function SearchBar() {
           className="position-absolute p-0"
           style={{
             zIndex: 1050,
-            width: "calc(100% - 15px)",
+            width: "100%",
             maxHeight: "660px",
-            top: "100%",
-            left: "50%",
-            transform: "translateX(-50%)",
+            top: "calc(100% + 2px)",
           }}
         >
-          <div className="list-group m-0 p-0 border-0 rounded-0 w-100">
+          <div className="list-group m-0 p-0 border-0 w-100">
             {loading ? (
               Array.from({ length: 5 }).map((_, index) => <DynamicSearchResultSkeleton key={index} />)
             ) : results.length > 0 ? (
