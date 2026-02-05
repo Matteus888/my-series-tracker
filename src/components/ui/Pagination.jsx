@@ -23,15 +23,15 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       startPage = 1;
       endPage = totalPages;
     } else {
-      if (currentPage <= 5) {
+      if (currentPage <= 7) {
         startPage = 1;
-        endPage = 7;
+        endPage = 9;
       } else if (currentPage + 4 >= totalPages) {
         startPage = totalPages - 6;
         endPage = totalPages;
       } else {
-        startPage = currentPage - 2;
-        endPage = currentPage + 2;
+        startPage = currentPage - 4;
+        endPage = currentPage + 4;
       }
     }
 

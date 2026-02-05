@@ -20,7 +20,7 @@ export default function Header() {
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center ms-3">
           <Link className="navbar-brand me-3" href="/">
-            <Image src="/globe.svg" alt="Logo" width={30} height={30} />
+            <Image src="/logo.png" alt="Logo" width={30} height={30} />
           </Link>
           <SearchBar />
         </div>

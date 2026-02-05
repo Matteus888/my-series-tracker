@@ -76,12 +76,17 @@ export default function SearchBar() {
           className="position-absolute p-0"
           style={{
             zIndex: 1050,
-            width: "100%",
+            width: "calc(100% - 2px)",
             maxHeight: "660px",
-            top: "calc(100% + 2px)",
+            top: "100%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            borderBottomLeftRadius: ".375rem",
+            borderBottomRightRadius: ".375rem",
+            overflow: "hidden",
           }}
         >
-          <div className="list-group m-0 p-0 border-0 w-100">
+          <div className="list-group m-0 p-0 border-0 w-100" style={{ borderBottomLeftRadius: "20px" }}>
             {loading ? (
               Array.from({ length: 5 }).map((_, index) => <DynamicSearchResultSkeleton key={index} />)
             ) : results.length > 0 ? (

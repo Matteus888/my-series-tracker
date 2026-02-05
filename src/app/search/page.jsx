@@ -13,6 +13,7 @@ export default function SearchPage() {
   const pageParam = searchParams.get("page");
   const router = useRouter();
   const [results, setResults] = useState([]);
+  const [totalResults, setTotalResults] = useState(0);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(pageParam ? parseInt(pageParam) : 1);
   const [totalPages, setTotalPages] = useState(0);
@@ -25,31 +26,43 @@ export default function SearchPage() {
   }, [query, pageParam]);
 
   useEffect(() => {
-    if (query) {
-      const fetchResults = async () => {
-        setLoading(true);
-        try {
-          const tmdbPage1 = currentPage * 2 - 1;
-          const tmdbPage2 = currentPage * 2;
+    if (!query) return;
+    const fetchResults = async () => {
+      setLoading(true);
+      try {
+        const UI_PAGE_SIZE = 36;
+        const TMDB_PAGE_SIZE = 20;
+        const startIndex = (currentPage - 1) * UI_PAGE_SIZE;
+        const endIndex = startIndex + UI_PAGE_SIZE;
 
-          const [page1, page2] = await Promise.all([searchSeries(query, tmdbPage1), searchSeries(tmdbPage2)]);
+        const startTmdbPage = Math.floor(startIndex / TMDB_PAGE_SIZE) + 1;
+        const endTmdbPage = Math.floor((endIndex - 1) / TMDB_PAGE_SIZE) + 1;
 
-          const combinedResults = [...page1.results, ...page2.results.slice(0, 4)];
-          setResults(combinedResults);
+        const responses = await Promise.all(
+          Array.from({ length: endTmdbPage - startTmdbPage + 1 }, (_, i) => searchSeries(query, startTmdbPage + i)),
+        );
 
-          const totalResults = page1.totalResults;
-          const calculatedTotalPages = Math.ceil(totalResults / 24);
-          setTotalPages(calculatedTotalPages);
-        } catch (err) {
-          console.error(err);
-          setResults([]);
-          setTotalPages(0);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchResults();
-    }
+        const allResults = responses.flatMap((r) => r.results);
+
+        const combinedResults = allResults.slice(
+          startIndex % TMDB_PAGE_SIZE,
+          (startIndex % TMDB_PAGE_SIZE) + UI_PAGE_SIZE,
+        );
+
+        setResults(combinedResults);
+        setTotalResults(responses[0].totalResults);
+
+        const calculatedTotalPages = Math.ceil(responses[0].totalResults / UI_PAGE_SIZE);
+        setTotalPages(calculatedTotalPages);
+      } catch (err) {
+        console.error(err);
+        setResults([]);
+        setTotalPages(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchResults();
   }, [query, currentPage]);
 
   const handleChangePage = (page) => {
@@ -58,22 +71,29 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="container-fluid mt-4 px-0">
+    <div className="container-fluid mt-0 px-0">
       <div className="row mx-0">
         {/* Espace réservé pour le futur sous-menu de filtres */}
-        <div className="col-md-2 d-none d-md-block px-0">{/* Futur composant de filtres */}</div>
+        <div className="col-md-2 d-none d-md-block px-0">
+          <p className="mb-2 me-3 text-end">
+            {totalResults} results for &quot;{query}&quot;
+          </p>
+        </div>
         <div className="col-md-10 p-0">
-          <h1 className="mb-4">Results for &quot;{query}&quot;</h1>
           {loading ? (
-            <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-0 mx-0 align-items-stretch">
-              {Array.from({ length: 24 }).map((_, index) => (
-                <SerieCardSkeleton key={index} />
-              ))}
-            </div>
+            <>
+              <div className="cards-container">
+                <div className="row row-cols-2 row-cols-sm-3 row-cols-lg-4 row-cols-xl-6 g-0 mx-0 align-items-stretch">
+                  {Array.from({ length: 36 }).map((_, index) => (
+                    <SerieCardSkeleton key={index} />
+                  ))}
+                </div>
+              </div>
+            </>
           ) : results.length > 0 ? (
             <>
               <div className="cards-container">
-                <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-0 mx-0 align-items-stretch">
+                <div className="row row-cols-2 row-cols-sm-3 row-cols-lg-4 row-cols-xl-6 g-0 mx-0 align-items-stretch">
                   {results.map((serie) => (
                     <div key={serie.id} className="col p-0">
                       <SerieCard serie={serie} />
