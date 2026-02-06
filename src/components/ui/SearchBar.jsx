@@ -57,20 +57,50 @@ export default function SearchBar() {
     if (e.key === "Enter" && query.trim()) {
       router.push(`/search?query=${encodeURIComponent(query)}`);
       setIsOpen(false);
+      setQuery("");
     }
+  };
+
+  const handleSelectSerie = (serie) => {
+    setIsOpen(false);
+    setQuery("");
   };
 
   return (
     <div className="position-relative me-3 flex-grow-1" ref={searchInputRef} style={{ minWidth: "300px" }}>
       <input
         type="text"
-        className={`form-control custom-search-input px-2 py-1 ${isOpen ? "rounded-bottom-0" : "rounded"}`}
+        className={`form-control custom-search-input ps-5 py-1 ${isOpen ? "rounded-bottom-0" : "rounded"}`}
         placeholder="Search for a serie..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => query.trim() && setIsOpen(!!results.length)}
         onKeyDown={handleKeyDown}
       />
+      {/* Icône à gauche */}
+      <i
+        className={`bi position-absolute top-50 translate-middle-y ${query ? "bi-x-lg text-dark" : "bi-search text-dark"}`}
+        style={{
+          left: "12px",
+          cursor: query ? "pointer" : "default",
+          fontSize: "1rem",
+          userSelect: "none",
+        }}
+        onClick={() => query && setQuery("")}
+      />
+      {/* Séparateur vertical */}
+      <div
+        className="position-absolute top-50 translate-middle-y"
+        style={{
+          left: "36px",
+          height: "60%",
+          width: "1px",
+          backgroundColor: "var(--border)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Liste des résultats */}
       {isOpen && (
         <div
           className="position-absolute p-0"
@@ -90,9 +120,18 @@ export default function SearchBar() {
             {loading ? (
               Array.from({ length: 5 }).map((_, index) => <DynamicSearchResultSkeleton key={index} />)
             ) : results.length > 0 ? (
-              results.map((serie) => <DynamicSearchResult key={serie.id} serie={serie} />)
+              results.map((serie) => <DynamicSearchResult key={serie.id} serie={serie} onSelect={handleSelectSerie} />)
             ) : (
-              <div className="p-3 text-center">No result found.</div>
+              <div
+                className="p-2 text-center text-dark list-group-item border-0 rounded-0"
+                style={{
+                  fontSize: "0.9rem",
+                  borderBottomLeftRadius: ".375rem",
+                  borderBottomRightRadius: ".375rem",
+                }}
+              >
+                No result found.
+              </div>
             )}
           </div>
         </div>

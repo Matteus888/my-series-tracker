@@ -1,16 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useSearch } from "@/context/SearchContext";
 
-export default function DynamicSearchResult({ serie }) {
-  const { setIsOpen } = useSearch();
-
-  const handleClick = () => {
-    setIsOpen(false);
-  };
-
+export default function DynamicSearchResult({ serie, onSelect }) {
   return (
-    <Link href={`/series/${serie.id}`} className="text-decoration-none text-dark" onClick={handleClick}>
+    <Link href={`/series/${serie.id}`} className="text-decoration-none text-dark" onClick={() => onSelect(serie)}>
       <div className="list-group-item list-group-item-action border-0 border-bottom p-0" style={{ height: "60px" }}>
         <div className="d-flex align-items-center">
           <div className="me-3 overflow-hidden" style={{ width: "40px", height: "60px", flexShrink: 0 }}>

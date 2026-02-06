@@ -32,18 +32,24 @@ export default function SearchPage() {
       try {
         const UI_PAGE_SIZE = 36;
         const TMDB_PAGE_SIZE = 20;
+
+        // Index globaux sur tous les résultats
         const startIndex = (currentPage - 1) * UI_PAGE_SIZE;
         const endIndex = startIndex + UI_PAGE_SIZE;
 
+        // Calcul de la 1ère et de la dernière pages TMDB nécessaires
         const startTmdbPage = Math.floor(startIndex / TMDB_PAGE_SIZE) + 1;
         const endTmdbPage = Math.floor((endIndex - 1) / TMDB_PAGE_SIZE) + 1;
 
+        // Récupération des pages TMDB correspondantes (2 ou 3 pages)
         const responses = await Promise.all(
           Array.from({ length: endTmdbPage - startTmdbPage + 1 }, (_, i) => searchSeries(query, startTmdbPage + i)),
         );
 
+        // Fusion des résultats des pages TMDB demandées
         const allResults = responses.flatMap((r) => r.results);
 
+        // Découpage suivant les index globaux
         const combinedResults = allResults.slice(
           startIndex % TMDB_PAGE_SIZE,
           (startIndex % TMDB_PAGE_SIZE) + UI_PAGE_SIZE,
