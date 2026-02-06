@@ -12,7 +12,7 @@ export default function Header() {
       style={{
         zIndex: 1020,
         background: "var(--card-bg)",
-        backdropFilter: "blur(5px)",
+        backdropFilter: "blur(10px)",
         padding: "0.5rem 0",
         borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
       }}
