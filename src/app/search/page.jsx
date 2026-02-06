@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { searchSeries } from "@/lib/api/tmdb.api";
+import SearchFilterHeader from "@/components/layout/SearchFilterHeader";
 import SerieCard from "@/components/series/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton";
 import Pagination from "@/components/ui/Pagination";
@@ -49,8 +50,11 @@ export default function SearchPage() {
         // Fusion des résultats des pages TMDB demandées
         const allResults = responses.flatMap((r) => r.results);
 
-        // Découpage suivant les index globaux
-        const combinedResults = allResults.slice(
+        // Déduplication par ID
+        const uniqueResults = Array.from(new Map(allResults.map((serie) => [serie.id, serie])).values());
+
+        // Découpage selon les index globaux
+        const combinedResults = uniqueResults.slice(
           startIndex % TMDB_PAGE_SIZE,
           (startIndex % TMDB_PAGE_SIZE) + UI_PAGE_SIZE,
         );
@@ -79,11 +83,15 @@ export default function SearchPage() {
   return (
     <div className="container-fluid mt-0 px-0">
       <div className="row mx-0">
-        {/* Espace réservé pour le futur sous-menu de filtres */}
-        <div className="col-md-2 d-none d-md-block px-0">
-          <p className="mb-2 me-3 text-end">
-            {totalResults} results for &quot;{query}&quot;
-          </p>
+        <div className="col-md-2 d-none d-md-block py-3 px-1">
+          <SearchFilterHeader
+            query={query}
+            totalResults={totalResults}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPrevPage={() => handleChangePage(currentPage - 1)}
+            onNextPage={() => handleChangePage(currentPage + 1)}
+          />
         </div>
         <div className="col-md-10 p-0">
           {loading ? (

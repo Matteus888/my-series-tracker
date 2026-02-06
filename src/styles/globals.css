@@ -70,11 +70,20 @@ a {
   background-color: white;
   color: var(--background-primary);
   box-shadow: none !important;
-  /* border-color: var(--blue); */
 }
 
 .form-control.custom-search-input:not(:focus):not(:placeholder-shown) {
   color: var(--background-secondary);
+}
+
+/* Search Filter */
+.search-nav-arrow {
+  color: var(--blue);
+  transition: color 0.15s ease;
+}
+
+.search-nav-arrow:hover {
+  color: color-mix(in srgb, var(--blue) 85%, black);
 }
 
 /* Cards */

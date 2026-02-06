@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearch } from "@/context/SearchContext";
 import { searchSeries } from "@/lib/api/tmdb.api";
 import { useRouter } from "next/navigation";
@@ -11,11 +11,13 @@ export default function SearchBar() {
   const { query, setQuery, results, setResults, loading, setLoading, isOpen, setIsOpen } = useSearch();
   const searchInputRef = useRef(null);
   const router = useRouter();
+  const [totalResults, setTotalResults] = useState(0);
 
   // Recherche live avec debounce
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
+      setTotalResults(0);
       setIsOpen(false);
       return;
     }
@@ -25,6 +27,7 @@ export default function SearchBar() {
       try {
         const data = await searchSeries(query, 1);
         setResults(data.results.slice(0, 10));
+        setTotalResults(data.totalResults);
         setIsOpen(true);
       } catch (err) {
         console.error(err);
@@ -61,7 +64,7 @@ export default function SearchBar() {
     }
   };
 
-  const handleSelectSerie = (serie) => {
+  const handleSelectSerie = () => {
     setIsOpen(false);
     setQuery("");
   };
@@ -70,7 +73,8 @@ export default function SearchBar() {
     <div className="position-relative me-3 flex-grow-1" ref={searchInputRef} style={{ minWidth: "300px" }}>
       <input
         type="text"
-        className={`form-control custom-search-input ps-5 py-1 ${isOpen ? "rounded-bottom-0" : "rounded"}`}
+        className={`form-control custom-search-input py-1 ${isOpen ? "rounded-bottom-0" : "rounded"}`}
+        style={{ paddingLeft: "3.5rem" }}
         placeholder="Search for a serie..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -85,15 +89,16 @@ export default function SearchBar() {
           cursor: query ? "pointer" : "default",
           fontSize: "1rem",
           userSelect: "none",
+          marginLeft: "0.15rem",
         }}
         onClick={() => query && setQuery("")}
       />
       {/* Séparateur vertical */}
       <div
-        className="position-absolute top-50 translate-middle-y"
+        className="position-absolute top-50 ms-1 translate-middle-y"
         style={{
           left: "36px",
-          height: "60%",
+          height: "100%",
           width: "1px",
           backgroundColor: "var(--border)",
           pointerEvents: "none",
@@ -111,21 +116,40 @@ export default function SearchBar() {
             top: "100%",
             left: "50%",
             transform: "translateX(-50%)",
+            overflow: "hidden",
+            borderTopLeftRadius: "0",
+            borderTopRightRadius: "0",
             borderBottomLeftRadius: ".375rem",
             borderBottomRightRadius: ".375rem",
-            overflow: "hidden",
           }}
         >
           <div className="list-group m-0 p-0 border-0 w-100" style={{ borderBottomLeftRadius: "20px" }}>
             {loading ? (
               Array.from({ length: 5 }).map((_, index) => <DynamicSearchResultSkeleton key={index} />)
             ) : results.length > 0 ? (
-              results.map((serie) => <DynamicSearchResult key={serie.id} serie={serie} onSelect={handleSelectSerie} />)
+              <>
+                {results.map((serie) => (
+                  <DynamicSearchResult key={serie.id} serie={serie} onSelect={handleSelectSerie} />
+                ))}
+                <div
+                  className="list-group-item text-center text-muted p-1 border-0"
+                  style={{
+                    fontSize: "0.7rem",
+                    backgroundColor: "white",
+                    borderBottomLeftRadius: ".375rem",
+                    borderBottomRightRadius: ".375rem",
+                  }}
+                >
+                  {totalResults} result{totalResults > 1 ? "s" : ""} found
+                </div>
+              </>
             ) : (
               <div
-                className="p-2 text-center text-dark list-group-item border-0 rounded-0"
+                className="list-group-item text-center text-dark p-2 border-0"
                 style={{
-                  fontSize: "0.9rem",
+                  fontSize: "0.7rem",
+                  borderTopLeftRadius: "0",
+                  borderTopRightRadius: "0",
                   borderBottomLeftRadius: ".375rem",
                   borderBottomRightRadius: ".375rem",
                 }}
