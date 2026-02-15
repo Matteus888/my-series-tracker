@@ -11,8 +11,12 @@ export default function Header() {
       className="position-sticky top-0 w-100"
       style={{
         zIndex: 1020,
-        background: "var(--card-bg)",
-        backdropFilter: "blur(10px)",
+        background: `
+          linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+          rgba(var(--card-bg-rgb), 0.6)
+        `,
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
         padding: "0.5rem 0",
         borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
         height: "50px",
