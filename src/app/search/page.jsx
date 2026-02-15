@@ -83,15 +83,17 @@ export default function SearchPage() {
   return (
     <div className="container-fluid mt-0 px-0">
       <div className="row mx-0">
-        <div className="col-md-2 d-none d-md-block py-3 px-1">
-          <SearchFilterHeader
-            query={query}
-            totalResults={totalResults}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPrevPage={() => handleChangePage(currentPage - 1)}
-            onNextPage={() => handleChangePage(currentPage + 1)}
-          />
+        <div className="col-md-2 d-none d-md-block pt-2 px-1">
+          <div className="position-sticky" style={{ top: "calc(50px + 0.5rem)" }}>
+            <SearchFilterHeader
+              query={query}
+              totalResults={totalResults}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPrevPage={() => handleChangePage(currentPage - 1)}
+              onNextPage={() => handleChangePage(currentPage + 1)}
+            />
+          </div>
         </div>
         <div className="col-md-10 p-0">
           {loading ? (

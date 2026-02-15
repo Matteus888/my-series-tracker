@@ -111,6 +111,37 @@ a {
   transition: background-color 0.2s ease;
 }
 
+/* Tooltip */
+.tooltip-wrapper {
+  position: relative;
+}
+
+.custom-tooltip {
+  font-size: 0.75rem;
+  opacity: 0;
+  transform: translate(-50%, -8px);
+  background: var(--background-primary);
+  color: var(--foreground);
+  white-space: nowrap;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.tooltip-wrapper:hover .custom-tooltip {
+  opacity: 1;
+  transform: translate(-50%, -12px);
+}
+
+.year-badge {
+  background: var(--border);
+  color: var(--foreground);
+  font-size: 0.75rem;
+  line-height: 1;
+  left: 0.5rem;
+  bottom: 0.5rem;
+}
+
 /* Boutons */
 .btn {
   border: none;

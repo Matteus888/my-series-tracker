@@ -15,6 +15,7 @@ export default function Header() {
         backdropFilter: "blur(10px)",
         padding: "0.5rem 0",
         borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+        height: "50px",
       }}
     >
       <div className="d-flex align-items-center justify-content-between">

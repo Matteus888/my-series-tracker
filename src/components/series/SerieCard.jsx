@@ -3,8 +3,18 @@ import Image from "next/image";
 
 export default function SerieCard({ serie }) {
   return (
-    <div className="col p-0 m-0 h-100 d-flex" style={{ minWidth: "16.6667%", flex: "1 0 auto" }}>
-      <div className="card hover-card h-100 w-100 m-0 rounded-0 d-flex flex-column">
+    <div
+      className="col p-0 m-0 h-100 d-flex tooltip-wrapper position-relative"
+      style={{ minWidth: "16.6667%", flex: "1 0 auto" }}
+    >
+      {/* Tooltip */}
+      <div
+        className="position-absolute bottom-100 start-50 translate-middle-x mb-1 rounded px-2 py-1 pe-none custom-tooltip"
+        style={{ zIndex: 1021 }}
+      >
+        {serie.name}
+      </div>
+      <div className="card hover-card h-100 w-100 m-0 rounded-0 d-flex flex-column position-relative overflow-visible">
         <div className="position-relative w-100 flex-grow-0 d-flex" style={{ aspectRatio: "2/3", overflow: "hidden" }}>
           <Link href={`/series/${serie.id}`} className="position-relative d-flex w-100">
             {serie.poster_path ? (
@@ -18,6 +28,11 @@ export default function SerieCard({ serie }) {
               />
             ) : (
               <div className="d-flex align-items-end w-100 h-100 p-2 text-start">{serie.name}</div>
+            )}
+
+            {/* Badge année */}
+            {serie.first_air_date && (
+              <span className="year-badge position-absolute px-2 py-1 fw-bold">{serie.first_air_date.slice(0, 4)}</span>
             )}
           </Link>
         </div>
