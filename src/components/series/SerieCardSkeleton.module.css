@@ -1,0 +1,70 @@
+.container {
+  min-width: 16.6667%;
+  flex: 1 0 auto;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  display: flex;
+}
+
+.skeletonCard {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.imagePlaceholder {
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  background-color: var(--background-secondary);
+  position: relative;
+}
+
+.footer {
+  height: 40px;
+  min-width: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.buttonsContainer {
+  height: 100%;
+  display: flex;
+}
+
+.buttonPlaceholder {
+  height: 100%;
+  width: 30px;
+  min-width: 30px;
+  background-color: var(--background-secondary);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.infoContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.elementPlaceholder {
+  background-color: var(--background-secondary);
+  border-radius: 0.25rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.elementSmall {
+  height: 16px;
+  width: 16px;
+}
+
+.elementMedium {
+  height: 16px;
+  width: 30px;
+}

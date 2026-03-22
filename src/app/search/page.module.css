@@ -1,0 +1,83 @@
+.searchLayout {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+}
+
+/* Colonne des filtres (cachée sur mobile) */
+.filterSidebar {
+  display: none;
+  padding: 0.25rem;
+  position: sticky;
+  top: calc(50px + 0.5rem);
+}
+@media (min-width: 768px) {
+  .filterSidebar {
+    display: block;
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+  }
+}
+
+/* Colonne des résultats (83% de la largeur) */
+.resultsArea {
+  flex: 0 0 83.333333%;
+  max-width: 83.333333%;
+  padding: 0;
+}
+
+/* Conteneur des cartes de séries */
+.seriesGrid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  gap: 0;
+  border-left: 1px solid var(--border);
+}
+
+/* Grille responsive pour les cartes */
+.gridRow {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  align-items: stretch;
+}
+
+/* Colonne pour une carte de série (adaptative) */
+.gridColumn {
+  padding: 0;
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+@media (min-width: 576px) {
+  .gridColumn {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+  }
+}
+@media (min-width: 992px) {
+  .gridColumn {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+}
+@media (min-width: 1200px) {
+  .gridColumn {
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+  }
+}
+
+/* Message "Aucun résultat" */
+.emptyMessage {
+  text-align: center;
+  padding: 2rem;
+  color: var(--foreground);
+}
+
+/* Style pour le conteneur des filtres (sticky) */
+.stickyFilter {
+  position: sticky;
+  top: calc(50px + 0.5rem);
+}

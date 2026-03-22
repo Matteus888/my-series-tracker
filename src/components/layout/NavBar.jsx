@@ -1,61 +1,43 @@
 "use client";
 
+import styles from "./NavBar.module.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function NavBar() {
   const pathname = usePathname();
+
+  const isActive = (path) => pathname === path;
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-light p-0">
-      <div className="container-fluid">
-        <ul className="navbar-nav me-auto">
-          <li className="nav-item">
-            <Link
-              className="nav-link p-1"
-              style={pathname === "/dashboard" ? { color: "var(--check)" } : {}}
-              href="/dashboard"
-            >
-              Dashboard
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link p-1"
-              style={pathname === "/series" ? { color: "var(--check)" } : {}}
-              href="/series"
-            >
-              Series
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link p-1"
-              style={pathname === "/favorites" ? { color: "var(--check)" } : {}}
-              href="/favorites"
-            >
-              Favorites
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link p-1"
-              style={pathname === "/watchlist" ? { color: "var(--check)" } : {}}
-              href="/watchlist"
-            >
-              Watchlist
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link p-1"
-              style={pathname === "/profile" ? { color: "var(--check)" } : {}}
-              href="/profile"
-            >
-              Profile
-            </Link>
-          </li>
-        </ul>
-      </div>
+    <nav className={styles.navContainer}>
+      <ul className={styles.navList}>
+        <li className={styles.navItem}>
+          <Link className={`${styles.navLink} ${isActive("/dashboard") ? styles.active : ""}`} href="/dashboard">
+            Dashboard
+          </Link>
+        </li>
+        <li className={styles.navItem}>
+          <Link className={`${styles.navLink} ${isActive("/series") ? styles.active : ""}`} href="/series">
+            Series
+          </Link>
+        </li>
+        <li className={styles.navItem}>
+          <Link className={`${styles.navLink} ${isActive("/favorites") ? styles.active : ""}`} href="/favorites">
+            Favorites
+          </Link>
+        </li>
+        <li className={styles.navItem}>
+          <Link className={`${styles.navLink} ${isActive("/watchlist") ? styles.active : ""}`} href="/watchlist">
+            Watchlist
+          </Link>
+        </li>
+        <li className={styles.navItem}>
+          <Link className={`${styles.navLink} ${isActive("/profile") ? styles.active : ""}`} href="/profile">
+            Profile
+          </Link>
+        </li>
+      </ul>
     </nav>
   );
 }

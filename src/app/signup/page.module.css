@@ -1,0 +1,56 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background-primary);
+}
+
+.signupCard {
+  width: 100%;
+  max-width: 420px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--foreground);
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formGroup:last-of-type {
+  margin-bottom: 1.5rem;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+
+.submitButton {
+  width: 100%;
+}
+
+.footer {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.mutedText {
+  color: #6c757d;
+}
+
+.loginLink {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+}

@@ -1,4 +1,5 @@
 "use client";
+import styles from "@/app/login/page.module.css";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -34,18 +35,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
-      <div className="card shadow-sm w-100" style={{ maxWidth: "420px" }}>
-        <div className="card-body p-4">
-          <h1 className="h4 fw-bold mb-4 text-center">Connection</h1>
+    <div className={styles.container}>
+      <div className={`${styles.loginCard} card`}>
+        <div className="card-body">
+          <h1 className={styles.loginTitle}>Connection</h1>
           {error && (
             <div className="alert alert-danger" role="alert">
               {error}
             </div>
           )}
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
+            <div className={styles.formGroup}>
+              <label htmlFor="email" className={styles.formLabel}>
                 Email
               </label>
               <input
@@ -58,8 +59,8 @@ export default function LoginPage() {
                 placeholder="your@email.com"
               />
             </div>
-            <div className="mb-4">
-              <label htmlFor="password" className="form-label">
+            <div className={styles.formGroup}>
+              <label htmlFor="password" className={styles.formLabel}>
                 Password
               </label>
               <input
@@ -72,15 +73,15 @@ export default function LoginPage() {
                 placeholder="••••••••"
               />
             </div>
-            <button type="submit" disabled={isLoading} className="btn btn-primary w-100">
+            <button type="submit" disabled={isLoading} className="btn btn-primary">
               {isLoading ? "Connecting..." : "Log In"}
             </button>
           </form>
 
-          <div className="text-center mt-4">
-            <p className="text-muted mb-0">
+          <div className={styles.formFooter}>
+            <p className={styles.mutedText}>
               Don&#39;t have an account yet?{" "}
-              <Link href="/signup" className="ms-1 link-primary text-decoration-none">
+              <Link href="/signup" className={styles.signupLink}>
                 Register
               </Link>
             </p>

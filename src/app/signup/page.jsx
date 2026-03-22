@@ -1,4 +1,6 @@
 "use client";
+
+import styles from "@/app/signup/page.module.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -43,18 +45,18 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
-      <div className="card shadow-sm w-100">
-        <div className="card-body p-4">
-          <h1 className="h4 fw-bold mb-4 text-center">Registration</h1>
+    <div className={styles.container}>
+      <div className={`card ${styles.signupCard}`}>
+        <div className="card-body">
+          <h1 className={styles.title}>Registration</h1>
           {error && (
             <div className="alert alert-danger" role="alert">
               {error}
             </div>
           )}
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="username" className="form-label">
+            <div className={styles.formGroup}>
+              <label htmlFor="username" className={styles.formLabel}>
                 Username
               </label>
               <input
@@ -68,8 +70,8 @@ export default function SignupPage() {
                 placeholder="Username"
               />
             </div>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
+            <div className={styles.formGroup}>
+              <label htmlFor="email" className={styles.formLabel}>
                 Email
               </label>
               <input
@@ -83,8 +85,8 @@ export default function SignupPage() {
                 placeholder="your@email.com"
               />
             </div>
-            <div className="mb-4">
-              <label htmlFor="password" className="form-label">
+            <div className={styles.formGroup}>
+              <label htmlFor="password" className={styles.formLabel}>
                 Password
               </label>
               <input
@@ -99,15 +101,15 @@ export default function SignupPage() {
                 minLength={8}
               />
             </div>
-            <button type="submit" disabled={isLoading} className="btn btn-primary w-100">
+            <button type="submit" disabled={isLoading} className={`btn btn-primary ${styles.submitButton}`}>
               {isLoading ? "Registration in progress..." : "Register"}
             </button>
           </form>
 
-          <div className="text-center mt-4">
-            <p className="text-muted mb-0">
+          <div className={styles.footer}>
+            <p className={styles.mutedText}>
               Already have an account?{" "}
-              <Link href="/login" className="ms-1 link-primary text-decoration-none">
+              <Link href="/login" className={styles.loginLink}>
                 Log In
               </Link>
             </p>

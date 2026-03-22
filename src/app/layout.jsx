@@ -1,8 +1,6 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+import "../styles/globals.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SearchProvider } from "@/context/SearchContext";
-import "../styles/globals.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
@@ -30,7 +28,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <SearchProvider>
           <Header />
-          <main className="flex-grow-1 mx-0">{children}</main>
+          <main>{children}</main>
           <Footer />
         </SearchProvider>
       </body>

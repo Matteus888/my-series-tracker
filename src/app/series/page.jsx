@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "@/app/series/page.module.css";
 import { useEffect, useState } from "react";
 import { getAllSeries } from "@/lib/api/tmdb.api";
 import SerieCard from "@/components/series/SerieCard";
@@ -24,19 +25,19 @@ export default function AllSeriesPage() {
   }, []);
 
   return (
-    <div className="container mt-4">
-      <h1 className="mb-4">All series</h1>
-      {loading && <div className="text-center my-3">Loading...</div>}
+    <div className={styles.container}>
+      <h1 className={styles.pageTitle}>All series</h1>
+      {loading && <div className={styles.loadingMessage}>Loading...</div>}
       {series.length > 0 ? (
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        <div className={styles.seriesGrid}>
           {series.map((serie) => (
-            <div key={serie.id} className="col">
+            <div key={serie.id} className={styles.gridItem}>
               <SerieCard serie={serie} />
             </div>
           ))}
         </div>
       ) : (
-        !loading && <p>No serie found.</p>
+        !loading && <p className={styles.emptyMessage}>No serie found.</p>
       )}
     </div>
   );

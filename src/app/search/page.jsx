@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "@/app/search/page.module.css";
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { searchSeries } from "@/lib/api/tmdb.api";
@@ -81,48 +82,48 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="container-fluid mt-0 px-0">
-      <div className="row mx-0">
-        <div className="col-md-2 d-none d-md-block pt-2 px-1">
-          <div className="position-sticky" style={{ top: "calc(50px + 0.5rem)" }}>
-            <SearchFilterHeader
-              query={query}
-              totalResults={totalResults}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPrevPage={() => handleChangePage(currentPage - 1)}
-              onNextPage={() => handleChangePage(currentPage + 1)}
-            />
-          </div>
+    <div className={styles.searchLayout}>
+      <div className={styles.filterSidebar}>
+        <div className={styles.stickyFilter}>
+          <SearchFilterHeader
+            query={query}
+            totalResults={totalResults}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPrevPage={() => handleChangePage(currentPage - 1)}
+            onNextPage={() => handleChangePage(currentPage + 1)}
+          />
         </div>
-        <div className="col-md-10 p-0">
-          {loading ? (
-            <>
-              <div className="cards-container">
-                <div className="row row-cols-2 row-cols-sm-3 row-cols-lg-4 row-cols-xl-6 g-0 mx-0 align-items-stretch">
-                  {Array.from({ length: 36 }).map((_, index) => (
-                    <SerieCardSkeleton key={index} />
-                  ))}
-                </div>
+      </div>
+      <div className={styles.resultsArea}>
+        {loading ? (
+          <>
+            <div className={styles.seriesGrid}>
+              <div className={styles.gridRow}>
+                {Array.from({ length: 36 }).map((_, index) => (
+                  <div key={index} className={styles.gridColumn}>
+                    <SerieCardSkeleton />
+                  </div>
+                ))}
               </div>
-            </>
-          ) : results.length > 0 ? (
-            <>
-              <div className="cards-container">
-                <div className="row row-cols-2 row-cols-sm-3 row-cols-lg-4 row-cols-xl-6 g-0 mx-0 align-items-stretch">
-                  {results.map((serie) => (
-                    <div key={serie.id} className="col p-0">
-                      <SerieCard serie={serie} />
-                    </div>
-                  ))}
-                </div>
+            </div>
+          </>
+        ) : results.length > 0 ? (
+          <>
+            <div className={styles.seriesGrid}>
+              <div className={styles.gridRow}>
+                {results.map((serie) => (
+                  <div key={serie.id} className={styles.gridColumn}>
+                    <SerieCard serie={serie} />
+                  </div>
+                ))}
               </div>
-              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage} />
-            </>
-          ) : (
-            !loading && <p>No result found.</p>
-          )}
-        </div>
+            </div>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage} />
+          </>
+        ) : (
+          !loading && <p className={styles.emptyMessage}>No result found.</p>
+        )}
       </div>
     </div>
   );

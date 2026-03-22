@@ -1,0 +1,113 @@
+.container {
+  min-width: 16.6667%;
+  flex: 1 0 auto;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.5rem;
+  z-index: 1021;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: visible;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  flex-grow: 0;
+  display: flex;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+}
+
+.imageLink {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.image {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.placeholderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+  text-align: start;
+}
+
+.yearBadge {
+  position: absolute;
+  padding: 0.25rem;
+  font-weight: 700;
+}
+
+.footer {
+  height: 40px;
+  min-width: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.buttonsContainer {
+  height: 100%;
+  display: flex;
+}
+
+.button {
+  height: 100%;
+  width: 30px;
+  min-width: 30px;
+  padding: 0 0.5rem;
+}
+
+.infoContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.heartIcon {
+  color: #dc3545; /* Équivalent à text-danger */
+  font-size: 0.8rem;
+}
+
+.rating {
+  font-size: 0.75rem;
+}
+
+.checkIcon::before {
+  content: "✓";
+  font-size: 0.9rem;
+}
+
+.bookmarkIcon::before {
+  content: "+";
+  font-size: 1rem;
+}

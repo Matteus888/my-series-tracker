@@ -1,27 +1,21 @@
+import styles from "./Footer.module.css";
+
 export default function Footer() {
   return (
-    <footer
-      className=""
-      style={{
-        backgroundColor: "var(--card-bg)",
-        padding: "0.5rem 0.85rem",
-        fontSize: "0.9rem",
-        color: "var(--foreground)",
-      }}
-    >
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
+    <footer className={styles.footer}>
+      <div className={styles.content}>
         {/* Texte gauche */}
-        <span className="mb-1 mb-md-0">© {new Date().getFullYear()} MySeriesTracker</span>
+        <span>© {new Date().getFullYear()} MySeriesTracker</span>
 
         {/* Liens droite */}
         <div>
-          <a href="/about" className="text-light text-decoration-none me-3">
+          <a href="/about" className={styles.link}>
             About
           </a>
-          <a href="/contact" className="text-light text-decoration-none me-3">
+          <a href="/contact" className={styles.link}>
             Contact
           </a>
-          <a href="/privacy" className="text-light text-decoration-none">
+          <a href="/privacy" className={styles.link}>
             Privacy
           </a>
         </div>

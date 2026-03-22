@@ -1,21 +1,22 @@
+import styles from "@/app/page.module.css";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
-      <main className="container bg-white p-5 shadow-sm rounded" style={{ maxWidth: "800px" }}>
-        <div className="mb-5">
+    <div className={styles.container}>
+      <main className={styles.homeCard}>
+        <div className={styles.logoSection}>
           <Image src="/next.svg" alt="Next.js logo" width={100} height={20} priority />
         </div>
-        <div className="mb-5">
-          <h1 className="fw-semibold mb-3">my-series-tracker</h1>
-          <p className="text-muted fs-5">
+        <div>
+          <h1 className={styles.title}>my-series-tracker</h1>
+          <p className={styles.description}>
             Looking for a starting point or more instructions? Head over to{" "}
             <a
               href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
               target="_blank"
               rel="noopener noreferrer"
-              className="link-primary text-decoration-none"
+              className={styles.descriptionLink}
             >
               Templates
             </a>{" "}
@@ -24,16 +25,16 @@ export default function Home() {
               href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
               target="_blank"
               rel="noopener noreferrer"
-              className="link-primary text-decoration-none"
+              className={styles.descriptionLink}
             >
               Learning
             </a>{" "}
             center.
           </p>
         </div>
-        <div className="d-flex flex-wrap gap-3">
+        <div className={styles.buttons}>
           <a
-            className="btn btn-dark d-flex align-items-center gap-2"
+            className={`${styles.deployButton} btn btn-primary`}
             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"
@@ -42,7 +43,7 @@ export default function Home() {
             Deploy Now
           </a>
           <a
-            className="btn btn-outline-secondary"
+            className={`${styles.docButton} btn`}
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"

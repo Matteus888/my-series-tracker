@@ -1,0 +1,55 @@
+.container {
+  padding-left: 1em;
+  margin-bottom: 1rem;
+}
+
+.titleContainer {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-weight: 700;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.navArrow {
+  font-size: 1rem;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  user-select: none;
+  color: var(--blue);
+}
+
+.leftArrow {
+  left: -1em;
+}
+
+.rightArrow {
+  left: 5.15em;
+}
+
+.disabledArrow {
+  cursor: default;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.resultsText {
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.paginationText {
+  font-size: 0.65rem;
+  margin-bottom: 0;
+}
+
+.bold {
+  font-weight: 700;
+}

@@ -1,0 +1,55 @@
+.resultContainer {
+  height: 60px;
+  display: block;
+  text-decoration: none;
+  color: var(--foreground);
+}
+
+.contentWrapper {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.imageContainer {
+  width: 40px;
+  height: 60px;
+  flex-shrink: 0;
+  overflow: hidden;
+  margin-right: 0.75rem;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.infoContainer {
+  height: 60px;
+  overflow: hidden;
+  padding: 0.25rem 0.5rem 0 0;
+  flex: 1;
+}
+
+.title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.year {
+  margin: 0;
+  font-size: 0.7rem;
+  color: #6c757d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.borderBottom {
+  border-bottom: 1px solid var(--border);
+}
