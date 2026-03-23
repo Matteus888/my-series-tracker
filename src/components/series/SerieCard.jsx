@@ -4,10 +4,12 @@ import Image from "next/image";
 
 export default function SerieCard({ serie }) {
   return (
-    <div className={styles.container}>
+    <div className={`tooltip-wrapper ${styles.container}`}>
       {/* Tooltip */}
-      <div className={`${styles.tooltip} custom-tooltip`}>{serie.name}</div>
-      <div className={`card hover-card ${styles.card}`}>
+      <div className="tooltip">{serie.name}</div>
+
+      {/* Carte */}
+      <div className={`card ${styles.card}`}>
         <div className={styles.imageContainer}>
           <Link href={`/series/${serie.id}`} className={styles.imageLink}>
             {serie.poster_path ? (
@@ -25,12 +27,10 @@ export default function SerieCard({ serie }) {
           </Link>
 
           {/* Badge année */}
-          {serie.first_air_date && (
-            <span className={`year-badge ${styles.yearBadge}`}>{serie.first_air_date.slice(0, 4)}</span>
-          )}
+          {serie.first_air_date && <span className={styles.yearBadge}>{serie.first_air_date.slice(0, 4)}</span>}
         </div>
 
-        <div className={`card-footer hover-footer ${styles.footer}`}>
+        <div className={`card-footer ${styles.footer}`}>
           <div className={styles.buttonsContainer}>
             <button className={`btn check ${styles.button}`}>
               <span className={styles.checkIcon}></span>

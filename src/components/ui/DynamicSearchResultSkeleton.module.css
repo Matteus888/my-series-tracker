@@ -1,0 +1,48 @@
+.container {
+  height: 60px;
+  background-color: var(--background-primary);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.contentWrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.imagePlaceholder {
+  width: 40px;
+  height: 60px;
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+  overflow: hidden;
+  background-color: var(--background-secondary);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.infoPlaceholder {
+  height: 60px;
+  width: calc(100% - 50px);
+  overflow: hidden;
+  padding: 0.25rem 0.5rem 0 0;
+}
+
+.textLine {
+  height: 12px;
+  width: 80%;
+  background-color: var(--background-secondary);
+  margin-bottom: 0.25rem;
+  animation: pulse 1.5s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+.textLineShort {
+  height: 8px;
+  width: 30%;
+  background-color: var(--background-secondary);
+  animation: pulse 1.5s ease-in-out infinite;
+  border-radius: 2px;
+}

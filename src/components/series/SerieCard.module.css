@@ -5,16 +5,6 @@
   margin: 0;
   height: 100%;
   display: flex;
-  position: relative;
-}
-
-.tooltip {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 0.5rem;
-  z-index: 1021;
 }
 
 .card {
@@ -62,6 +52,12 @@
   position: absolute;
   padding: 0.25rem;
   font-weight: 700;
+  background: var(--border);
+  color: var(--foreground);
+  font-size: 0.75rem;
+  line-height: 1;
+  left: 0.5rem;
+  bottom: 0.5rem;
 }
 
 .footer {
@@ -76,7 +72,6 @@
 
 .buttonsContainer {
   height: 100%;
-  display: flex;
 }
 
 .button {
@@ -84,6 +79,7 @@
   width: 30px;
   min-width: 30px;
   padding: 0 0.5rem;
+  border-radius: 0;
 }
 
 .infoContainer {
@@ -94,8 +90,8 @@
 }
 
 .heartIcon {
-  color: #dc3545; /* Équivalent à text-danger */
-  font-size: 0.8rem;
+  color: #dc3545;
+  font-size: 1.2rem;
 }
 
 .rating {
@@ -104,10 +100,10 @@
 
 .checkIcon::before {
   content: "✓";
-  font-size: 0.9rem;
+  font-size: 1.2rem;
 }
 
 .bookmarkIcon::before {
   content: "+";
-  font-size: 1rem;
+  font-size: 1.3rem;
 }

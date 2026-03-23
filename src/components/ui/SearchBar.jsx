@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "./SearchBar.module.css";
 import { useEffect, useRef, useState } from "react";
 import { useSearch } from "@/context/SearchContext";
 import { searchSeries } from "@/lib/api/tmdb.api";
@@ -70,11 +71,10 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="position-relative me-3 flex-grow-1" ref={searchInputRef} style={{ minWidth: "300px" }}>
+    <div className={styles.container} ref={searchInputRef}>
       <input
         type="text"
-        className={`form-control custom-search-input py-1 ${isOpen ? "rounded-bottom-0" : "rounded"}`}
-        style={{ paddingLeft: "3.5rem" }}
+        className={`${styles.searchInput} ${isOpen ? styles.searchInputOpen : ""}`}
         placeholder="Search for a serie..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -82,48 +82,16 @@ export default function SearchBar() {
         onKeyDown={handleKeyDown}
       />
       {/* Icône à gauche */}
-      <i
-        className={`bi position-absolute top-50 translate-middle-y ${query ? "bi-x-lg text-dark" : "bi-search text-dark"}`}
-        style={{
-          left: "12px",
-          cursor: query ? "pointer" : "default",
-          fontSize: "1rem",
-          userSelect: "none",
-          marginLeft: "0.15rem",
-        }}
-        onClick={() => query && setQuery("")}
-      />
+      <span className={styles.icon} onClick={() => query && setQuery("")}>
+        {query ? "✕" : "🔍"}
+      </span>
       {/* Séparateur vertical */}
-      <div
-        className="position-absolute top-50 ms-1 translate-middle-y"
-        style={{
-          left: "36px",
-          height: "100%",
-          width: "1px",
-          backgroundColor: "var(--border)",
-          pointerEvents: "none",
-        }}
-      />
+      <div className={styles.separator} />
 
       {/* Liste des résultats */}
       {isOpen && (
-        <div
-          className="position-absolute p-0"
-          style={{
-            zIndex: 1050,
-            width: "calc(100% - 2px)",
-            maxHeight: "660px",
-            top: "100%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            overflow: "hidden",
-            borderTopLeftRadius: "0",
-            borderTopRightRadius: "0",
-            borderBottomLeftRadius: ".375rem",
-            borderBottomRightRadius: ".375rem",
-          }}
-        >
-          <div className="list-group m-0 p-0 border-0 w-100" style={{ borderBottomLeftRadius: "20px" }}>
+        <div className={styles.resultsContainer}>
+          <div className={styles.resultsList}>
             {loading ? (
               Array.from({ length: 5 }).map((_, index) => <DynamicSearchResultSkeleton key={index} />)
             ) : results.length > 0 ? (
@@ -131,31 +99,12 @@ export default function SearchBar() {
                 {results.map((serie) => (
                   <DynamicSearchResult key={serie.id} serie={serie} onSelect={handleSelectSerie} />
                 ))}
-                <div
-                  className="list-group-item text-center text-muted p-1 border-0"
-                  style={{
-                    fontSize: "0.7rem",
-                    backgroundColor: "white",
-                    borderBottomLeftRadius: ".375rem",
-                    borderBottomRightRadius: ".375rem",
-                  }}
-                >
+                <div className={styles.resultsFooter}>
                   {totalResults} result{totalResults > 1 ? "s" : ""} found
                 </div>
               </>
             ) : (
-              <div
-                className="list-group-item text-center text-dark p-2 border-0"
-                style={{
-                  fontSize: "0.7rem",
-                  borderTopLeftRadius: "0",
-                  borderTopRightRadius: "0",
-                  borderBottomLeftRadius: ".375rem",
-                  borderBottomRightRadius: ".375rem",
-                }}
-              >
-                No result found.
-              </div>
+              <div className={styles.noResults}>No result found.</div>
             )}
           </div>
         </div>

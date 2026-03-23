@@ -1,3 +1,4 @@
+import styles from "./Pagination.module.css";
 import Link from "next/link";
 
 export default function Pagination({ currentPage, totalPages, onPageChange }) {
@@ -52,30 +53,27 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
   const pageNumbers = getPageNumbers();
 
   return (
-    <div
-      className="d-flex justify-content-between align-items-center w-100"
-      style={{ height: "40px", fontSize: "0.8rem" }}
-    >
+    <div className={styles.container}>
       <Link
         href="#"
-        className={`pagination-link ${currentPage === 1 ? "pagination-link-disabled" : ""}`}
+        className={`${styles.link} ${currentPage === 1 ? styles.linkDisabled : ""}`}
         onClick={handlePrevious}
         aria-disabled={currentPage === 1}
       >
-        <i className="bi bi-arrow-left"></i>
+        <span className={styles.arrowIcon}>←</span>
         <span>Previous page</span>
       </Link>
-      <div className="d-inline-flex gap-1 h-100 align-items-center">
+      <div className={styles.pagesContainer}>
         {pageNumbers.map((pageNumber, index) =>
           pageNumber === "..." ? (
-            <span key={index} className="pagination-ellipsis">
+            <span key={index} className={styles.ellipsis}>
               ···
             </span>
           ) : (
             <Link
               key={index}
               href="#"
-              className={`pagination-link ${currentPage === pageNumber ? "pagination-link-active" : ""}`}
+              className={`${styles.link} ${currentPage === pageNumber ? `${styles.linkActive} ${styles.pageNumber}` : ""}`}
               onClick={(e) => {
                 e.preventDefault();
                 onPageChange(pageNumber);
@@ -88,12 +86,12 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       </div>
       <Link
         href="#"
-        className={`pagination-link ${currentPage === totalPages ? "pagination-link-disabled" : ""}`}
+        className={`${styles.link} ${currentPage === totalPages ? styles.linkDisabled : ""}`}
         onClick={handleNext}
         aria-disabled={currentPage === totalPages}
       >
         <span>Next page</span>
-        <i className="bi bi-arrow-right"></i>
+        <span className={styles.arrowIcon}>→</span>
       </Link>
     </div>
   );
