@@ -1,6 +1,8 @@
 "use client";
 
 import styles from "./SearchBar.module.css";
+import Icon from "@mdi/react";
+import { mdiMagnify, mdiClose } from "@mdi/js";
 import { useEffect, useRef, useState } from "react";
 import { useSearch } from "@/context/SearchContext";
 import { searchSeries } from "@/lib/api/tmdb.api";
@@ -83,7 +85,7 @@ export default function SearchBar() {
       />
       {/* Icône à gauche */}
       <span className={styles.icon} onClick={() => query && setQuery("")}>
-        {query ? "✕" : "🔍"}
+        {query ? <Icon path={mdiClose} size={1} /> : <Icon path={mdiMagnify} size={1} />}
       </span>
       {/* Séparateur vertical */}
       <div className={styles.separator} />

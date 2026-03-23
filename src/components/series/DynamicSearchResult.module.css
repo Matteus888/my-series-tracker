@@ -2,7 +2,12 @@
   height: 60px;
   display: block;
   text-decoration: none;
-  color: var(--foreground);
+  color: var(--background-primary);
+  border-bottom: 1px solid var(--border);
+}
+
+.resultContainer:hover {
+  background-color: white;
 }
 
 .contentWrapper {
@@ -29,7 +34,6 @@
   height: 60px;
   overflow: hidden;
   padding: 0.25rem 0.5rem 0 0;
-  flex: 1;
 }
 
 .title {
@@ -48,8 +52,4 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.borderBottom {
-  border-bottom: 1px solid var(--border);
 }

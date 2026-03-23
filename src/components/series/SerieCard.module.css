@@ -78,7 +78,7 @@
   height: 100%;
   width: 30px;
   min-width: 30px;
-  padding: 0 0.5rem;
+  padding: 2px 0 0;
   border-radius: 0;
 }
 
@@ -98,7 +98,7 @@
   font-size: 0.75rem;
 }
 
-.checkIcon::before {
+/* .checkIcon::before {
   content: "✓";
   font-size: 1.2rem;
 }
@@ -106,4 +106,4 @@
 .bookmarkIcon::before {
   content: "+";
   font-size: 1.3rem;
-}
+} */

@@ -1,4 +1,6 @@
 import styles from "./SerieCard.module.css";
+import Icon from "@mdi/react";
+import { mdiCheck, mdiBookmarkPlusOutline, mdiHeartOutline } from "@mdi/js";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -33,16 +35,16 @@ export default function SerieCard({ serie }) {
         <div className={`card-footer ${styles.footer}`}>
           <div className={styles.buttonsContainer}>
             <button className={`btn check ${styles.button}`}>
-              <span className={styles.checkIcon}></span>
+              <Icon path={mdiCheck} size={1} />
             </button>
             <button className={`btn bookmark ${styles.button}`}>
-              <span className={styles.bookmarkIcon}></span>
+              <Icon path={mdiBookmarkPlusOutline} size={1} />
             </button>
           </div>
           <div className={styles.infoContainer}>
             {serie.vote_average > 0 && (
               <>
-                <span className={styles.heartIcon}>♥</span>
+                <Icon path={mdiHeartOutline} size={0.8} color="var(--red)" />
                 <span className={styles.rating}>{Math.round(serie.vote_average * 10)}%</span>
               </>
             )}
