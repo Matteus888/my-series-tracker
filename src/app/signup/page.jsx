@@ -47,73 +47,71 @@ export default function SignupPage() {
   return (
     <div className={styles.container}>
       <div className={`card ${styles.signupCard}`}>
-        <div className="card-body">
-          <h1 className={styles.title}>Registration</h1>
-          {error && (
-            <div className="alert alert-danger" role="alert">
-              {error}
-            </div>
-          )}
-          <form onSubmit={handleSubmit}>
-            <div className={styles.formGroup}>
-              <label htmlFor="username" className={styles.formLabel}>
-                Username
-              </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                className="form-control"
-                required
-                placeholder="Username"
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="email" className={styles.formLabel}>
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="form-control"
-                required
-                placeholder="your@email.com"
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="password" className={styles.formLabel}>
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="form-control"
-                required
-                placeholder="•••••••• (8 characters min)"
-                minLength={8}
-              />
-            </div>
-            <button type="submit" disabled={isLoading} className={`btn btn-primary ${styles.submitButton}`}>
-              {isLoading ? "Registration in progress..." : "Register"}
-            </button>
-          </form>
-
-          <div className={styles.footer}>
-            <p className={styles.mutedText}>
-              Already have an account?{" "}
-              <Link href="/login" className={styles.loginLink}>
-                Log In
-              </Link>
-            </p>
+        <h1 className={styles.title}>Registration</h1>
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            {error}
           </div>
+        )}
+        <form onSubmit={handleSubmit}>
+          <div className={styles.formGroup}>
+            <label htmlFor="username" className={styles.formLabel}>
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              className="form-control"
+              required
+              placeholder="Username"
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="email" className={styles.formLabel}>
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="form-control"
+              required
+              placeholder="your@email.com"
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="password" className={styles.formLabel}>
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="form-control"
+              required
+              placeholder="•••••••• (8 characters min)"
+              minLength={8}
+            />
+          </div>
+          <button type="submit" disabled={isLoading} className={`btn ${styles.submitButton}`}>
+            {isLoading ? "Registration in progress..." : "Register"}
+          </button>
+        </form>
+
+        <div className={styles.footer}>
+          <p className={styles.mutedText}>
+            Already have an account?{" "}
+            <Link href="/login" className={styles.loginLink}>
+              Log In
+            </Link>
+          </p>
         </div>
       </div>
     </div>

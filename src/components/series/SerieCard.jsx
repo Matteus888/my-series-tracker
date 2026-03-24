@@ -1,10 +1,15 @@
+"use client";
+
 import styles from "./SerieCard.module.css";
 import Icon from "@mdi/react";
 import { mdiCheck, mdiBookmarkPlusOutline, mdiHeartOutline } from "@mdi/js";
 import Link from "next/link";
 import Image from "next/image";
+import { useSeries } from "@/hooks/useSeries";
 
 export default function SerieCard({ serie }) {
+  const { isTracked, toggle } = useSeries(serie.id);
+
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
       {/* Tooltip */}
@@ -34,7 +39,11 @@ export default function SerieCard({ serie }) {
 
         <div className={`card-footer ${styles.footer}`}>
           <div className={styles.buttonsContainer}>
-            <button className={`btn check ${styles.button}`}>
+            <button
+              className={`btn check ${styles.button} ${isTracked ? styles.active : ""}`}
+              onClick={toggle}
+              title={isTracked ? "Don't follow" : "Follow"}
+            >
               <Icon path={mdiCheck} size={1} />
             </button>
             <button className={`btn bookmark ${styles.button}`}>

@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import { Geist, Geist_Mono } from "next/font/google";
-import { SearchProvider } from "@/context/SearchContext";
+import Providers from "@/components/layout/Providers";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
@@ -26,11 +26,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <SearchProvider>
+        <Providers>
           <Header />
           <main>{children}</main>
           <Footer />
-        </SearchProvider>
+        </Providers>
       </body>
     </html>
   );

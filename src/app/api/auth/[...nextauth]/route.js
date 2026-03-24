@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { User } from "@/models/user.model";
 import dbConnect from "@/lib/db/db.connect";
 
-const handler = NextAuth({
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -64,6 +64,8 @@ const handler = NextAuth({
     signIn: "/login",
   },
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

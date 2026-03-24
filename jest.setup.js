@@ -29,24 +29,18 @@ global.Request = class {
 
 // Mock de mongoose
 jest.mock("mongoose", () => {
-  const mockSchema = {
-    pre: jest.fn(),
-    method: jest.fn(),
+  const mockObjectId = {
+    toString: jest.fn(() => "mocked-object-id"),
   };
-
-  const mockModel = jest.fn(() => ({
-    findOne: jest.fn(),
-    save: jest.fn().mockResolvedValue(true),
-  }));
 
   return {
     connect: jest.fn(),
     disconnect: jest.fn(),
-    model: mockModel,
+    model: jest.fn(),
     models: {},
-    Schema: jest.fn(() => mockSchema),
+    Schema: jest.fn(() => ({})),
     Types: {
-      ObjectId: jest.fn().mockImplementation(() => "mocked-object-id"),
+      ObjectId: jest.fn(() => mockObjectId),
     },
   };
 });
@@ -55,4 +49,17 @@ jest.mock("mongoose", () => {
 jest.mock("bcryptjs", () => ({
   hash: jest.fn().mockResolvedValue("hashed-password"),
   compare: jest.fn().mockResolvedValue(true),
+}));
+
+// Mock de dbConnect
+jest.mock("@/lib/db/db.connect", () => ({
+  __esModule: true,
+  default: jest.fn().mockResolvedValue({
+    connection: {
+      readyState: 1,
+      db: {
+        databaseName: "test_db",
+      },
+    },
+  }),
 }));
