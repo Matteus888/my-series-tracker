@@ -2,13 +2,46 @@
 
 import styles from "./SerieCard.module.css";
 import Icon from "@mdi/react";
-import { mdiCheck, mdiBookmarkPlusOutline, mdiHeartOutline } from "@mdi/js";
+import { mdiCheck, mdiBookmarkPlusOutline, mdiHeartOutline, mdiCancel } from "@mdi/js";
 import Link from "next/link";
 import Image from "next/image";
 import { useSeries } from "@/hooks/useSeries";
+import { useState, useEffect, useRef } from "react";
 
-export default function SerieCard({ serie }) {
+export default function SerieCard({ serie, onCheck }) {
   const { isTracked, toggle } = useSeries(serie.id, serie);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const popoverRef = useRef(null);
+
+  useEffect(() => {
+    if (!showConfirm) return;
+
+    const handleClickOutside = (e) => {
+      if (popoverRef.current && !popoverRef.current.contains(e.target)) {
+        setShowConfirm(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showConfirm]);
+
+  const handleCheck = () => {
+    if (onCheck) {
+      onCheck(serie);
+      return;
+    }
+    setShowConfirm(true);
+  };
+
+  const handleConfirm = (confirm) => {
+    if (isTracked) {
+      if (confirm) toggle();
+    } else {
+      if (confirm) toggle({ markAllWatched: true, status: "completed" });
+    }
+    setShowConfirm(false);
+  };
 
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
@@ -39,13 +72,52 @@ export default function SerieCard({ serie }) {
 
         <div className={`card-footer ${styles.footer}`}>
           <div className={styles.buttonsContainer}>
-            <button
-              className={`btn check ${styles.button} ${isTracked ? "active" : ""}`}
-              onClick={toggle}
-              title={isTracked ? "Don't follow" : "Follow"}
-            >
-              <Icon path={mdiCheck} size={1} />
-            </button>
+            {/* Bouton check */}
+            <div className={styles.checkWrapper}>
+              <button
+                className={`btn check ${styles.button} ${isTracked ? "active" : ""}`}
+                onClick={handleCheck}
+                title={isTracked ? "Not watched" : "Watched"}
+              >
+                <Icon path={mdiCheck} size={1} />
+              </button>
+
+              {/* Popover de confirmation */}
+              {showConfirm && (
+                <div className={styles.confirmPopover} ref={popoverRef}>
+                  {isTracked ? (
+                    <>
+                      <p>
+                        Remove <strong>{serie.name}</strong> from watched shows?
+                      </p>
+                      <div className={styles.confirmButtons}>
+                        <span className={styles.validate} onClick={() => handleConfirm(true)}>
+                          <Icon path={mdiCheck} size={0.8} />
+                        </span>
+                        <span className={styles.cancel} onClick={() => handleConfirm(false)}>
+                          <Icon path={mdiCancel} size={0.8} />
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p>
+                        Add <strong>{serie.name}</strong> to watched shows?
+                      </p>
+                      <div className={styles.confirmButtons}>
+                        <span className={styles.validate} onClick={() => handleConfirm(true)}>
+                          <Icon path={mdiCheck} size={0.8} />
+                        </span>
+                        <span className={styles.cancel} onClick={() => handleConfirm(false)}>
+                          <Icon path={mdiCancel} size={0.8} />
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
             <button className={`btn bookmark ${styles.button}`}>
               <Icon path={mdiBookmarkPlusOutline} size={1} />
             </button>

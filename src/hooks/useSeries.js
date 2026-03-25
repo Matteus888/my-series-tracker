@@ -7,9 +7,9 @@ export const useSeries = (seriesId, serieData) => {
 
   const tracked = isTracked(seriesId);
 
-  const toggle = () => {
+  const toggle = (options = {}) => {
     if (tracked) removeSeries(seriesId);
-    else addSeries(seriesId, serieData);
+    else addSeries(seriesId, serieData, options);
   };
   return { isTracked: tracked, toggle, addSeries, removeSeries };
 };

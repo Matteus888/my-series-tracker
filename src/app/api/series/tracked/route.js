@@ -10,12 +10,12 @@ export const POST = async (request) => {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
-    const { seriesId, serieData, status, lastWatched, isFavorite, rating } = await request.json();
+    const { seriesId, serieData, status, isFavorite, rating, markAllWatched } = await request.json();
     const trackedSeries = await addTrackedSeries(User, Series, session.user.id, seriesId, serieData, {
       status,
-      lastWatched,
       isFavorite,
       rating,
+      markAllWatched,
     });
     return NextResponse.json({ success: true, trackedSeries }, { status: 200 });
   } catch (err) {

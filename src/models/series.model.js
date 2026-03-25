@@ -79,6 +79,19 @@ const seriesSchema = new mongoose.Schema(
       default: 1,
       min: [1, "Number of episodes must be at least 1."],
     },
+    seasons: [
+      {
+        seasonNumber: { type: Number, required: true },
+        episodeCount: { type: Number, required: true },
+        tmdbSeasonId: { type: Number },
+        name: { type: String, trim: true },
+        posterPath: {
+          type: String,
+          trim: true,
+        },
+        airDate: { type: Date },
+      },
+    ],
     lastUpdated: {
       type: Date,
       default: Date.now,
@@ -94,12 +107,12 @@ const seriesSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Construction de l'URL complète des images via TMDB
 seriesSchema.methods.getPosterUrl = function (size = "w500") {
-  return this.posterPath ? `htpps://image.tmdb.org/t/p/${size}${this.posterPath}` : null;
+  return this.posterPath ? `https://image.tmdb.org/t/p/${size}${this.posterPath}` : null;
 };
 
 seriesSchema.methods.getBackdropUrl = function (size = "w1280") {

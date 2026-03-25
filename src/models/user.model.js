@@ -90,18 +90,6 @@ const userSchema = new mongoose.Schema(
           },
           default: "plan_to_watch",
         },
-        lastWatched: {
-          season: {
-            type: Number,
-            default: 1,
-            min: [1, "Season must be greater than or equal to 1."],
-          },
-          episode: {
-            type: Number,
-            default: 1,
-            min: [1, "Episode must be greater than or equal to 1."],
-          },
-        },
         isFavorite: {
           type: Boolean,
           default: false,

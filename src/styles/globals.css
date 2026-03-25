@@ -5,7 +5,7 @@
   --foreground: #ededed;
   --blue: #0082ce;
   --red: #ff6b6b;
-  --bookmark: #16a085;
+  --green: #16a085;
   --border: #333333;
   --card-bg: #1a1a1a;
   --card-bg-rgb: 26, 26, 26;
@@ -172,12 +172,12 @@ a {
 
 .bookmark {
   background-color: var(--background-secondary);
-  color: var(--bookmark);
+  color: var(--green);
 }
 
 .bookmark:hover,
 .bookmark.active {
-  background-color: var(--bookmark);
+  background-color: var(--green);
   color: var(--foreground);
 }
 

@@ -41,11 +41,11 @@ const episodeProgressSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Index pour optimiser les requêtes
-episodeProgressSchema.index({ userId: 1, seriesId: 1, seasonNumber: 1, episodeNumber: 1 });
+episodeProgressSchema.index({ userId: 1, seriesId: 1, seasonNumber: 1, episodeNumber: 1 }, { unique: true });
 
 export const EpisodeProgress =
   mongoose.models.EpisodeProgress || mongoose.model("EpisodeProgress", episodeProgressSchema);

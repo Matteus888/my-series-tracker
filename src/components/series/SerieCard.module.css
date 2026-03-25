@@ -97,3 +97,65 @@
 .rating {
   font-size: 0.75rem;
 }
+
+.checkWrapper {
+  position: relative;
+  height: 100%;
+  display: inline-block;
+}
+
+.confirmPopover {
+  position: absolute;
+  bottom: calc(100%);
+  left: 0;
+  z-index: 100;
+  background-color: var(--background-primary);
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.7rem;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.confirmPopover p {
+  font-size: 0.75rem;
+  margin: 0;
+  line-height: 1.3;
+  color: var(--foreground);
+}
+
+.confirmButtons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.validate,
+.cancel {
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.validate {
+  color: var(--green);
+}
+
+.validate:hover {
+  color: var(--foreground);
+  background-color: var(--green);
+}
+
+.cancel {
+  color: var(--red);
+}
+
+.cancel:hover {
+  color: var(--foreground);
+  background-color: var(--red);
+}
