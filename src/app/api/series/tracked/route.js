@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route.js";
 import { addTrackedSeries, getTrackedSeries, removeTrackedSeries } from "@/lib/api/series.api";
 import { User } from "@/models/user.model";
 import { Series } from "@/models/series.model";
@@ -10,8 +10,8 @@ export const POST = async (request) => {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
-    const { seriesId, status, lastWatched, isFavorite, rating } = await request.json();
-    const trackedSeries = await addTrackedSeries(User, Series, session.user.id, seriesId, {
+    const { seriesId, serieData, status, lastWatched, isFavorite, rating } = await request.json();
+    const trackedSeries = await addTrackedSeries(User, Series, session.user.id, seriesId, serieData, {
       status,
       lastWatched,
       isFavorite,
@@ -33,6 +33,7 @@ export const GET = async (request) => {
     const trackedSeries = await getTrackedSeries(User, session.user.id);
     return NextResponse.json({ trackedSeries }, { status: 200 });
   } catch (err) {
+    console.error("GET /api/series/tracked error:", err.message);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 };

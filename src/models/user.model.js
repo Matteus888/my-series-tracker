@@ -78,6 +78,10 @@ const userSchema = new mongoose.Schema(
           ref: "Series",
           required: [true, "Serie ID is required."],
         },
+        tmdbId: {
+          type: Number,
+          required: true,
+        },
         status: {
           type: String,
           enum: {
@@ -160,7 +164,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Comparaison des mdp

@@ -101,9 +101,7 @@ export default function SearchPage() {
             <div className={styles.seriesGrid}>
               <div className={styles.gridRow}>
                 {Array.from({ length: 36 }).map((_, index) => (
-                  <div key={index} className={styles.gridColumn}>
-                    <SerieCardSkeleton />
-                  </div>
+                  <SerieCardSkeleton key={index} />
                 ))}
               </div>
             </div>
@@ -119,7 +117,9 @@ export default function SearchPage() {
                 ))}
               </div>
             </div>
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage} />
+            {totalPages > 1 && (
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage} />
+            )}
           </>
         ) : (
           !loading && <p className={styles.emptyMessage}>No result found.</p>

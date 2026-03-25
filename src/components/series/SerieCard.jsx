@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useSeries } from "@/hooks/useSeries";
 
 export default function SerieCard({ serie }) {
-  const { isTracked, toggle } = useSeries(serie.id);
+  const { isTracked, toggle } = useSeries(serie.id, serie);
 
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
@@ -40,7 +40,7 @@ export default function SerieCard({ serie }) {
         <div className={`card-footer ${styles.footer}`}>
           <div className={styles.buttonsContainer}>
             <button
-              className={`btn check ${styles.button} ${isTracked ? styles.active : ""}`}
+              className={`btn check ${styles.button} ${isTracked ? "active" : ""}`}
               onClick={toggle}
               title={isTracked ? "Don't follow" : "Follow"}
             >

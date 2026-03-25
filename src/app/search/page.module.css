@@ -3,9 +3,9 @@
   flex-wrap: wrap;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
-/* Colonne des filtres (cachée sur mobile) */
 .filterSidebar {
   display: none;
   padding: 0.25rem;
@@ -20,14 +20,19 @@
   }
 }
 
-/* Colonne des résultats (83% de la largeur) */
 .resultsArea {
-  flex: 0 0 83.333333%;
-  max-width: 83.333333%;
+  flex: 0 0 100%;
+  max-width: 100%;
   padding: 0;
 }
 
-/* Conteneur des cartes de séries */
+@media (min-width: 768px) {
+  .resultsArea {
+    flex: 0 0 83.333333%;
+    max-width: 83.333333%;
+  }
+}
+
 .seriesGrid {
   display: flex;
   flex-wrap: wrap;
@@ -36,47 +41,39 @@
   border-left: 1px solid var(--border);
 }
 
-/* Grille responsive pour les cartes */
 .gridRow {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   margin: 0;
   align-items: stretch;
-}
-
-/* Colonne pour une carte de série (adaptative) */
-.gridColumn {
-  padding: 0;
-  flex: 0 0 50%;
-  max-width: 50%;
+  width: 100%;
 }
 @media (min-width: 576px) {
-  .gridColumn {
-    flex: 0 0 33.333333%;
-    max-width: 33.333333%;
+  .gridRow {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 @media (min-width: 992px) {
-  .gridColumn {
-    flex: 0 0 25%;
-    max-width: 25%;
+  .gridRow {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 @media (min-width: 1200px) {
-  .gridColumn {
-    flex: 0 0 16.666667%;
-    max-width: 16.666667%;
+  .gridRow {
+    grid-template-columns: repeat(6, 1fr);
   }
 }
 
-/* Message "Aucun résultat" */
+.gridColumn {
+  padding: 0;
+}
+
 .emptyMessage {
   text-align: center;
   padding: 2rem;
   color: var(--foreground);
 }
 
-/* Style pour le conteneur des filtres (sticky) */
 .stickyFilter {
   position: sticky;
   top: calc(50px + 0.5rem);

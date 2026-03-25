@@ -164,7 +164,8 @@ a {
   color: var(--blue);
 }
 
-.check:hover {
+.check:hover,
+.check.active {
   background-color: var(--blue);
   color: var(--foreground);
 }
@@ -174,9 +175,21 @@ a {
   color: var(--bookmark);
 }
 
-.bookmark:hover {
+.bookmark:hover,
+.bookmark.active {
   background-color: var(--bookmark);
   color: var(--foreground);
+}
+
+.check svg,
+.bookmark svg {
+  transition: transform 0.15s ease;
+}
+
+.check:active svg,
+.bookmark:active svg {
+  transform: scale(0.6);
+  transition: transform 0.15s ease;
 }
 
 /* ===== SEARCH FILTER ===== */

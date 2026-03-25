@@ -30,13 +30,13 @@ export const TrackedSeriesProvider = ({ children }) => {
   }, [fetchTrackedSeries]);
 
   const addSeries = useCallback(
-    async (seriesId, options = {}) => {
-      setTrackedSeries((prev) => [...prev, { seriesId, ...options }]);
+    async (seriesId, serieData, options = {}) => {
+      setTrackedSeries((prev) => [...prev, { tmdbId: seriesId, ...options }]);
       try {
         const response = await fetch("/api/series/tracked", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ seriesId, ...options }),
+          body: JSON.stringify({ seriesId, serieData, ...options }),
         });
         const data = await response.json();
         setTrackedSeries(data.trackedSeries ?? []);
@@ -51,10 +51,10 @@ export const TrackedSeriesProvider = ({ children }) => {
   const removeSeries = useCallback(
     async (seriesId) => {
       const prev = trackedSeries;
-      setTrackedSeries((curr) => curr.filter((s) => s.seriesId !== seriesId));
+      setTrackedSeries((curr) => curr.filter((s) => s.tmdbId.toString() !== seriesId?.toString()));
       try {
         const response = await fetch("/api/series/tracked", {
-          methode: "DELETE",
+          method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ serieId: seriesId }),
         });
@@ -65,11 +65,11 @@ export const TrackedSeriesProvider = ({ children }) => {
         setTrackedSeries(prev);
       }
     },
-    [trackedSeries, fetchTrackedSeries],
+    [trackedSeries],
   );
 
   const isTracked = useCallback(
-    (seriesId) => trackedSeries.some((s) => s.seriesId?.toString() === seriesId?.toString()),
+    (tmdbId) => trackedSeries.some((s) => s.tmdbId?.toString() === tmdbId?.toString()),
     [trackedSeries],
   );
 
