@@ -2,14 +2,14 @@
 
 import styles from "./SerieCard.module.css";
 import Icon from "@mdi/react";
-import { mdiCheck, mdiBookmarkPlusOutline, mdiHeartOutline, mdiCancel } from "@mdi/js";
+import { mdiCheck, mdiBookmarkPlusOutline, mdiHeartOutline, mdiCancel, mdiPlaylistPlus } from "@mdi/js";
 import Link from "next/link";
 import Image from "next/image";
 import { useSeries } from "@/hooks/useSeries";
 import { useState, useEffect, useRef } from "react";
 
 export default function SerieCard({ serie, onCheck }) {
-  const { isTracked, toggle } = useSeries(serie.id, serie);
+  const { isTracked, isFavorite, toggle, toggleFavorite } = useSeries(serie.id, serie);
   const [showConfirm, setShowConfirm] = useState(false);
   const popoverRef = useRef(null);
 
@@ -118,7 +118,13 @@ export default function SerieCard({ serie, onCheck }) {
               )}
             </div>
 
-            <button className={`btn bookmark ${styles.button}`}>
+            {/* Bouton bookmark */}
+            <button
+              className={`btn bookmark ${styles.button} ${isFavorite ? "active" : ""} ${!isTracked ? "disabled" : ""}`}
+              onClick={toggleFavorite}
+              title={!isTracked ? "Follow this show first" : isFavorite ? "Remove from favorites" : "Add to favorites"}
+              disabled={!isTracked}
+            >
               <Icon path={mdiBookmarkPlusOutline} size={1} />
             </button>
           </div>

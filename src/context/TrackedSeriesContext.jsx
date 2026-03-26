@@ -2,17 +2,20 @@
 
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
+import { useToast } from "./ToastContext";
 
 const TrackedSeriesContext = createContext(null);
 
 export const TrackedSeriesProvider = ({ children }) => {
   const { data: session } = useSession();
+  const { showToast } = useToast();
   const [trackedSeries, setTrackedSeries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchTrackedSeries = useCallback(async () => {
-    if (!session) return setIsLoading(true);
+    if (!session) return;
+    setIsLoading(true);
 
     try {
       const response = await fetch("/api/series/tracked");
@@ -40,12 +43,14 @@ export const TrackedSeriesProvider = ({ children }) => {
         });
         const data = await response.json();
         setTrackedSeries(data.trackedSeries ?? []);
+        showToast(`${serieData.name} added to watched shows ✓`);
       } catch (err) {
         setError(err.message);
+        showToast(err.message, "error");
         fetchTrackedSeries();
       }
     },
-    [fetchTrackedSeries],
+    [fetchTrackedSeries, showToast],
   );
 
   const removeSeries = useCallback(
@@ -59,13 +64,39 @@ export const TrackedSeriesProvider = ({ children }) => {
           body: JSON.stringify({ serieId: seriesId }),
         });
         const data = await response.json();
-        setTrackedSeries(data.trackedSeries);
+        setTrackedSeries(data.trackedSeries ?? []);
+        showToast(`Serie removed from watched shows`);
       } catch (err) {
         setError(err.message);
+        showToast(err.message, "error");
         setTrackedSeries(prev);
       }
     },
-    [trackedSeries],
+    [trackedSeries, showToast],
+  );
+
+  const updateSeries = useCallback(
+    async (seriesId, updates) => {
+      setTrackedSeries((prev) =>
+        prev.map((s) => (s.tmdbId?.toString() === seriesId?.toString() ? { ...s, ...updates } : s)),
+      );
+
+      try {
+        const response = await fetch("/api/series/tracked", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ seriesId, ...updates }),
+        });
+        const data = await response.json();
+        setTrackedSeries(data.trackedSeries ?? []);
+        showToast(updates.isFavorite ? "Added to favorites ✓" : "Removed from favorites");
+      } catch (err) {
+        setError(err.message);
+        showToast(err.message, "error");
+        fetchTrackedSeries();
+      }
+    },
+    [fetchTrackedSeries, showToast],
   );
 
   const isTracked = useCallback(
@@ -73,9 +104,24 @@ export const TrackedSeriesProvider = ({ children }) => {
     [trackedSeries],
   );
 
+  const isFavorite = useCallback(
+    (tmdb) => trackedSeries.some((s) => s.tmdbId?.toString() === tmdb?.toString() && s.isFavorite === true),
+    [trackedSeries],
+  );
+
   return (
     <TrackedSeriesContext.Provider
-      value={{ trackedSeries, isLoading, error, addSeries, removeSeries, isTracked, refresh: fetchTrackedSeries }}
+      value={{
+        trackedSeries,
+        isLoading,
+        error,
+        addSeries,
+        removeSeries,
+        updateSeries,
+        isTracked,
+        isFavorite,
+        refresh: fetchTrackedSeries,
+      }}
     >
       {children}
     </TrackedSeriesContext.Provider>

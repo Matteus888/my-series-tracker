@@ -5,7 +5,7 @@
   --foreground: #ededed;
   --blue: #0082ce;
   --red: #ff6b6b;
-  --green: #16a085;
+  --green: #0fbe58;
   --border: #333333;
   --card-bg: #1a1a1a;
   --card-bg-rgb: 26, 26, 26;
@@ -190,6 +190,11 @@ a {
 .bookmark:active svg {
   transform: scale(0.6);
   transition: transform 0.15s ease;
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* ===== SEARCH FILTER ===== */

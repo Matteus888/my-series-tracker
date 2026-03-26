@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route.js";
-import { addTrackedSeries, getTrackedSeries, removeTrackedSeries } from "@/lib/api/series.api";
+import { addTrackedSeries, getTrackedSeries, removeTrackedSeries, updateTrackedSeries } from "@/lib/api/series.api";
 import { User } from "@/models/user.model";
 import { Series } from "@/models/series.model";
 
@@ -48,6 +48,22 @@ export const DELETE = async (request) => {
     const trackedSeries = await removeTrackedSeries(User, session.user.id, serieId);
     return NextResponse.json({ success: true, trackedSeries }, { status: 200 });
   } catch (err) {
+    console.error("DELETE /api/series/tracked error:", err.message);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+};
+
+// Mettre à jour une série suivie
+export const PATCH = async (request) => {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  try {
+    const { seriesId, ...updates } = await request.json();
+    const trackedSeries = await updateTrackedSeries(User, session.user.id, seriesId, updates);
+    return NextResponse.json({ success: true, trackedSeries }, { status: 200 });
+  } catch (err) {
+    console.error("PATCH /api/series/tracked error:", err.message);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 };

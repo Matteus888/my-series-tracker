@@ -107,3 +107,21 @@ export const removeTrackedSeries = async (UserModel, userId, tmdbId) => {
 
   return user.trackedSeries;
 };
+
+export const updateTrackedSeries = async (UserModel, userId, tmdbId, updates) => {
+  await dbConnect();
+  const user = await UserModel.findById(userId);
+  if (!user) throw new Error("User not found");
+
+  const existingSerieIndex = user.trackedSeries.findIndex((s) => s.tmdbId?.toString() === tmdbId.toString());
+  if (existingSerieIndex === -1) throw new Error("Serie not tracked");
+
+  const allowedFields = ["isFavorite", "status", "rating"];
+  allowedFields.forEach((field) => {
+    if (updates[field] !== undefined) {
+      user.trackedSeries[existingSerieIndex][field] = updates[field];
+    }
+  });
+  await user.save();
+  return user.trackedSeries;
+};
