@@ -34,7 +34,6 @@ export const TrackedSeriesProvider = ({ children }) => {
 
   const addSeries = useCallback(
     async (seriesId, serieData, options = {}) => {
-      setTrackedSeries((prev) => [...prev, { tmdbId: seriesId, ...options }]);
       try {
         const response = await fetch("/api/series/tracked", {
           method: "POST",
@@ -42,12 +41,11 @@ export const TrackedSeriesProvider = ({ children }) => {
           body: JSON.stringify({ seriesId, serieData, ...options }),
         });
         const data = await response.json();
-        setTrackedSeries(data.trackedSeries ?? []);
+        await fetchTrackedSeries();
         showToast(`${serieData.name} added to watched shows ✓`);
       } catch (err) {
         setError(err.message);
         showToast(err.message, "error");
-        fetchTrackedSeries();
       }
     },
     [fetchTrackedSeries, showToast],
@@ -55,45 +53,35 @@ export const TrackedSeriesProvider = ({ children }) => {
 
   const removeSeries = useCallback(
     async (seriesId) => {
-      const prev = trackedSeries;
-      setTrackedSeries((curr) => curr.filter((s) => s.tmdbId.toString() !== seriesId?.toString()));
       try {
         const response = await fetch("/api/series/tracked", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ serieId: seriesId }),
         });
-        const data = await response.json();
-        setTrackedSeries(data.trackedSeries ?? []);
+        await fetchTrackedSeries();
         showToast(`Serie removed from watched shows`);
       } catch (err) {
         setError(err.message);
         showToast(err.message, "error");
-        setTrackedSeries(prev);
       }
     },
-    [trackedSeries, showToast],
+    [fetchTrackedSeries, showToast],
   );
 
   const updateSeries = useCallback(
     async (seriesId, updates) => {
-      setTrackedSeries((prev) =>
-        prev.map((s) => (s.tmdbId?.toString() === seriesId?.toString() ? { ...s, ...updates } : s)),
-      );
-
       try {
         const response = await fetch("/api/series/tracked", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ seriesId, ...updates }),
         });
-        const data = await response.json();
-        setTrackedSeries(data.trackedSeries ?? []);
+        await fetchTrackedSeries();
         showToast(updates.isFavorite ? "Added to favorites ✓" : "Removed from favorites");
       } catch (err) {
         setError(err.message);
         showToast(err.message, "error");
-        fetchTrackedSeries();
       }
     },
     [fetchTrackedSeries, showToast],

@@ -181,19 +181,32 @@ a {
   color: var(--foreground);
 }
 
+.watchlist {
+  background-color: var(--background-secondary);
+  color: var(--foreground);
+}
+
+.watchlist:hover,
+.watchlist.active {
+  background-color: var(--foreground);
+  color: var(--background-secondary);
+}
+
 .check svg,
-.bookmark svg {
+.bookmark svg,
+.watchlist svg {
   transition: transform 0.15s ease;
 }
 
 .check:active svg,
-.bookmark:active svg {
+.bookmark:active svg,
+.watchlist:active svg {
   transform: scale(0.6);
   transition: transform 0.15s ease;
 }
 
 .disabled {
-  opacity: 0.5;
+  /* opacity: 0.5; */
   cursor: not-allowed;
 }
 

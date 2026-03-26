@@ -4,6 +4,7 @@ import styles from "@/app/search/page.module.css";
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { searchSeries } from "@/lib/api/tmdb.api";
+import { getTmdbPagesForUiPage, sliceResultsForUiPage, calcTotalUiPages } from "@/lib/utils/pagination.utils";
 import SearchFilterHeader from "@/components/layout/SearchFilterHeader";
 import SerieCard from "@/components/series/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton";
@@ -32,39 +33,18 @@ export default function SearchPage() {
     const fetchResults = async () => {
       setLoading(true);
       try {
-        const UI_PAGE_SIZE = 36;
-        const TMDB_PAGE_SIZE = 20;
+        const { startIndex, startTmdbPage, endTmdbPage } = getTmdbPagesForUiPage(currentPage);
 
-        // Index globaux sur tous les résultats
-        const startIndex = (currentPage - 1) * UI_PAGE_SIZE;
-        const endIndex = startIndex + UI_PAGE_SIZE;
-
-        // Calcul de la 1ère et de la dernière pages TMDB nécessaires
-        const startTmdbPage = Math.floor(startIndex / TMDB_PAGE_SIZE) + 1;
-        const endTmdbPage = Math.floor((endIndex - 1) / TMDB_PAGE_SIZE) + 1;
-
-        // Récupération des pages TMDB correspondantes (2 ou 3 pages)
         const responses = await Promise.all(
           Array.from({ length: endTmdbPage - startTmdbPage + 1 }, (_, i) => searchSeries(query, startTmdbPage + i)),
         );
 
-        // Fusion des résultats des pages TMDB demandées
         const allResults = responses.flatMap((r) => r.results);
+        const uniqueResults = Array.from(new Map(allResults.map((s) => [s.id, s])).values());
 
-        // Déduplication par ID
-        const uniqueResults = Array.from(new Map(allResults.map((serie) => [serie.id, serie])).values());
-
-        // Découpage selon les index globaux
-        const combinedResults = uniqueResults.slice(
-          startIndex % TMDB_PAGE_SIZE,
-          (startIndex % TMDB_PAGE_SIZE) + UI_PAGE_SIZE,
-        );
-
-        setResults(combinedResults);
+        setResults(sliceResultsForUiPage(uniqueResults, startIndex));
         setTotalResults(responses[0].totalResults);
-
-        const calculatedTotalPages = Math.ceil(responses[0].totalResults / UI_PAGE_SIZE);
-        setTotalPages(calculatedTotalPages);
+        setTotalPages(calcTotalUiPages(responses[0].totalResults));
       } catch (err) {
         console.error(err);
         setResults([]);

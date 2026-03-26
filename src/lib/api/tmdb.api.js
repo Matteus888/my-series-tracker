@@ -1,17 +1,29 @@
 const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
-export const getAllSeries = async () => {
+export const getAllSeries = async (page = 1, filters = {}) => {
   try {
-    const response = await fetch(`${TMDB_BASE_URL}/tv/popular?api_key=${TMDB_API_KEY}`);
+    const params = new URLSearchParams({
+      api_key: TMDB_API_KEY,
+      page,
+      sort_by: "popularity.desc",
+      ...filters,
+    });
+
+    const response = await fetch(`${TMDB_BASE_URL}/discover/tv?${params}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    return data.results;
+    return {
+      results: data.results,
+      totalResults: data.total_results,
+      totalPages: data.total_pages,
+      currentPage: data.page,
+    };
   } catch (error) {
     console.error("Error fetching all series:", error);
-    return [];
+    return { results: [], totalResults: 0, totalPages: 0, currentPage: 1 };
   }
 };
 

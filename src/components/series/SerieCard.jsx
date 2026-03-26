@@ -72,16 +72,7 @@ export default function SerieCard({ serie, onCheck }) {
 
         <div className={`card-footer ${styles.footer}`}>
           <div className={styles.buttonsContainer}>
-            {/* Bouton check */}
             <div className={styles.checkWrapper}>
-              <button
-                className={`btn check ${styles.button} ${isTracked ? "active" : ""}`}
-                onClick={handleCheck}
-                title={isTracked ? "Not watched" : "Watched"}
-              >
-                <Icon path={mdiCheck} size={1} />
-              </button>
-
               {/* Popover de confirmation */}
               {showConfirm && (
                 <div className={styles.confirmPopover} ref={popoverRef}>
@@ -116,17 +107,35 @@ export default function SerieCard({ serie, onCheck }) {
                   )}
                 </div>
               )}
-            </div>
 
-            {/* Bouton bookmark */}
-            <button
-              className={`btn bookmark ${styles.button} ${isFavorite ? "active" : ""} ${!isTracked ? "disabled" : ""}`}
-              onClick={toggleFavorite}
-              title={!isTracked ? "Follow this show first" : isFavorite ? "Remove from favorites" : "Add to favorites"}
-              disabled={!isTracked}
-            >
-              <Icon path={mdiBookmarkPlusOutline} size={1} />
-            </button>
+              {/* Bouton check */}
+              <button
+                className={`btn check ${styles.button} ${isTracked ? "active" : ""}`}
+                onClick={handleCheck}
+                title={isTracked ? "Not watched" : "Watched"}
+              >
+                <Icon path={mdiCheck} size={1} />
+              </button>
+
+              {/* Bouton bookmark */}
+              <button
+                className={`btn bookmark ${styles.button} ${isFavorite ? "active" : ""} ${!isTracked ? "disabled" : ""}`}
+                onClick={toggleFavorite}
+              >
+                <Icon path={mdiBookmarkPlusOutline} size={1} />
+              </button>
+
+              {/* Bouton watchlist */}
+              <button
+                className={`btn watchlist ${styles.button}`}
+                title={
+                  !isTracked ? "Follow this show first" : isFavorite ? "Remove from favorites" : "Add to favorites"
+                }
+                disabled={!isTracked}
+              >
+                <Icon path={mdiPlaylistPlus} size={1} />
+              </button>
+            </div>
           </div>
           <div className={styles.infoContainer}>
             {serie.vote_average > 0 && (
