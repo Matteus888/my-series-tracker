@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const listSchema = new mongoose.Schema(
+const userListSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -22,6 +22,10 @@ const listSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isDefault: {
+      type: Boolean,
+      default: false,
+    },
     series: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -31,7 +35,7 @@ const listSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-export const list = mongoose.models.List || mongoose.model("List", listSchema);
+export const UserList = mongoose.models.UserList || mongoose.model("UserList", userListSchema);
