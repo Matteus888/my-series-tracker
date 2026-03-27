@@ -12,7 +12,7 @@ export default function Header() {
       <div className={styles.mainContainer}>
         <div className={styles.leftContainer}>
           <Link className={styles.logoLink} href="/">
-            <Image src="/logo.png" alt="Logo" width={30} height={30} className={styles.logo} />
+            <Image src="/logo10.png" alt="Logo" width={42} height={35} className={styles.logo} />
           </Link>
           <SearchBar />
         </div>

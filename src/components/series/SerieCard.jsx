@@ -2,29 +2,16 @@
 
 import styles from "./SerieCard.module.css";
 import Icon from "@mdi/react";
-import { mdiCheck, mdiBookmarkPlusOutline, mdiHeartOutline, mdiCancel, mdiPlaylistPlus } from "@mdi/js";
+import { mdiCheck, mdiBookmarkPlusOutline, mdiHeartOutline, mdiPlaylistPlus } from "@mdi/js";
 import Link from "next/link";
 import Image from "next/image";
 import { useSeries } from "@/hooks/useSeries";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
+import ConfirmPopover from "../ui/ConfirmPopover";
 
 export default function SerieCard({ serie, onCheck }) {
   const { isTracked, isFavorite, toggle, toggleFavorite } = useSeries(serie.id, serie);
   const [showConfirm, setShowConfirm] = useState(false);
-  const popoverRef = useRef(null);
-
-  useEffect(() => {
-    if (!showConfirm) return;
-
-    const handleClickOutside = (e) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target)) {
-        setShowConfirm(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showConfirm]);
 
   const handleCheck = () => {
     if (onCheck) {
@@ -47,8 +34,6 @@ export default function SerieCard({ serie, onCheck }) {
     <div className={`tooltip-wrapper ${styles.container}`}>
       {/* Tooltip */}
       <div className="tooltip">{serie.name}</div>
-
-      {/* Carte */}
       <div className={`card ${styles.card}`}>
         <div className={styles.imageContainer}>
           <Link href={`/series/${serie.id}`} className={styles.imageLink}>
@@ -65,77 +50,39 @@ export default function SerieCard({ serie, onCheck }) {
               <div className={styles.placeholderContainer}>{serie.name}</div>
             )}
           </Link>
-
           {/* Badge année */}
           {serie.first_air_date && <span className={styles.yearBadge}>{serie.first_air_date.slice(0, 4)}</span>}
         </div>
-
         <div className={`card-footer ${styles.footer}`}>
           <div className={styles.buttonsContainer}>
-            <div className={styles.checkWrapper}>
-              {/* Popover de confirmation */}
-              {showConfirm && (
-                <div className={styles.confirmPopover} ref={popoverRef}>
-                  {isTracked ? (
-                    <>
-                      <p>
-                        Remove <strong>{serie.name}</strong> from watched shows?
-                      </p>
-                      <div className={styles.confirmButtons}>
-                        <span className={styles.validate} onClick={() => handleConfirm(true)}>
-                          <Icon path={mdiCheck} size={0.8} />
-                        </span>
-                        <span className={styles.cancel} onClick={() => handleConfirm(false)}>
-                          <Icon path={mdiCancel} size={0.8} />
-                        </span>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p>
-                        Add <strong>{serie.name}</strong> to watched shows?
-                      </p>
-                      <div className={styles.confirmButtons}>
-                        <span className={styles.validate} onClick={() => handleConfirm(true)}>
-                          <Icon path={mdiCheck} size={0.8} />
-                        </span>
-                        <span className={styles.cancel} onClick={() => handleConfirm(false)}>
-                          <Icon path={mdiCancel} size={0.8} />
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-
-              {/* Bouton check */}
-              <button
-                className={`btn check ${styles.button} ${isTracked ? "active" : ""}`}
-                onClick={handleCheck}
-                title={isTracked ? "Not watched" : "Watched"}
-              >
-                <Icon path={mdiCheck} size={1} />
-              </button>
-
-              {/* Bouton bookmark */}
-              <button
-                className={`btn bookmark ${styles.button} ${isFavorite ? "active" : ""} ${!isTracked ? "disabled" : ""}`}
-                onClick={toggleFavorite}
-              >
-                <Icon path={mdiBookmarkPlusOutline} size={1} />
-              </button>
-
-              {/* Bouton watchlist */}
-              <button
-                className={`btn watchlist ${styles.button}`}
-                title={
-                  !isTracked ? "Follow this show first" : isFavorite ? "Remove from favorites" : "Add to favorites"
-                }
-                disabled={!isTracked}
-              >
-                <Icon path={mdiPlaylistPlus} size={1} />
-              </button>
-            </div>
+            {showConfirm && (
+              <ConfirmPopover
+                serieName={serie.name}
+                isTracked={isTracked}
+                onConfirm={handleConfirm}
+                onClose={() => setShowConfirm(false)}
+              />
+            )}
+            {/* Bouton check */}
+            <button
+              className={`btn check ${styles.button} ${isTracked ? "active" : ""}`}
+              onClick={handleCheck}
+              title={isTracked ? "Remove from watched" : "Add to watched"}
+            >
+              <Icon path={mdiCheck} size={1} />
+            </button>
+            {/* Bouton bookmark */}
+            <button
+              className={`btn bookmark ${styles.button} ${isFavorite ? "active" : ""} ${!isTracked ? "disabled" : ""}`}
+              onClick={toggleFavorite}
+              title={!isTracked ? "Follow this show first" : isFavorite ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Icon path={mdiBookmarkPlusOutline} size={1} />
+            </button>
+            {/* Bouton watchlist */}
+            <button className={`btn watchlist ${styles.button}`}>
+              <Icon path={mdiPlaylistPlus} size={1} />
+            </button>
           </div>
           <div className={styles.infoContainer}>
             {serie.vote_average > 0 && (
