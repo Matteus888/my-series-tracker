@@ -3,6 +3,7 @@
 import styles from "@/app/signup/page.module.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 
 export default function SignupPage() {
@@ -36,7 +37,14 @@ export default function SignupPage() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Error during signup.");
 
-      router.push("/login?signup=true"); // Redirige vers la page de connexion avec un message de succès
+      const loginResult = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+      if (loginResult?.error) throw new Error("Account created but login failed. Please log in manually.");
+
+      router.push("/");
     } catch (err) {
       setError(err.message);
     } finally {

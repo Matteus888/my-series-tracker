@@ -5,14 +5,15 @@ import { UserList } from "@/models/userList.model";
 import dbConnect from "@/lib/db/db.connect";
 
 // Récupérer une liste
-export const GET = async (request, { params }) => {
+export const GET = async (request, context) => {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     await dbConnect();
+    const { listId } = await context.params;
     const list = await UserList.findOne({
-      _id: params.listId,
+      _id: listId,
       userId: session.user.id,
     }).populate({ path: "series", model: "Series" });
     if (!list) return NextResponse.json({ error: "List not found" }, { status: 404 });
@@ -24,15 +25,16 @@ export const GET = async (request, { params }) => {
 };
 
 // Modifier une liste
-export const PATCH = async (request, { params }) => {
+export const PATCH = async (request, context) => {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     await dbConnect();
+    const { listId } = await context.params;
     const { name, description, isPublic } = await request.json();
     const list = await UserList.findOneAndUpdate(
-      { _id: params.listId, userId: session.user.id, isDefault: false },
+      { _id: listId, userId: session.user.id, isDefault: false },
       { $set: { name, description, isPublic } },
       { returnDocument: "after", runValidators: true },
     );
@@ -45,14 +47,15 @@ export const PATCH = async (request, { params }) => {
 };
 
 // Supprimer une liste
-export const DELETE = async (request, { params }) => {
+export const DELETE = async (request, context) => {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     await dbConnect();
+    const { listId } = await context.params;
     const list = await UserList.findOneAndDelete({
-      _id: params.listId,
+      _id: listId,
       userId: session.user.id,
       isDefault: false,
     });

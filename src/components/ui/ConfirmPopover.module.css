@@ -1,23 +1,26 @@
 .confirmPopover {
   position: absolute;
-  bottom: calc(100%);
+  bottom: 100%;
   left: 0;
   z-index: 100;
   background-color: var(--foreground);
   border: 1px solid var(--border);
-  padding: 0.5rem 0.7rem;
-  width: 150px;
+  padding: 0.6rem 0.7rem;
+  width: 140px;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .confirmPopover p {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
   margin: 0;
-  line-height: 1.3;
   color: var(--background-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .confirmButtons {

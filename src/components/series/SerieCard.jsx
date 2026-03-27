@@ -5,20 +5,45 @@ import Icon from "@mdi/react";
 import { mdiCheck, mdiBookmarkPlusOutline, mdiHeartOutline, mdiPlaylistPlus } from "@mdi/js";
 import Link from "next/link";
 import Image from "next/image";
-import { useSeries } from "@/hooks/useSeries";
 import { useState } from "react";
+import { useSeries } from "@/hooks/useSeries";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { useList } from "@/context/ListContext";
+import { useToast } from "@/context/ToastContext";
 import ConfirmPopover from "../ui/ConfirmPopover";
+import WatchlistPopover from "../ui/WatchlistPopover";
 
 export default function SerieCard({ serie, onCheck }) {
   const { isTracked, isFavorite, toggle, toggleFavorite } = useSeries(serie.id, serie);
+  const { requireAuth } = useAuthGuard();
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showWatchList, setShowWatchlist] = useState(false);
+  const { showToast } = useToast();
+  const { lists } = useList();
+  const inAnyList = lists.some((l) => l.series.some((s) => s.tmdbId === serie.id));
 
   const handleCheck = () => {
-    if (onCheck) {
-      onCheck(serie);
-      return;
-    }
-    setShowConfirm(true);
+    requireAuth(() => {
+      if (onCheck) {
+        onCheck(serie);
+        return;
+      }
+      setShowConfirm(true);
+    });
+  };
+
+  const handleFavorite = () => {
+    requireAuth(() => {
+      if (!isTracked) {
+        showToast("Mark this show as watched first to add it to favorites.", "error");
+        return;
+      }
+      toggleFavorite();
+    });
+  };
+
+  const handleWatchlist = () => {
+    requireAuth(() => setShowWatchlist((prev) => !prev));
   };
 
   const handleConfirm = (confirm) => {
@@ -73,16 +98,23 @@ export default function SerieCard({ serie, onCheck }) {
             </button>
             {/* Bouton bookmark */}
             <button
-              className={`btn bookmark ${styles.button} ${isFavorite ? "active" : ""} ${!isTracked ? "disabled" : ""}`}
-              onClick={toggleFavorite}
-              title={!isTracked ? "Follow this show first" : isFavorite ? "Remove from favorites" : "Add to favorites"}
+              className={`btn bookmark ${styles.button} ${isFavorite ? "active" : ""}`}
+              onClick={handleFavorite}
+              title={isFavorite ? "Remove from favorites" : "Add to favorites"}
             >
               <Icon path={mdiBookmarkPlusOutline} size={1} />
             </button>
             {/* Bouton watchlist */}
-            <button className={`btn watchlist ${styles.button}`}>
-              <Icon path={mdiPlaylistPlus} size={1} />
-            </button>
+            <div className={styles.watchlistWrapper}>
+              <button
+                className={`btn watchlist ${styles.button} ${inAnyList ? "active" : ""}`}
+                onClick={handleWatchlist}
+                title="Add to list"
+              >
+                <Icon path={mdiPlaylistPlus} size={1} />
+              </button>
+              {showWatchList && <WatchlistPopover serie={serie} onClose={() => setShowWatchlist(false)} />}
+            </div>
           </div>
           <div className={styles.infoContainer}>
             {serie.vote_average > 0 && (

@@ -6,12 +6,13 @@ import { Series } from "@/models/series.model";
 import dbConnect from "@/lib/db/db.connect";
 
 // Ajouter une série à une liste
-export const POST = async (request, { params }) => {
+export const POST = async (request, context) => {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     await dbConnect();
+    const { listId } = await context.params;
     const { tmdbId, serieData } = await request.json();
 
     const series = await Series.findOneAndUpdate(
@@ -32,7 +33,7 @@ export const POST = async (request, { params }) => {
     );
 
     const list = await UserList.findOneAndUpdate(
-      { _id: params.listId, userId: session.user.id },
+      { _id: listId, userId: session.user.id },
       { $addToSet: { series: series._id } },
       { returnDocument: "after" },
     );
@@ -45,15 +46,16 @@ export const POST = async (request, { params }) => {
 };
 
 // Retirer une série d'une liste
-export const DELETE = async (request, { params }) => {
+export const DELETE = async (request, context) => {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     await dbConnect();
+    const { listId } = await context.params;
     const { seriesId } = await request.json();
     const list = await UserList.findOneAndUpdate(
-      { _id: params.listId, userId: session.user.id },
+      { _id: listId, userId: session.user.id },
       { $pull: { series: seriesId } },
       { returnDocument: "after" },
     );

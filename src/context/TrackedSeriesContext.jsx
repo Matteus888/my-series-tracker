@@ -3,12 +3,14 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useToast } from "./ToastContext";
+import { useList } from "./ListContext";
 
 const TrackedSeriesContext = createContext(null);
 
 export const TrackedSeriesProvider = ({ children }) => {
   const { data: session } = useSession();
   const { showToast } = useToast();
+  const { refresh: refreshLists } = useList();
   const [trackedSeries, setTrackedSeries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -34,21 +36,28 @@ export const TrackedSeriesProvider = ({ children }) => {
 
   const addSeries = useCallback(
     async (seriesId, serieData, options = {}) => {
+      setIsLoading(true);
       try {
         const response = await fetch("/api/series/tracked", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ seriesId, serieData, ...options }),
         });
-        const data = await response.json();
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || "An error occurred");
+        }
         await fetchTrackedSeries();
+        await refreshLists();
         showToast(`${serieData.name} added to watched shows ✓`);
       } catch (err) {
         setError(err.message);
         showToast(err.message, "error");
+      } finally {
+        setIsLoading(false);
       }
     },
-    [fetchTrackedSeries, showToast],
+    [fetchTrackedSeries, showToast, refreshLists],
   );
 
   const removeSeries = useCallback(
@@ -59,6 +68,10 @@ export const TrackedSeriesProvider = ({ children }) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ serieId: seriesId }),
         });
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || "An error occurred");
+        }
         await fetchTrackedSeries();
         showToast(`Serie removed from watched shows`);
       } catch (err) {
@@ -77,6 +90,10 @@ export const TrackedSeriesProvider = ({ children }) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ seriesId, ...updates }),
         });
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || "An error occurred");
+        }
         await fetchTrackedSeries();
         showToast(updates.isFavorite ? "Added to favorites ✓" : "Removed from favorites");
       } catch (err) {

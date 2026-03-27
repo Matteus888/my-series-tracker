@@ -1,4 +1,5 @@
-import { Series } from "@/models/series.model"; // nécessaire pour l'enregistrement du schéma Mongoose
+import { Series } from "@/models/series.model";
+import { UserList } from "@/models/userList.model";
 import { EpisodeProgress } from "@/models/episodeProgress.model";
 import { getAllSeasonsWithEpisodes } from "./tmdb.api";
 const dbConnect = require("@/lib/db/db.connect").default;
@@ -70,6 +71,13 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
     await EpisodeProgress.insertMany(episodeDocs, { ordered: false }).catch((err) => {
       if (err.code !== 11000) throw err;
     });
+
+    const watchlist = await UserList.findOne({ userId, isDefault: true });
+    if (watchlist) {
+      await UserList.findByIdAndUpdate(watchlist._id, {
+        $pull: { series: series._id },
+      });
+    }
   }
 
   return user.trackedSeries;

@@ -1,0 +1,105 @@
+.popover {
+  position: absolute;
+  bottom: 0;
+  left: 100%;
+  z-index: 100;
+  background-color: var(--foreground);
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.7rem;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--background-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lists {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border-radius: 2px;
+  color: var(--background-primary);
+  transition: background-color 0.15s ease;
+  min-height: 28px;
+}
+
+.listItem:hover {
+  background-color: var(--background-secondary);
+  color: var(--foreground);
+}
+
+.listItem.active {
+  color: var(--blue);
+}
+
+.listName {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.defaultBadge {
+  font-size: 0.6rem;
+  opacity: 0.5;
+  font-style: italic;
+}
+
+.createForm {
+  display: flex;
+  gap: 0.25rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.5rem;
+}
+
+.input {
+  width: 100%;
+  flex: 1;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--background-secondary);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  outline: none;
+}
+
+.createButton {
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  transition: background-color 0.15s ease;
+}
+
+.createButton:hover:not(:disabled) {
+  background-color: var(--blue);
+}
+
+.createButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}

@@ -20,9 +20,7 @@ export default function ConfirmPopover({ serieName, isTracked, onConfirm, onClos
 
   return (
     <div className={styles.confirmPopover} ref={popoverRef}>
-      <p>
-        {isTracked ? "Remove" : "Add"} <strong>{serieName}</strong> {isTracked ? "from" : "to"} watched shows?
-      </p>
+      <p>{isTracked ? "Remove from" : "Add to"} watched shows?</p>
       <div className={styles.confirmButtons}>
         <span className={styles.validate} onClick={() => onConfirm(true)}>
           <Icon path={mdiCheck} size={0.8} />
