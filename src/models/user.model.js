@@ -105,39 +105,6 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-    customLists: [
-      {
-        name: {
-          type: String,
-          required: [true, "List name is required."],
-          trim: true,
-          maxlength: [50, "List name must not exceed 50 characters."],
-        },
-        description: {
-          type: String,
-          trim: true,
-          maxlength: [200, "Description must not exceed 200 characters."],
-        },
-        series: [
-          {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Series",
-          },
-        ],
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
     lastLogin: {
       type: Date,
     },

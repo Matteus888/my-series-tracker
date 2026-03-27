@@ -92,10 +92,6 @@ const seriesSchema = new mongoose.Schema(
         airDate: { type: Date },
       },
     ],
-    lastUpdated: {
-      type: Date,
-      default: Date.now,
-    },
     isPopular: {
       type: Boolean,
       default: false, // Peut être mis à jour via un cron job (ex: séries les plus suivies)
