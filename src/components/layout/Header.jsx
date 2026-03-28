@@ -9,15 +9,13 @@ import Image from "next/image";
 export default function Header() {
   return (
     <header className={styles.header}>
-      <div className={styles.mainContainer}>
-        <div className={styles.leftContainer}>
-          <Link className={styles.logoLink} href="/">
-            <Image src="/logo10.png" alt="Logo" width={42} height={35} className={styles.logo} />
-          </Link>
-          <SearchBar />
-        </div>
-        <NavBar />
+      <div className={styles.leftContainer}>
+        <Link className={styles.logoLink} href="/">
+          <Image src="/logo10.png" alt="Logo" width={42} height={35} className={styles.logo} />
+        </Link>
+        <SearchBar />
       </div>
+      <NavBar />
     </header>
   );
 }

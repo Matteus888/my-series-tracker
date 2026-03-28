@@ -12,29 +12,29 @@ export default function NavBar() {
   return (
     <nav className={styles.navContainer}>
       <ul className={styles.navList}>
-        <li className={styles.navItem}>
+        <li>
           <Link className={`${styles.navLink} ${isActive("/dashboard") ? styles.active : ""}`} href="/dashboard">
-            Dashboard
+            <span className={styles.navText}>Dashboard</span>
           </Link>
         </li>
-        <li className={styles.navItem}>
+        <li>
           <Link className={`${styles.navLink} ${isActive("/series") ? styles.active : ""}`} href="/series">
-            Series
+            <span className={styles.navText}>Series</span>
           </Link>
         </li>
-        <li className={styles.navItem}>
+        <li>
           <Link className={`${styles.navLink} ${isActive("/favorites") ? styles.active : ""}`} href="/favorites">
-            Favorites
+            <span className={styles.navText}>Favorites</span>
           </Link>
         </li>
-        <li className={styles.navItem}>
+        <li>
           <Link className={`${styles.navLink} ${isActive("/watchlist") ? styles.active : ""}`} href="/watchlist">
-            Watchlist
+            <span className={styles.navText}>Watchlist</span>
           </Link>
         </li>
-        <li className={styles.navItem}>
+        <li>
           <Link className={`${styles.navLink} ${isActive("/profile") ? styles.active : ""}`} href="/profile">
-            Profile
+            <span className={styles.navText}>Profile</span>
           </Link>
         </li>
       </ul>

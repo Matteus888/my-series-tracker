@@ -109,7 +109,7 @@ export default function SerieCard({ serie, onCheck }) {
               <button
                 className={`btn watchlist ${styles.button} ${inAnyList ? "active" : ""}`}
                 onClick={handleWatchlist}
-                title="Add to list"
+                title={inAnyList ? "Manage list" : "Add to list"}
               >
                 <Icon path={mdiPlaylistPlus} size={1} />
               </button>

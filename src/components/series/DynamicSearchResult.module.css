@@ -3,11 +3,12 @@
   display: block;
   text-decoration: none;
   color: var(--background-primary);
+  background-color: white;
   border-bottom: 1px solid var(--border);
 }
 
 .resultContainer:hover {
-  background-color: white;
+  background-color: var(--foreground);
 }
 
 .contentWrapper {

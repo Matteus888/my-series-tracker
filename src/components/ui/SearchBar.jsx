@@ -8,7 +8,7 @@ import { useSearch } from "@/context/SearchContext";
 import { searchSeries } from "@/lib/api/tmdb.api";
 import { useRouter } from "next/navigation";
 import DynamicSearchResult from "../series/DynamicSearchResult";
-import DynamicSearchResultSkeleton from "./DynamicSearchResultSkeleton";
+import DynamicSearchResultSkeleton from "../series/DynamicSearchResultSkeleton";
 
 export default function SearchBar() {
   const { query, setQuery, results, setResults, loading, setLoading, isOpen, setIsOpen } = useSearch();
@@ -84,12 +84,15 @@ export default function SearchBar() {
         onKeyDown={handleKeyDown}
       />
       {/* Icône à gauche */}
-      <span className={styles.icon} onClick={() => query && setQuery("")}>
-        {query ? <Icon path={mdiClose} size={1} /> : <Icon path={mdiMagnify} size={1} />}
+      <span className={`${styles.icon} ${styles.glass}`} onClick={() => query && setQuery("")}>
+        <Icon path={mdiMagnify} size={1} />
       </span>
       {/* Séparateur vertical */}
       <div className={styles.separator} />
-
+      {/* Icône effacer à droite */}
+      <span className={`${styles.icon} ${styles.delete}`} onClick={() => query && setQuery("")}>
+        {query && <Icon path={mdiClose} size={0.8} />}
+      </span>
       {/* Liste des résultats */}
       {isOpen && (
         <div className={styles.resultsContainer}>

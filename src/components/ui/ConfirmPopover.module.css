@@ -25,13 +25,14 @@
 
 .confirmButtons {
   display: flex;
-  justify-content: space-evenly;
+  /* justify-content: space-evenly; */
 }
 
 .validate,
 .cancel {
   cursor: pointer;
-  border-radius: 50%;
+  /* border-radius: 50%; */
+  width: 100%;
   padding: 4px;
   display: flex;
   align-items: center;
