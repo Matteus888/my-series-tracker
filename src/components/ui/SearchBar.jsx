@@ -15,6 +15,7 @@ export default function SearchBar() {
   const searchInputRef = useRef(null);
   const router = useRouter();
   const [totalResults, setTotalResults] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(-1); // -1 = rien de sélectionné
 
   // Recherche live avec debounce
   useEffect(() => {
@@ -58,12 +59,40 @@ export default function SearchBar() {
     };
   }, [setIsOpen]);
 
-  // Redirection page search quand "Enter"
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && query.trim()) {
-      router.push(`/search?query=${encodeURIComponent(query)}`);
+  useEffect(() => {
+    setSelectedIndex(-1);
+  }, [query]);
+
+  const handleSearch = () => {
+    if (query.trim()) {
+      router.push(`/search?query=${encodeURIComponent(query.trim())}`);
       setIsOpen(false);
       setQuery("");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev < results.length - 1 ? prev + 1 : prev));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+    } else if (e.key === "Enter") {
+      if (selectedIndex >= 0 && results[selectedIndex]) {
+        router.push(`/series/${results[selectedIndex].id}`);
+        setIsOpen(false);
+        setQuery("");
+        setSelectedIndex(-1);
+      } else if (query.trim()) {
+        router.push(`/search?query=${encodeURIComponent(query)}`);
+        setIsOpen(false);
+        setQuery("");
+        setSelectedIndex(-1);
+      }
+    } else if (e.key === "Escape") {
+      setIsOpen(false);
+      setSelectedIndex(-1);
     }
   };
 
@@ -84,7 +113,7 @@ export default function SearchBar() {
         onKeyDown={handleKeyDown}
       />
       {/* Icône à gauche */}
-      <span className={`${styles.icon} ${styles.glass}`} onClick={() => query && setQuery("")}>
+      <span className={`${styles.icon} ${styles.glass}`} onClick={handleSearch}>
         <Icon path={mdiMagnify} size={1} />
       </span>
       {/* Séparateur vertical */}
@@ -101,8 +130,13 @@ export default function SearchBar() {
               Array.from({ length: 5 }).map((_, index) => <DynamicSearchResultSkeleton key={index} />)
             ) : results.length > 0 ? (
               <>
-                {results.map((serie) => (
-                  <DynamicSearchResult key={serie.id} serie={serie} onSelect={handleSelectSerie} />
+                {results.map((serie, index) => (
+                  <DynamicSearchResult
+                    key={serie.id}
+                    serie={serie}
+                    onSelect={handleSelectSerie}
+                    isSelected={index === selectedIndex}
+                  />
                 ))}
                 <div className={styles.resultsFooter}>
                   {totalResults} result{totalResults > 1 ? "s" : ""} found

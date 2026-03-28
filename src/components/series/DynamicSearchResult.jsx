@@ -2,9 +2,13 @@ import styles from "./DynamicSearchResult.module.css";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function DynamicSearchResult({ serie, onSelect }) {
+export default function DynamicSearchResult({ serie, onSelect, isSelected }) {
   return (
-    <Link href={`/series/${serie.id}`} className={styles.resultContainer} onClick={() => onSelect(serie)}>
+    <Link
+      href={`/series/${serie.id}`}
+      className={`${styles.resultContainer} ${isSelected ? styles.selected : ""}`}
+      onClick={() => onSelect(serie)}
+    >
       <div className={styles.contentWrapper}>
         <div className={styles.imageContainer}>
           <Image

@@ -11,6 +11,10 @@
   background-color: var(--foreground);
 }
 
+.selected {
+  background-color: var(--foreground);
+}
+
 .contentWrapper {
   display: flex;
   align-items: center;
