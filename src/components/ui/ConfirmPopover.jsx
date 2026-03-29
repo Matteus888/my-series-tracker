@@ -3,21 +3,8 @@
 import styles from "./ConfirmPopover.module.css";
 import Icon from "@mdi/react";
 import { mdiCheck, mdiCancel } from "@mdi/js";
-import { useEffect, useRef } from "react";
 
-export default function ConfirmPopover({ serieName, isTracked, onConfirm, onClose }) {
-  const popoverRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target)) {
-        onClose();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
-
+export default function ConfirmPopover({ isTracked, onConfirm, popoverRef }) {
   return (
     <div className={styles.confirmPopover} ref={popoverRef}>
       <p>{isTracked ? "Remove from" : "Add to"} watched shows?</p>

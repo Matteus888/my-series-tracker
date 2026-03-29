@@ -19,6 +19,8 @@ export default function SearchBar() {
 
   // Recherche live avec debounce
   useEffect(() => {
+    setSelectedIndex(-1);
+
     if (!query.trim()) {
       setResults([]);
       setTotalResults(0);
@@ -58,10 +60,6 @@ export default function SearchBar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [setIsOpen]);
-
-  useEffect(() => {
-    setSelectedIndex(-1);
-  }, [query]);
 
   const handleSearch = () => {
     if (query.trim()) {
@@ -109,7 +107,9 @@ export default function SearchBar() {
         placeholder="Search for a serie..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        onFocus={() => query.trim() && setIsOpen(!!results.length)}
+        onFocus={() => {
+          if (query.trim() && results.length > 0) setIsOpen(true);
+        }}
         onKeyDown={handleKeyDown}
       />
       {/* Icône à gauche */}

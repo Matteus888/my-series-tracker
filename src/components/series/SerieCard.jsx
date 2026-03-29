@@ -5,21 +5,22 @@ import Icon from "@mdi/react";
 import { mdiCheck, mdiBookmarkPlusOutline, mdiHeartOutline, mdiPlaylistPlus } from "@mdi/js";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import { useSeries } from "@/hooks/useSeries";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useList } from "@/context/ListContext";
 import { useToast } from "@/context/ToastContext";
+import { usePopover } from "@/hooks/usePopover";
 import ConfirmPopover from "../ui/ConfirmPopover";
 import WatchlistPopover from "../ui/WatchlistPopover";
 
 export default function SerieCard({ serie, onCheck }) {
   const { isTracked, isFavorite, toggle, toggleFavorite } = useSeries(serie.id, serie);
   const { requireAuth } = useAuthGuard();
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [showWatchList, setShowWatchlist] = useState(false);
   const { showToast } = useToast();
   const { lists } = useList();
+  const confirmPopover = usePopover();
+  const watchlistPopover = usePopover();
+
   const inAnyList = lists.some((l) => l.series.some((s) => s.tmdbId === serie.id));
 
   const handleCheck = () => {
@@ -28,7 +29,7 @@ export default function SerieCard({ serie, onCheck }) {
         onCheck(serie);
         return;
       }
-      setShowConfirm(true);
+      confirmPopover.open();
     });
   };
 
@@ -43,7 +44,7 @@ export default function SerieCard({ serie, onCheck }) {
   };
 
   const handleWatchlist = () => {
-    requireAuth(() => setShowWatchlist((prev) => !prev));
+    requireAuth(() => watchlistPopover.toggle());
   };
 
   const handleConfirm = (confirm) => {
@@ -52,7 +53,7 @@ export default function SerieCard({ serie, onCheck }) {
     } else {
       if (confirm) toggle({ markAllWatched: true, status: "completed" });
     }
-    setShowConfirm(false);
+    confirmPopover.close();
   };
 
   return (
@@ -80,13 +81,8 @@ export default function SerieCard({ serie, onCheck }) {
         </div>
         <div className={`card-footer ${styles.footer}`}>
           <div className={styles.buttonsContainer}>
-            {showConfirm && (
-              <ConfirmPopover
-                serieName={serie.name}
-                isTracked={isTracked}
-                onConfirm={handleConfirm}
-                onClose={() => setShowConfirm(false)}
-              />
+            {confirmPopover.isOpen && (
+              <ConfirmPopover isTracked={isTracked} onConfirm={handleConfirm} popoverRef={confirmPopover.popoverRef} />
             )}
             {/* Bouton check */}
             <button
@@ -113,7 +109,13 @@ export default function SerieCard({ serie, onCheck }) {
               >
                 <Icon path={mdiPlaylistPlus} size={1} />
               </button>
-              {showWatchList && <WatchlistPopover serie={serie} onClose={() => setShowWatchlist(false)} />}
+              {watchlistPopover.isOpen && (
+                <WatchlistPopover
+                  serie={serie}
+                  onClose={watchlistPopover.close}
+                  popoverRef={watchlistPopover.popoverRef}
+                />
+              )}
             </div>
           </div>
           <div className={styles.infoContainer}>

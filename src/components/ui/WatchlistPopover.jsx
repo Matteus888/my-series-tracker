@@ -2,24 +2,13 @@
 
 import styles from "./WatchlistPopover.module.css";
 import Icon from "@mdi/react";
-import { mdiCheck, mdiPlus } from "@mdi/js";
-import { useEffect, useState, useRef } from "react";
+import { mdiCheck, mdiPlus, mdiClose } from "@mdi/js";
+import { useState } from "react";
 import { useList } from "@/context/ListContext";
 
-export default function WatchlistPopover({ serie, onClose }) {
-  const { lists, watchlist, isInWatchlist, addSeriesToList, removeSeriesFromList, createList } = useList();
+export default function WatchlistPopover({ serie, onClose, popoverRef }) {
+  const { lists, watchlist, addSeriesToList, removeSeriesFromList, createList, deleteList } = useList();
   const [newListName, setNewListName] = useState("");
-  const popoverRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target)) {
-        onClose();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
 
   const handleToggleList = (list) => {
     const seriesInList = list.series.find((s) => s.tmdbId === serie.id);
@@ -42,9 +31,12 @@ export default function WatchlistPopover({ serie, onClose }) {
     }
   };
 
-  const isSerieInList = (list) => {
-    return list.series.some((s) => s.tmdbId === serie.id);
+  const handleDeleteList = async (e, listId) => {
+    e.stopPropagation();
+    await deleteList(listId);
   };
+
+  const isSerieInList = (list) => list.series.some((s) => s.tmdbId === serie.id);
 
   const sortedLists = [...(watchlist ? [watchlist] : []), ...lists.filter((l) => !l.isDefault)];
 
@@ -54,6 +46,7 @@ export default function WatchlistPopover({ serie, onClose }) {
       <ul className={styles.lists}>
         {sortedLists.map((list) => {
           const inList = isSerieInList(list);
+          const isDeletable = !list.isDefault && list.series.length === 0;
           return (
             <li
               key={list._id}
@@ -64,7 +57,14 @@ export default function WatchlistPopover({ serie, onClose }) {
                 {list.name}
                 {list.isDefault && <span className={styles.defaultBadge}>default</span>}
               </span>
-              {inList && <Icon path={mdiCheck} size={0.7} style={{ opacity: inList ? 1 : 0 }} />}
+              <div className={styles.listActions}>
+                <Icon path={mdiCheck} size={0.7} style={{ opacity: inList ? 1 : 0 }} />
+                {isDeletable && (
+                  <span className={styles.deleteList} onClick={(e) => handleDeleteList(e, list._id)}>
+                    <Icon path={mdiClose} size={0.6} />
+                  </span>
+                )}
+              </div>
             </li>
           );
         })}
