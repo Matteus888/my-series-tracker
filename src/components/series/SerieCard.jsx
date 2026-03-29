@@ -13,14 +13,16 @@ import { usePopover } from "@/hooks/usePopover";
 import ConfirmPopover from "../ui/ConfirmPopover";
 import WatchlistPopover from "../ui/WatchlistPopover";
 import HeartRating from "../ui/HeartRating";
+import RatingsPopover from "../ui/RatingsPopover";
 
-export default function SerieCard({ serie, onCheck }) {
+export default function SerieCard({ serie, onCheck, score, ratings }) {
   const { isTracked, isFavorite, toggle, toggleFavorite } = useSeries(serie.id, serie);
   const { requireAuth } = useAuthGuard();
   const { showToast } = useToast();
   const { lists } = useList();
   const confirmPopover = usePopover();
   const watchlistPopover = usePopover();
+  const ratingsPopover = usePopover();
 
   const inAnyList = lists.some((l) => l.series.some((s) => s.tmdbId === serie.id));
 
@@ -120,10 +122,13 @@ export default function SerieCard({ serie, onCheck }) {
             </div>
           </div>
           <div className={styles.infoContainer}>
-            {serie.vote_average > 0 && (
-              <div className={styles.infoContainer}>
-                <HeartRating percentage={Math.round(serie.vote_average * 10)} />
-                <span className={styles.rating}>{Math.round(serie.vote_average * 10)}%</span>
+            {(score ?? 0) > 0 && (
+              <div className={styles.heartWrapper} onClick={ratingsPopover.toggle}>
+                <HeartRating percentage={score} />
+                <span className={styles.rating}>{score}%</span>
+                {ratingsPopover.isOpen && (
+                  <RatingsPopover serie={serie} ratings={ratings} popoverRef={ratingsPopover.popoverRef} />
+                )}
               </div>
             )}
           </div>

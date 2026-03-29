@@ -8,6 +8,7 @@ import { getTmdbPagesForUiPage, sliceResultsForUiPage, calcTotalUiPages } from "
 import SerieCard from "@/components/series/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton";
 import Pagination from "@/components/ui/Pagination";
+import { useSeriesRatings } from "@/hooks/useSeriesRatings";
 
 export default function AllSeriesPage() {
   const searchParams = useSearchParams();
@@ -19,6 +20,8 @@ export default function AllSeriesPage() {
   const [currentPage, setCurrentPage] = useState(pageParam ? parseInt(pageParam) : 1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalResults, setTotalResults] = useState(0);
+
+  const { getScore, ratingsMap } = useSeriesRatings(series);
 
   useEffect(() => {
     setCurrentPage(pageParam ? parseInt(pageParam) : 1);
@@ -59,7 +62,7 @@ export default function AllSeriesPage() {
   return (
     <div className={styles.container}>
       <h1 className={styles.pageTitle}>All series</h1>
-      {!loading ? (
+      {loading ? (
         <div className={styles.seriesGrid}>
           {Array.from({ length: 36 }).map((_, i) => (
             <div key={i} className={styles.gridItem}>
@@ -72,7 +75,11 @@ export default function AllSeriesPage() {
           <div className={styles.seriesGrid}>
             {series.map((serie) => (
               <div key={serie.id} className={styles.gridItem}>
-                <SerieCard serie={serie} />
+                <SerieCard
+                  serie={serie}
+                  score={getScore(serie.id, serie.vote_average)}
+                  ratings={ratingsMap[serie.id]}
+                />
               </div>
             ))}
           </div>

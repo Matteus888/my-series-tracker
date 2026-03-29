@@ -60,14 +60,36 @@ const seriesSchema = new mongoose.Schema(
         trim: true,
       },
     ],
-    voteAverage: {
-      type: Number,
-      min: [0, "Vote average cannot be less than 0."],
-      max: [10, "Vote average cannot be greater than 10."],
+    ratings: {
+      tmdb: {
+        score: {
+          type: Number,
+          min: [0, "Score cannot be less than 0."],
+          max: [10, "Score cannot be greater than 10."],
+        },
+        voteCount: {
+          type: Number,
+          default: 0,
+        },
+      },
+      imdb: {
+        score: {
+          type: Number,
+          min: [0, "Score cannot be less than 0."],
+          max: [10, "Score cannot be greater than 10."],
+        },
+        voteCount: {
+          type: Number,
+          default: 0,
+        },
+      },
+      lastFetched: {
+        type: Date,
+      },
     },
-    voteCount: {
-      type: Number,
-      default: 0,
+    imdbId: {
+      type: String,
+      trim: true,
     },
     numberOfSeasons: {
       type: Number,

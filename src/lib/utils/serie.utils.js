@@ -1,6 +1,7 @@
+import { computeAverageScore } from "./ratings.utils";
+
 export const normalizeSerieData = (tracked) => {
   if (!tracked) return null;
-
   if (tracked.name !== undefined) return tracked;
 
   const seriesId = tracked.seriesId;
@@ -14,8 +15,8 @@ export const normalizeSerieData = (tracked) => {
       backdrop_path: seriesId.backdropPath,
       overview: seriesId.overview,
       first_air_date: seriesId.firstAirDate,
-      vote_average: seriesId.voteAverage,
-      vote_count: seriesId.voteCount,
+      score: computeAverageScore(seriesId.ratings),
+      ratings: seriesId.ratings,
     };
   }
   return null;

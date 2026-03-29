@@ -2,6 +2,8 @@ import { Series } from "@/models/series.model";
 import { UserList } from "@/models/userList.model";
 import { EpisodeProgress } from "@/models/episodeProgress.model";
 import { getAllSeasonsWithEpisodes } from "./tmdb.api";
+import { getOmdbRatings } from "./omdb.api";
+
 const dbConnect = require("@/lib/db/db.connect").default;
 
 export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, serieData, options = {}) => {
@@ -18,6 +20,9 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
     airDate: season.air_date ? new Date(season.air_date) : null,
   }));
 
+  const imdbId = seriesDetails.external_ids?.imdb_id || null;
+  const omdbRatings = imdbId ? await getOmdbRatings(imdbId) : null;
+
   const series = await SeriesModel.findOneAndUpdate(
     { tmdbId },
     {
@@ -27,12 +32,17 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
         posterPath: serieData.poster_path,
         backdropPath: serieData.backdrop_path,
         overview: serieData.overview,
+        genres: seriesDetails.genres?.map((g) => g.name) || [],
         firstAirDate: serieData.first_air_date ? new Date(serieData.first_air_date) : null,
-        voteAverage: serieData.vote_average,
-        voteCount: serieData.vote_count,
         numberOfSeasons: seriesDetails.number_of_seasons,
         numberOfEpisodes: seriesDetails.number_of_episodes,
         seasons: seasonsData,
+        imdbId,
+        "ratings.tmdb.score": serieData.vote_average,
+        "ratings.tmdb.voteCount": serieData.vote_count,
+        "ratings.imdb.score": omdbRatings?.imdb?.score || null,
+        "ratings.imdb.voteCount": omdbRatings?.imdb?.voteCount || null,
+        "ratings.lastFetched": new Date(),
       },
     },
     { upsert: true, returnDocument: "after", runValidators: true },

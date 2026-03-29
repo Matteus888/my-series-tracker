@@ -93,9 +93,16 @@
   padding-right: 0.25rem;
 }
 
-.heartIcon {
-  color: #dc3545;
-  font-size: 1.2rem;
+.heartWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+}
+
+.heartWrapper:hover {
+  opacity: 0.8;
 }
 
 .rating {
@@ -104,7 +111,6 @@
 
 .watchlistWrapper {
   position: relative;
-  /* height: 100%; */
   display: flex;
   align-items: stretch;
 }

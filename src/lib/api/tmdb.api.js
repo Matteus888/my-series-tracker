@@ -48,7 +48,9 @@ export const searchSeries = async (query, page = 1) => {
 
 export const getSeriesDetails = async (seriesId) => {
   try {
-    const response = await fetch(`${TMDB_BASE_URL}/tv/${seriesId}?api_key=${TMDB_API_KEY}`);
+    const response = await fetch(
+      `${TMDB_BASE_URL}/tv/${seriesId}?api_key=${TMDB_API_KEY}&append_to_response=external_ids`,
+    );
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
     return data;

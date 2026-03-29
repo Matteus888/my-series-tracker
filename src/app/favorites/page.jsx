@@ -22,9 +22,11 @@ export default function FavoritesPage() {
         </div>
       ) : favorites.length > 0 ? (
         <div className={styles.grid}>
-          {favorites.map((tracked) => (
-            <SerieCard key={tracked.tmdbId} serie={normalizeSerieData(tracked)} />
-          ))}
+          {favorites.map((tracked) => {
+            const normalized = normalizeSerieData(tracked);
+            if (!normalized) return null;
+            return <SerieCard key={tracked.tmdbId} serie={normalized} score={normalized.score} />;
+          })}
         </div>
       ) : (
         <p className={styles.empty}>No favorites yet. Click the bookmark icon on a show to add it here.</p>
