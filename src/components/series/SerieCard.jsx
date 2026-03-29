@@ -2,7 +2,7 @@
 
 import styles from "./SerieCard.module.css";
 import Icon from "@mdi/react";
-import { mdiCheck, mdiBookmarkPlusOutline, mdiHeartOutline, mdiPlaylistPlus } from "@mdi/js";
+import { mdiCheck, mdiBookmarkPlusOutline, mdiPlaylistPlus } from "@mdi/js";
 import Link from "next/link";
 import Image from "next/image";
 import { useSeries } from "@/hooks/useSeries";
@@ -12,6 +12,7 @@ import { useToast } from "@/context/ToastContext";
 import { usePopover } from "@/hooks/usePopover";
 import ConfirmPopover from "../ui/ConfirmPopover";
 import WatchlistPopover from "../ui/WatchlistPopover";
+import HeartRating from "../ui/HeartRating";
 
 export default function SerieCard({ serie, onCheck }) {
   const { isTracked, isFavorite, toggle, toggleFavorite } = useSeries(serie.id, serie);
@@ -120,10 +121,10 @@ export default function SerieCard({ serie, onCheck }) {
           </div>
           <div className={styles.infoContainer}>
             {serie.vote_average > 0 && (
-              <>
-                <Icon path={mdiHeartOutline} size={0.8} color="var(--red)" />
+              <div className={styles.infoContainer}>
+                <HeartRating percentage={Math.round(serie.vote_average * 10)} />
                 <span className={styles.rating}>{Math.round(serie.vote_average * 10)}%</span>
-              </>
+              </div>
             )}
           </div>
         </div>
