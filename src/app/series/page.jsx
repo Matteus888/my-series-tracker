@@ -59,7 +59,7 @@ export default function AllSeriesPage() {
   return (
     <div className={styles.container}>
       <h1 className={styles.pageTitle}>All series</h1>
-      {loading ? (
+      {!loading ? (
         <div className={styles.seriesGrid}>
           {Array.from({ length: 36 }).map((_, i) => (
             <div key={i} className={styles.gridItem}>

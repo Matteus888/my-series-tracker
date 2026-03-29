@@ -7,20 +7,32 @@
   display: flex;
 }
 
-.skeletonCard {
+.card {
   width: 100%;
   height: 100%;
   margin: 0;
   display: flex;
   flex-direction: column;
-  animation: pulse 1.5s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  flex-grow: 0;
+  display: flex;
+  aspect-ratio: 2/3;
+  overflow: hidden;
 }
 
 .imagePlaceholder {
-  aspect-ratio: 2/3;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
   background-color: var(--background-secondary);
-  position: relative;
+  border: 1px solid transparent;
+  animation: pulseBorder 1.5s infinite ease-in-out;
 }
 
 .footer {
@@ -31,19 +43,27 @@
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
+  background-color: var(--background-primary);
 }
 
 .buttonsContainer {
   height: 100%;
+  position: relative;
   display: flex;
+  align-items: stretch;
 }
 
-.buttonPlaceholder {
+.button {
   height: 100%;
   width: 30px;
   min-width: 30px;
+  padding: 2px 0 0;
+  border-radius: 0;
+  flex-shrink: 0;
   background-color: var(--background-secondary);
-  animation: pulse 1.5s ease-in-out infinite;
+  margin-right: 2px;
+  border: 1px solid transparent;
+  animation: pulseBorder 1.5s infinite ease-in-out;
 }
 
 .infoContainer {
@@ -53,18 +73,46 @@
   padding-right: 0.25rem;
 }
 
-.elementPlaceholder {
+.heartRatingPlaceholder {
+  width: 20px;
+  height: 20px;
+  background-color: var(--background-secondary);
+  border-radius: 50%;
+  border: 1px solid transparent;
+  animation: pulseBorder 1.5s infinite ease-in-out;
+}
+
+.ratingPlaceholder {
+  width: 30px;
+  height: 16px;
   background-color: var(--background-secondary);
   border-radius: 0.25rem;
-  animation: pulse 1.5s ease-in-out infinite;
+  border: 1px solid transparent;
+  animation: pulseBorder 1.5s infinite ease-in-out;
 }
 
-.elementSmall {
-  height: 16px;
-  width: 16px;
-}
-
-.elementMedium {
-  height: 16px;
+.yearBadgePlaceholder {
+  position: absolute;
   width: 30px;
+  height: 16px;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  background-color: var(--border);
+  border: 1px solid transparent;
+  animation: pulseBorder 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseBorder {
+  0% {
+    border-color: transparent;
+    opacity: 0.7;
+  }
+  50% {
+    border-color: rgba(255, 255, 255, 0.3);
+    opacity: 1;
+  }
+  100% {
+    border-color: transparent;
+    opacity: 0.7;
+  }
 }
