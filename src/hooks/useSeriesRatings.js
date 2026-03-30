@@ -1,36 +1,30 @@
 import { useState, useEffect } from "react";
 import { computeAverageScore } from "@/lib/utils/ratings.utils";
 
-export const useSeriesRatings = (series) => {
-  const [ratingsMap, setRatingsMap] = useState({});
+export const useSeriesRatings = (tmdbId) => {
+  const [ratings, setRatings] = useState(null);
+  const [score, setScore] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!series?.length) return;
+    if (!tmdbId) return;
 
     const fetchRatings = async () => {
-      const tmdbIds = series.map((s) => s.id);
+      setIsLoading(true);
       try {
-        const response = await fetch("/api/series/ratings", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tmdbIds }),
-        });
+        const response = await fetch(`/api/series/${tmdbId}/ratings`);
         const data = await response.json();
-        setRatingsMap(data.ratingsMap ?? {});
+        setRatings(data.ratings);
+        setScore(computeAverageScore(data.ratings));
       } catch (err) {
         console.error("Error fetching ratings:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchRatings();
-  }, [series]);
+  }, [tmdbId]);
 
-  const getScore = (tmdbId, fallbackVoteAverage = null) => {
-    const ratings = ratingsMap[tmdbId];
-    if (ratings) return computeAverageScore(ratings);
-    if (fallbackVoteAverage) return Math.round(fallbackVoteAverage * 10);
-    return null;
-  };
-
-  return { ratingsMap, getScore };
+  return { ratings, score, isLoading };
 };

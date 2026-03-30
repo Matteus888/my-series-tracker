@@ -1,9 +1,8 @@
-export const computeAverageScore = (ratings, userRating = null) => {
+export const computeAverageScore = (ratings) => {
   const scores = [];
 
   if (ratings?.tmdb?.score) scores.push((ratings.tmdb.score / 10) * 100);
   if (ratings?.imdb?.score) scores.push((ratings.imdb.score / 10) * 100);
-  if (userRating) scores.push((userRating / 10) * 100);
 
   if (scores.length === 0) return null;
 

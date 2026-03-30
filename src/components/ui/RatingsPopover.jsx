@@ -1,12 +1,14 @@
 "use client";
 
 import styles from "./RatingsPopover.module.css";
-import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import Icon from "@mdi/react";
 import { mdiStar, mdiStarOutline } from "@mdi/js";
+import { useTrackedSeries } from "@/context/TrackedSeriesContext";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
-export default function RatingsPopover({ serie, ratings, popoverRef }) {
+export default function RatingsPopover({ serie, popoverRef }) {
   const { trackedSeries, updateSeries } = useTrackedSeries();
+  const { isAuthenticated } = useAuthGuard();
 
   const tracked = trackedSeries.find((s) => s.tmdbId === serie.id);
   const userRating = tracked?.rating ?? null;
@@ -18,34 +20,21 @@ export default function RatingsPopover({ serie, ratings, popoverRef }) {
     updateSeries(serie.id, { rating: newRating });
   };
 
+  console.log(
+    "find result:",
+    trackedSeries.find((s) => s.tmdbId === serie.id),
+  );
+  console.log("manual check:", trackedSeries[0].tmdbId === serie.id, trackedSeries[0].tmdbId, serie.id);
+
   return (
     <div className={styles.popover} ref={popoverRef}>
-      <p className={styles.title}>Ratings</p>
-      <div className={styles.scores}>
-        {ratings?.tmdb?.score && (
-          <div className={styles.scoreRow}>
-            <span className={styles.source}>TMDB</span>
-            <span className={styles.score}>
-              {Math.round(ratings.tmdb.score * 10)}%
-              <span className={styles.voteCount}>({ratings.tmdb.voteCount?.toLocaleString()})</span>
-            </span>
-          </div>
-        )}
-        {ratings?.imdb?.score && (
-          <div className={styles.scoreRow}>
-            <span className={styles.source}>IMDB</span>
-            <span className={styles.score}>
-              {ratings.imdb.score}/10
-              <span className={styles.voteCount}>({ratings.imdb.voteCount?.toLocaleString()})</span>
-            </span>
-          </div>
-        )}
-      </div>
-
-      {tracked && (
+      {!isAuthenticated ? (
+        <p className={styles.message}>Log in to rate this show</p>
+      ) : !tracked ? (
+        <p className={styles.message}>Follow this show to rate it</p>
+      ) : (
         <>
-          <div className={styles.divider} />
-          <p className={styles.userRatingTitle}>Your rating</p>
+          <p className={styles.title}>Your rating</p>
           <div className={styles.stars}>
             {Array.from({ length: 10 }).map((_, i) => {
               const starValue = i + 1;
@@ -54,20 +43,14 @@ export default function RatingsPopover({ serie, ratings, popoverRef }) {
                 <span key={i} className={styles.star} onClick={() => handleRate(starValue)} title={`${starValue}/10`}>
                   <Icon
                     path={isFilled ? mdiStar : mdiStarOutline}
-                    size={0.7}
-                    color={isFilled ? "var(--yellow)" : "var(--foreground)"}
+                    size={0.6}
+                    color={isFilled ? "var(--yellow)" : "var(--background-secondary)"}
                   />
                 </span>
               );
             })}
           </div>
           {userRating && <p className={styles.userRatingValue}>{userRating}/10</p>}
-        </>
-      )}
-      {!tracked && (
-        <>
-          <div className={styles.divider} />
-          <p className={styles.notTracked}>Follow this show to rate it</p>
         </>
       )}
     </div>

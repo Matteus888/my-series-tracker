@@ -191,17 +191,29 @@ a {
   color: var(--background-secondary);
 }
 
+.heartWrapper {
+  background-color: var(--background-secondary);
+  color: var(--red);
+}
+
+.heartWrapper:hover,
+.heartWrapper.active {
+  background-color: var(--red);
+  color: var(--foreground);
+}
+
 .check svg,
 .bookmark svg,
-.watchlist svg {
+.watchlist svg,
+.heartWrapper svg {
   transition: transform 0.15s ease;
 }
 
 .check:active svg,
 .bookmark:active svg,
-.watchlist:active svg {
+.watchlist:active svg,
+.heartWrapper:active svg {
   transform: scale(0.6);
-  transition: transform 0.15s ease;
 }
 
 .disabled {

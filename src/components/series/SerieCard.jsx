@@ -7,16 +7,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSeries } from "@/hooks/useSeries";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { usePopover } from "@/hooks/usePopover";
 import { useList } from "@/context/ListContext";
 import { useToast } from "@/context/ToastContext";
-import { usePopover } from "@/hooks/usePopover";
+import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import ConfirmPopover from "../ui/ConfirmPopover";
 import WatchlistPopover from "../ui/WatchlistPopover";
-import HeartRating from "../ui/HeartRating";
 import RatingsPopover from "../ui/RatingsPopover";
+import HeartRating from "../ui/HeartRating";
+import { computeAverageScore } from "@/lib/utils/ratings.utils";
 
-export default function SerieCard({ serie, onCheck, score, ratings }) {
+export default function SerieCard({ serie, onCheck }) {
   const { isTracked, isFavorite, toggle, toggleFavorite } = useSeries(serie.id, serie);
+  const { trackedSeries } = useTrackedSeries();
   const { requireAuth } = useAuthGuard();
   const { showToast } = useToast();
   const { lists } = useList();
@@ -24,6 +27,9 @@ export default function SerieCard({ serie, onCheck, score, ratings }) {
   const watchlistPopover = usePopover();
   const ratingsPopover = usePopover();
 
+  const tracked = trackedSeries.find((s) => s.tmdbId === serie.id);
+  const ratings = tracked?.seriesId?.ratings ?? null;
+  const score = isTracked && ratings ? computeAverageScore(ratings) : Math.round((serie.vote_average ?? 0) * 10);
   const inAnyList = lists.some((l) => l.series.some((s) => s.tmdbId === serie.id));
 
   const handleCheck = () => {
@@ -123,12 +129,13 @@ export default function SerieCard({ serie, onCheck, score, ratings }) {
           </div>
           <div className={styles.infoContainer}>
             {(score ?? 0) > 0 && (
-              <div className={styles.heartWrapper} onClick={ratingsPopover.toggle}>
+              <div
+                className={`btn heartWrapper ${styles.heartWrapper} ${ratingsPopover.isOpen ? "active" : ""}`}
+                onClick={ratingsPopover.toggle}
+              >
                 <HeartRating percentage={score} />
                 <span className={styles.rating}>{score}%</span>
-                {ratingsPopover.isOpen && (
-                  <RatingsPopover serie={serie} ratings={ratings} popoverRef={ratingsPopover.popoverRef} />
-                )}
+                {ratingsPopover.isOpen && <RatingsPopover serie={serie} popoverRef={ratingsPopover.popoverRef} />}
               </div>
             )}
           </div>
