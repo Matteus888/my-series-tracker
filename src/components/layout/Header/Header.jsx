@@ -1,8 +1,8 @@
 "use client";
 
 import styles from "./Header.module.css";
-import SearchBar from "../ui/SearchBar";
-import NavBar from "./NavBar";
+import SearchBar from "@/components/ui/SearchBar/SearchBar";
+import NavBar from "@/components/layout/NavBar/NavBar";
 import Link from "next/link";
 import Image from "next/image";
 

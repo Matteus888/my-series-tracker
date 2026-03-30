@@ -1,4 +1,5 @@
 import styles from "./SidebarFilterHeader.module.css";
+import { RESULTS_VARIANTS } from "./variants";
 
 export default function SidebarFilterHeader({
   query,
@@ -8,7 +9,15 @@ export default function SidebarFilterHeader({
   totalPages,
   onPrevPage,
   onNextPage,
+  variant = "search",
 }) {
+  const renderResultsText =
+    RESULTS_VARIANTS[variant]?.({
+      totalResults,
+      query,
+      styles,
+    }) ?? null;
+
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
@@ -33,10 +42,7 @@ export default function SidebarFilterHeader({
         </span>
       </div>
 
-      <p className={styles.resultsText}>
-        We found <span className={styles.bold}>{totalResults}</span> results for{" "}
-        <span className={styles.bold}>{query}</span>.
-      </p>
+      <p className={styles.resultsText}>{renderResultsText}</p>
 
       <p className={styles.paginationText}>
         You&apos;re viewing page <span className={styles.bold}>{currentPage}</span> of{" "}
