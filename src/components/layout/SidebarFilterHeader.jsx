@@ -1,6 +1,6 @@
-import styles from "./SearchFilterHeader.module.css";
+import styles from "./SidebarFilterHeader.module.css";
 
-export default function SearchFilterHeader({
+export default function SidebarFilterHeader({
   query,
   pageName,
   totalResults,
