@@ -1,11 +1,11 @@
 .container {
-  padding: 1.5rem 0 0 0;
+  padding: 1rem 0 0 0;
 }
 
 .pageTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   color: var(--foreground);
 }
 

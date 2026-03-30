@@ -42,6 +42,15 @@ export default function SerieCard({ serie, onCheck }) {
     });
   };
 
+  const handleConfirm = (confirm) => {
+    if (isTracked) {
+      if (confirm) toggle();
+    } else {
+      if (confirm) toggle({ markAllWatched: true, status: "completed" });
+    }
+    confirmPopover.close();
+  };
+
   const handleFavorite = () => {
     requireAuth(() => {
       if (!isTracked) {
@@ -56,13 +65,14 @@ export default function SerieCard({ serie, onCheck }) {
     requireAuth(() => watchlistPopover.toggle());
   };
 
-  const handleConfirm = (confirm) => {
-    if (isTracked) {
-      if (confirm) toggle();
-    } else {
-      if (confirm) toggle({ markAllWatched: true, status: "completed" });
-    }
-    confirmPopover.close();
+  const handleRatings = () => {
+    requireAuth(() => {
+      if (!isTracked) {
+        showToast("Follow show first to rate it.", "error");
+        return;
+      }
+      ratingsPopover.toggle();
+    });
   };
 
   return (
@@ -131,7 +141,8 @@ export default function SerieCard({ serie, onCheck }) {
             {(score ?? 0) > 0 && (
               <div
                 className={`btn heartWrapper ${styles.heartWrapper} ${ratingsPopover.isOpen ? "active" : ""}`}
-                onClick={ratingsPopover.toggle}
+                onClick={handleRatings}
+                title={tracked?.rating ? `Your rating: ${tracked.rating}/10` : "Rate this show"}
               >
                 <HeartRating percentage={score} />
                 <span className={styles.rating}>{score}%</span>
