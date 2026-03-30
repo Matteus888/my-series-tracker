@@ -10,7 +10,7 @@
   display: none;
   padding: 0.25rem;
   position: sticky;
-  top: calc(50px + 0.5rem);
+  top: calc(45px + 0.5rem);
 }
 @media (min-width: 768px) {
   .filterSidebar {

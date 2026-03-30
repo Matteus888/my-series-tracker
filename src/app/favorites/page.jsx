@@ -3,8 +3,8 @@
 import styles from "./page.module.css";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import { normalizeSerieData } from "@/lib/utils/serie.utils";
-import SerieCard from "@/components/series/SerieCard";
-import SerieCardSkeleton from "@/components/series/SerieCardSkeleton";
+import SerieCard from "@/components/series/SerieCard/SerieCard";
+import SerieCardSkeleton from "@/components/series/SerieCardSkeleton/SerieCardSkeleton";
 
 export default function FavoritesPage() {
   const { trackedSeries, isLoading } = useTrackedSeries();

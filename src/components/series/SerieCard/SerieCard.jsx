@@ -11,10 +11,10 @@ import { usePopover } from "@/hooks/usePopover";
 import { useList } from "@/context/ListContext";
 import { useToast } from "@/context/ToastContext";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
-import ConfirmPopover from "../ui/ConfirmPopover";
-import WatchlistPopover from "../ui/WatchlistPopover";
-import RatingsPopover from "../ui/RatingsPopover";
-import HeartRating from "../ui/HeartRating";
+import ConfirmPopover from "../../ui/ConfirmPopover/ConfirmPopover";
+import WatchlistPopover from "../../ui/WatchlistPopover/WatchlistPopover";
+import RatingsPopover from "../../ui/RatingsPopover/RatingsPopover";
+import HeartRating from "../../ui/HeartRating/HeartRating";
 import { computeAverageScore } from "@/lib/utils/ratings.utils";
 
 export default function SerieCard({ serie, onCheck }) {

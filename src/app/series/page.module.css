@@ -10,7 +10,7 @@
   display: none;
   padding: 0.25rem;
   position: sticky;
-  top: calc(50px + 0.5rem);
+  top: calc(45px + 0.5rem);
 }
 @media (min-width: 768px) {
   .filterSidebar {
@@ -64,13 +64,13 @@
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .seriesGrid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .seriesGrid {
     grid-template-columns: repeat(6, 1fr);
   }

@@ -7,8 +7,8 @@ import { useEffect, useRef, useState } from "react";
 import { useSearch } from "@/context/SearchContext";
 import { searchSeries } from "@/lib/api/tmdb.api";
 import { useRouter } from "next/navigation";
-import DynamicSearchResult from "../series/DynamicSearchResult";
-import DynamicSearchResultSkeleton from "../series/DynamicSearchResultSkeleton";
+import DynamicSearchResult from "../../series/DynamicSearchResult/DynamicSearchResult";
+import DynamicSearchResultSkeleton from "../../series/DynamicSearchResultSkeleton/DynamicSearchResultSkeleton";
 
 export default function SearchBar() {
   const { query, setQuery, results, setResults, loading, setLoading, isOpen, setIsOpen } = useSearch();

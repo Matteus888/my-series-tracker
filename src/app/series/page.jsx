@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getAllSeries } from "@/lib/api/tmdb.api";
 import { getTmdbPagesForUiPage, sliceResultsForUiPage, calcTotalUiPages } from "@/lib/utils/pagination.utils";
-import SearchFilterHeader from "@/components/layout/SearchFilterHeader";
-import SerieCard from "@/components/series/SerieCard";
-import SerieCardSkeleton from "@/components/series/SerieCardSkeleton";
-import Pagination from "@/components/ui/Pagination";
+import SidebarFilterHeader from "@/components/layout/SidebarFilterHeader/SidebarFilterHeader";
+import SerieCard from "@/components/series/SerieCard/SerieCard";
+import SerieCardSkeleton from "@/components/series/SerieCardSkeleton/SerieCardSkeleton";
+import Pagination from "@/components/ui/Pagination/Pagination";
 
 export default function AllSeriesPage() {
   const searchParams = useSearchParams();
@@ -61,14 +61,14 @@ export default function AllSeriesPage() {
     <div className={styles.allSeriesLayout}>
       <div className={styles.filterSidebar}>
         <div className={styles.stickyFilter}>
-          <SearchFilterHeader
-            // query={query}
+          <SidebarFilterHeader
             pageName="Series"
             totalResults={totalResults}
             currentPage={currentPage}
             totalPages={totalPages}
             onPrevPage={() => handleChangePage(currentPage - 1)}
             onNextPage={() => handleChangePage(currentPage + 1)}
+            variant="allSeries"
           />
         </div>
       </div>
