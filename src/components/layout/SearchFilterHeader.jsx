@@ -1,6 +1,14 @@
 import styles from "./SearchFilterHeader.module.css";
 
-export default function SearchFilterHeader({ query, totalResults, currentPage, totalPages, onPrevPage, onNextPage }) {
+export default function SearchFilterHeader({
+  query,
+  pageName,
+  totalResults,
+  currentPage,
+  totalPages,
+  onPrevPage,
+  onNextPage,
+}) {
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
@@ -13,11 +21,11 @@ export default function SearchFilterHeader({ query, totalResults, currentPage, t
           ◀
         </span>
 
-        <h3 className={styles.title}>Search</h3>
+        <h3 className={styles.title}>{pageName}</h3>
 
         {/* Flèche droite */}
         <span
-          className={`${styles.navArrow} ${styles.rightArrow} ${currentPage >= totalPages ? styles.disabledArrow : ""}`}
+          className={`${styles.navArrow} ${currentPage >= totalPages ? styles.disabledArrow : ""}`}
           title="Next page"
           onClick={currentPage < totalPages ? onNextPage : undefined}
         >

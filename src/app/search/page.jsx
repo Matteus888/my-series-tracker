@@ -15,6 +15,7 @@ export default function SearchPage() {
   const query = searchParams.get("query");
   const pageParam = searchParams.get("page");
   const router = useRouter();
+
   const [results, setResults] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -67,6 +68,7 @@ export default function SearchPage() {
         <div className={styles.stickyFilter}>
           <SearchFilterHeader
             query={query}
+            pageName="Search"
             totalResults={totalResults}
             currentPage={currentPage}
             totalPages={totalPages}

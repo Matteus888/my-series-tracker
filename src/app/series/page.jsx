@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getAllSeries } from "@/lib/api/tmdb.api";
 import { getTmdbPagesForUiPage, sliceResultsForUiPage, calcTotalUiPages } from "@/lib/utils/pagination.utils";
+import SearchFilterHeader from "@/components/layout/SearchFilterHeader";
 import SerieCard from "@/components/series/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton";
 import Pagination from "@/components/ui/Pagination";
@@ -57,30 +58,44 @@ export default function AllSeriesPage() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.pageTitle}>All series</h1>
-      {loading ? (
-        <div className={styles.seriesGrid}>
-          {Array.from({ length: 36 }).map((_, i) => (
-            <div key={i} className={styles.gridItem}>
-              <SerieCardSkeleton />
-            </div>
-          ))}
+    <div className={styles.allSeriesLayout}>
+      <div className={styles.filterSidebar}>
+        <div className={styles.stickyFilter}>
+          <SearchFilterHeader
+            // query={query}
+            pageName="Series"
+            totalResults={totalResults}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPrevPage={() => handleChangePage(currentPage - 1)}
+            onNextPage={() => handleChangePage(currentPage + 1)}
+          />
         </div>
-      ) : series.length > 0 ? (
-        <>
+      </div>
+      <div className={styles.allSeriesContainer}>
+        {loading ? (
           <div className={styles.seriesGrid}>
-            {series.map((serie) => (
-              <div key={serie.id} className={styles.gridItem}>
-                <SerieCard serie={serie} score={Math.round(serie.vote_average * 10)} />
+            {Array.from({ length: 36 }).map((_, i) => (
+              <div key={i} className={styles.gridItem}>
+                <SerieCardSkeleton />
               </div>
             ))}
           </div>
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage} />
-        </>
-      ) : (
-        <p className={styles.emptyMessage}>No serie found.</p>
-      )}
+        ) : series.length > 0 ? (
+          <>
+            <div className={styles.seriesGrid}>
+              {series.map((serie) => (
+                <div key={serie.id} className={styles.gridItem}>
+                  <SerieCard serie={serie} score={Math.round(serie.vote_average * 10)} />
+                </div>
+              ))}
+            </div>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage} />
+          </>
+        ) : (
+          <p className={styles.emptyMessage}>No serie found.</p>
+        )}
+      </div>
     </div>
   );
 }

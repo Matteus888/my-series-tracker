@@ -20,6 +20,11 @@
   }
 }
 
+.stickyFilter {
+  position: sticky;
+  top: calc(45px + 0.5rem);
+}
+
 .resultsArea {
   flex: 0 0 100%;
   max-width: 100%;
@@ -72,9 +77,4 @@
   text-align: center;
   padding: 2rem;
   color: var(--foreground);
-}
-
-.stickyFilter {
-  position: sticky;
-  top: calc(50px + 0.5rem);
 }
