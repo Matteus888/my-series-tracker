@@ -3,7 +3,7 @@
   top: 0;
   width: 100%;
   height: 45px;
-  z-index: 1020;
+  z-index: var(--z-header);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -26,4 +26,11 @@
 
 .logo {
   margin-right: 1rem;
+}
+
+.rightContainer {
+  display: flex;
+  align-items: center;
+  /* gap: 0.5rem; */
+  height: 100%;
 }

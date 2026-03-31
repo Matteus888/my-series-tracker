@@ -1,1 +1,5 @@
-export default function Profile() {}
+import styles from "./page.module.css";
+
+export default function Profile() {
+  return <p>ProfilePage</p>;
+}

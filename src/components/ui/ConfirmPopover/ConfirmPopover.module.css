@@ -2,8 +2,8 @@
   position: absolute;
   bottom: 100%;
   left: 0;
-  z-index: 100;
-  background-color: var(--foreground);
+  z-index: var(--z-popover);
+  background-color: var(--background-secondary);
   border: 1px solid var(--border);
   padding: 0.6rem 0.7rem;
   width: 140px;
@@ -14,25 +14,27 @@
 }
 
 .confirmPopover p {
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  /* font-weight: 400; */
   text-align: center;
   margin: 0;
-  color: var(--background-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  padding-bottom: 0.3rem;
+  color: var(--foreground);
+  /* text-transform: uppercase; */
+  /* letter-spacing: 0.05em; */
 }
 
 .confirmButtons {
   display: flex;
-  /* justify-content: space-evenly; */
+  justify-content: space-around;
+  background-color: var(--background-primary);
 }
 
 .validate,
 .cancel {
+  border: 1px solid var(--border);
   cursor: pointer;
-  /* border-radius: 50%; */
-  width: 100%;
+  width: 40%;
   padding: 4px;
   display: flex;
   align-items: center;

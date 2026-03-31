@@ -1,1 +1,5 @@
-export default function Dashboard() {}
+import styles from "./page.module.css";
+
+export default function DashboardPage() {
+  return <p>Dashboard</p>;
+}

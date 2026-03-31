@@ -53,7 +53,6 @@
   cursor: pointer;
   user-select: none;
   color: var(--background-primary);
-  z-index: 1;
 }
 
 .icon:active {
@@ -84,7 +83,7 @@
 .resultsContainer {
   position: absolute;
   padding: 0;
-  z-index: 1050;
+  z-index: var(--z-searchresults);
   width: calc(100% - 2px);
   max-height: 660px;
   top: 100%;

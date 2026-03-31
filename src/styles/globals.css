@@ -11,6 +11,14 @@
   --card-bg: #1a1a1a;
   --card-bg-rgb: 26, 26, 26;
   --hover-bg: #2a2a2a;
+  --z-tooltip: 100;
+  --z-popover: 200;
+  --z-menu: 300;
+  --z-searchresults: 400;
+  --z-toast: 500;
+  --z-header: 1020;
+  --z-backbutton: 1025;
+  --z-modal: 1030;
 }
 
 /* ===== BASE & RESET ===== */
@@ -121,6 +129,7 @@ a {
 
 .tooltip {
   position: absolute;
+  z-index: var(--z-tooltip);
   max-width: 95%;
   font-size: 0.75rem;
   opacity: 0;
@@ -131,7 +140,6 @@ a {
   pointer-events: none;
   padding: 0.2rem 0.3rem;
   transition: opacity 0.3s ease;
-  z-index: 1021;
   top: 5px;
   left: 50%;
   transform: translateX(-50%);

@@ -3,7 +3,7 @@
   top: 45px;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: var(--z-toast);
   padding: 1rem 1.5rem;
   font-size: 0.875rem;
   text-align: left;

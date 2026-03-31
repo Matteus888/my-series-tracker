@@ -14,7 +14,10 @@ export const ListProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   const fetchLists = useCallback(async () => {
-    if (!session) return;
+    if (!session) {
+      setLists([]);
+      return;
+    }
     setIsLoading(true);
     try {
       const response = await fetch("/api/lists");

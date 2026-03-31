@@ -2,8 +2,9 @@
   position: absolute;
   bottom: 0;
   left: 100%;
-  z-index: 100;
-  background-color: var(--foreground);
+  z-index: var(--z-popover);
+  background-color: var(--background-secondary);
+  color: var(--foreground);
   border: 1px solid var(--border);
   padding: 0.5rem 0.7rem;
   width: 200px;
@@ -14,12 +15,9 @@
 }
 
 .title {
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.8rem;
   margin: 0;
-  color: var(--background-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  padding-bottom: 0.2rem;
 }
 
 .lists {
@@ -28,29 +26,26 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: 0.3rem;
 }
 
 .listItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.3rem;
-  font-size: 0.8rem;
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
   cursor: pointer;
-  border-radius: 2px;
-  color: var(--background-primary);
-  transition: background-color 0.15s ease;
+  color: var(--foreground);
+  background-color: var(--background-primary);
+  border: 1px solid var(--border);
+  transition: all 0.15s ease;
   min-height: 28px;
 }
 
 .listItem:hover {
-  background-color: var(--background-secondary);
-  color: var(--foreground);
-}
-
-.listItem.active {
-  color: var(--blue);
+  background-color: var(--foreground);
+  color: var(--background-primary);
 }
 
 .listName {
@@ -68,60 +63,65 @@
 .listActions {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
 }
 
 .deleteList {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  padding: 3px;
+  padding: 2px;
   color: var(--red);
-  opacity: 0.6;
-  transition: opacity 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .deleteList:hover {
-  opacity: 1;
-  background-color: rgba(255, 107, 107, 0.15);
+  background-color: var(--red);
+  color: var(--foreground);
 }
 
 .createForm {
   display: flex;
   gap: 0.25rem;
-  border-top: 1px solid var(--border);
-  padding-top: 0.5rem;
+  padding-top: 0.2rem;
 }
 
 .input {
   width: 100%;
   flex: 1;
   font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  background: var(--background-secondary);
+  padding: 0 0.5rem;
+  background-color: var(--background-primary);
   border: 1px solid var(--border);
   color: var(--foreground);
   outline: none;
 }
 
+.input:hover,
+.input:focus {
+  /* border-color: var(--foreground); */
+  background-color: var(--foreground);
+  color: var(--background-primary);
+}
+
 .createButton {
-  background-color: var(--background-secondary);
-  border: 1px solid var(--border);
+  background-color: var(--background-primary);
+  border: 1px solid var(--foreground);
   color: var(--foreground);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.25rem;
-  transition: background-color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .createButton:hover:not(:disabled) {
-  background-color: var(--blue);
+  background-color: var(--foreground);
+  color: var(--background-primary);
 }
 
 .createButton:disabled {
-  opacity: 0.3;
+  color: var(--border);
+  border-color: var(--border);
   cursor: not-allowed;
 }

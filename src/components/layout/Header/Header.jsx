@@ -3,6 +3,7 @@
 import styles from "./Header.module.css";
 import SearchBar from "@/components/ui/SearchBar/SearchBar";
 import NavBar from "@/components/layout/NavBar/NavBar";
+import ProfileMenu from "../ProfileMenu/ProfileMenu";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -15,7 +16,10 @@ export default function Header() {
         </Link>
         <SearchBar />
       </div>
-      <NavBar />
+      <div className={styles.rightContainer}>
+        <NavBar />
+        <ProfileMenu />
+      </div>
     </header>
   );
 }

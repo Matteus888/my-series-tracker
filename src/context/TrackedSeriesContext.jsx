@@ -16,7 +16,10 @@ export const TrackedSeriesProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   const fetchTrackedSeries = useCallback(async () => {
-    if (!session) return;
+    if (!session) {
+      setTrackedSeries([]);
+      return;
+    }
     setIsLoading(true);
 
     try {

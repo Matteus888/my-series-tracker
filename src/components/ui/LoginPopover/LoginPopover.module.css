@@ -1,0 +1,82 @@
+.popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: var(--z-popover);
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border);
+  padding: 0.6rem 0.75rem;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.title {
+  font-size: 0.8rem;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.75rem;
+  background: var(--background-primary);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.input:focus {
+  border-color: var(--blue);
+}
+
+.submitButton {
+  padding: 0.1rem 0;
+  background-color: var(--background-primary);
+  border: 1px solid var(--border);
+  color: var(--blue);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--blue);
+  color: var(--foreground);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.footer {
+  text-align: center;
+}
+
+.link {
+  font-size: 0.7rem;
+  color: var(--foreground);
+  opacity: 0.5;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.link:hover {
+  color: var(--blue);
+  opacity: 1;
+}

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const protectedRoutes = ["/profile", "/watchlist", "/dashboard", "/favorites"];
+const protectedRoutes = ["/profile", "/watchlist", "/dashboard", "/favorites", "/settings"];
 const publicRoutes = ["/login", "/signup", "/verify-email", "/series"];
 
 export async function middleware(request) {
@@ -29,7 +29,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|login|signup|verify-email).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|login|signup|verify-email).*)"],
 };

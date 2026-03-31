@@ -30,7 +30,7 @@ export default function RatingsPopover({ serie, popoverRef }) {
               <Icon
                 path={isFilled ? mdiStar : mdiStarOutline}
                 size={0.6}
-                color={isFilled ? "var(--yellow)" : "var(--background-secondary)"}
+                color={isFilled ? "var(--yellow)" : "var(--foreground)"}
               />
             </span>
           );
