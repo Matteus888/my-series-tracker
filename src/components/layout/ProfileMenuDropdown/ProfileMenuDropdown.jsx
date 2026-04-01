@@ -24,6 +24,11 @@ export default function ProfileMenuDropdown({ session, popoverRef, onClose, onLo
     router.push("/signup");
   };
 
+  const handleSettings = () => {
+    onClose();
+    router.push("/settings");
+  };
+
   return (
     <div className={styles.menu} ref={popoverRef}>
       {session ? (
@@ -33,7 +38,7 @@ export default function ProfileMenuDropdown({ session, popoverRef, onClose, onLo
             <span className={styles.email}>{session.user.email}</span>
           </div>
           <div className={styles.divider} />
-          <button className={styles.menuItem} onClick={() => router.push("/settings")}>
+          <button className={styles.menuItem} onClick={handleSettings}>
             <Icon path={mdiCog} size={0.7} />
             <span>Settings</span>
           </button>

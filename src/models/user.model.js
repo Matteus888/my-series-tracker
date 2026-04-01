@@ -71,6 +71,11 @@ const userSchema = new mongoose.Schema(
         message: "Profile picture URL is invalid.",
       },
     },
+    bio: {
+      type: String,
+      trim: true,
+      maxlength: [200, "Bio must not exceed 200 characters."],
+    },
     trackedSeries: [
       {
         seriesId: {
@@ -115,6 +120,18 @@ const userSchema = new mongoose.Schema(
         message: "Specified role is invalid.",
       },
       default: "user",
+    },
+    isPublic: {
+      type: Boolean,
+      default: true,
+    },
+    publicLists: {
+      type: Boolean,
+      default: true,
+    },
+    publicActivity: {
+      type: Boolean,
+      default: true,
     },
   },
   {

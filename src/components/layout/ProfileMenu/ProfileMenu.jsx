@@ -23,7 +23,7 @@ export default function ProfileMenu() {
     <div className={styles.wrapper}>
       {/* Icône profil */}
       <div
-        className={`${styles.avatar} ${menuPopover.isOpen ? styles.avatarActive : ""}`}
+        className={`${styles.avatar} ${menuPopover.isOpen || loginPopover.isOpen ? styles.avatarActive : ""}`}
         onClick={menuPopover.toggle}
         title={session ? session.user.name : "Account"}
       >

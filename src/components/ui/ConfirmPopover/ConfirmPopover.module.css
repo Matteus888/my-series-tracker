@@ -15,24 +15,21 @@
 
 .confirmPopover p {
   font-size: 0.8rem;
-  /* font-weight: 400; */
   text-align: center;
   margin: 0;
   padding-bottom: 0.3rem;
   color: var(--foreground);
-  /* text-transform: uppercase; */
-  /* letter-spacing: 0.05em; */
 }
 
 .confirmButtons {
   display: flex;
   justify-content: space-around;
-  background-color: var(--background-primary);
 }
 
 .validate,
 .cancel {
   border: 1px solid var(--border);
+  background-color: var(--background-primary);
   cursor: pointer;
   width: 40%;
   padding: 4px;
@@ -43,12 +40,12 @@
 }
 
 .validate {
-  color: var(--green);
+  color: var(--blue);
 }
 
 .validate:hover {
   color: var(--foreground);
-  background-color: var(--green);
+  background-color: var(--blue);
 }
 
 .cancel {

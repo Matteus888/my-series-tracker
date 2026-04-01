@@ -87,11 +87,11 @@
 
 .confirmYes {
   background-color: var(--background-primary);
-  color: var(--green);
+  color: var(--blue);
 }
 
 .confirmYes:hover {
-  background-color: var(--green);
+  background-color: var(--blue);
   color: var(--foreground);
 }
 
