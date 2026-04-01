@@ -27,8 +27,15 @@ export default function ProfileMenu() {
         onClick={menuPopover.toggle}
         title={session ? session.user.name : "Account"}
       >
-        {session?.user?.image ? (
-          <Image src={session.user.image} alt="profile" className={styles.avatarImage} />
+        {session?.user?.profilePicture && session.user.profilePicture !== "/images/default-profile.png" ? (
+          <Image
+            src={session.user.profilePicture}
+            alt="profile"
+            width={34}
+            height={34}
+            className={styles.avatarImage}
+            priority
+          />
         ) : (
           <Icon path={mdiAccount} size={1} />
         )}

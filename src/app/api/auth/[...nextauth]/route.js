@@ -23,6 +23,7 @@ export const authOptions = {
           id: user._id.toString(),
           email: user.email,
           name: user.username,
+          profilePicture: user.profilePicture || null,
         };
       },
     }),
@@ -52,11 +53,13 @@ export const authOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.profilePicture = user.profilePicture || null;
       }
       return token;
     },
     async session({ session, token }) {
       session.user.id = token.id;
+      session.user.profilePicture = token.profilePicture || null;
       return session;
     },
   },

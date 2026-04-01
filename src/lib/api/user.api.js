@@ -1,5 +1,12 @@
 import dbConnect from "@/lib/db/db.connect";
 import bcrypt from "bcryptjs";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const getUser = async (UserModel, userId, select = "") => {
   await dbConnect();
@@ -52,6 +59,46 @@ export const updateUserPrivacy = async (UserModel, userId, { isPublic, publicLis
     { $set: { isPublic, publicLists, publicActivity } },
     { runValidators: true },
   );
+};
+
+export const uploadAvatar = async (UserModel, userId, buffer) => {
+  const result = await new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream(
+        {
+          folder: "my-serie-tracker-users-avatars",
+          public_id: `user_${userId}`,
+          overwrite: true,
+          transformation: [{ width: 200, height: 200, crop: "fill", gravity: "face" }],
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        },
+      )
+      .end(buffer);
+  });
+  await UserModel.findByIdAndUpdate(userId, {
+    $set: { profilePicture: result.secure_url },
+  });
+  return result.secure_url;
+};
+
+export const updateAvatarUrl = async (UserModel, userId, url) => {
+  await dbConnect();
+
+  const result = await cloudinary.uploader.upload(url, {
+    folder: "my-serie-tracker-users-avatars",
+    public_id: `user_${userId}`,
+    overwrite: true,
+    transformation: [{ width: 200, height: 200, crop: "fill", gravity: "face" }],
+  });
+
+  await UserModel.findByIdAndUpdate(userId, {
+    $set: { profilePicture: url },
+  });
+
+  return result.secure_url;
 };
 
 export const deleteUser = async (UserModel, UserListModel, EpisodeProgressModel, userId) => {

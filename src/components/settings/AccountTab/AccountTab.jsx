@@ -1,21 +1,30 @@
 "use client";
 
 import styles from "../shared/settings.module.css";
+import avatarStyles from "./AccountTab.module.css";
+import { useState, useEffect, useRef } from "react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Icon from "@mdi/react";
-import { mdiContentSaveOutline, mdiContentSaveMoveOutline } from "@mdi/js";
-import { useState, useEffect } from "react";
+import { mdiContentSaveOutline, mdiContentSaveMoveOutline, mdiAccount, mdiUpload, mdiLink } from "@mdi/js";
 import { useToast } from "@/context/ToastContext";
 
 export default function AccountTab({ session }) {
+  const { update } = useSession();
   const { showToast } = useToast();
+  const fileInputRef = useRef(null);
 
   const [username, setUsername] = useState(session?.user?.name || "");
   const [email, setEmail] = useState(session?.user?.email || "");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [externalUrl, setExternalUrl] = useState("");
+  const [showUrlInput, setShowUrlInput] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoadingAccount, setIsLoadingAccount] = useState(false);
   const [isLoadingPassword, setIsLoadingPassword] = useState(false);
+  const [isLoadingAvatar, setIsLoadingAvatar] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -24,10 +33,76 @@ export default function AccountTab({ session }) {
       if (data.user) {
         setUsername(data.user.username || "");
         setEmail(data.user.email || "");
+        setAvatarUrl(data.user.profilePicture || "");
       }
     };
     fetchUser();
   }, []);
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Please select an image file.", "error");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("Image must be under 5MB.", "error");
+      return;
+    }
+    setIsLoadingAvatar(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/user/avatar", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Upload failed.");
+      }
+      const data = await response.json();
+      setAvatarUrl(data.url);
+      await update({ profilePicture: data.url });
+      showToast("Avatar updated ✓");
+    } catch (err) {
+      showToast(err.message, "error");
+    } finally {
+      setIsLoadingAvatar(false);
+    }
+  };
+
+  const handleExternalUrl = async (e) => {
+    e.preventDefault();
+    if (!externalUrl.trim()) return;
+    setIsLoadingAvatar(true);
+
+    try {
+      const response = await fetch("/api/user/avatar", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: externalUrl }),
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "An error occurred.");
+      }
+      const data = await response.json();
+      setAvatarUrl(data.url);
+      await update({ profilePicture: data.url });
+      setExternalUrl("");
+      setShowUrlInput(false);
+      showToast("Avatar updated ✓");
+    } catch (err) {
+      showToast(err.message, "error");
+    } finally {
+      setIsLoadingAvatar(false);
+    }
+  };
 
   const handleSaveAccount = async (e) => {
     e.preventDefault();
@@ -80,6 +155,62 @@ export default function AccountTab({ session }) {
 
   return (
     <div className={styles.section}>
+      {/* Avatar */}
+      <p className={styles.sectionTitle}>Profile picture</p>
+      <div className={avatarStyles.avatarSection}>
+        <div className={avatarStyles.avatarPreview}>
+          {avatarUrl && avatarUrl !== "/images/default-profile.png" ? (
+            <Image src={avatarUrl} alt="avatar" width={80} height={80} className={avatarStyles.avatarImage} priority />
+          ) : (
+            <Icon path={mdiAccount} size={2} />
+          )}
+          {isLoadingAvatar && <div className={avatarStyles.avatarOverlay}>...</div>}
+        </div>
+        <div className={avatarStyles.avatarActions}>
+          {/* Upload fichier */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileUpload}
+            className={avatarStyles.fileInput}
+          />
+          <button
+            className={avatarStyles.avatarButton}
+            onClick={() => fileInputRef.current.click()}
+            disabled={isLoadingAvatar}
+          >
+            <Icon path={mdiUpload} size={0.8} />
+            Upload image
+          </button>
+          {/* URL externe */}
+          <button
+            className={avatarStyles.avatarButton}
+            onClick={() => setShowUrlInput((prev) => !prev)}
+            disabled={isLoadingAvatar}
+          >
+            <Icon path={mdiLink} size={0.8} />
+            Use URL
+          </button>
+        </div>
+      </div>
+      {showUrlInput && (
+        <form onSubmit={handleExternalUrl} className={avatarStyles.urlForm}>
+          <input
+            type="url"
+            placeholder="https://example.com/image.jpg"
+            value={externalUrl}
+            onChange={(e) => setExternalUrl(e.target.value)}
+            className={styles.input}
+            required
+          />
+          <button type="submit" className={styles.saveButton} disabled={isLoadingAvatar}>
+            Save
+          </button>
+        </form>
+      )}
+      <div className={styles.divider} />
+
       {/* Username & Email */}
       <p className={styles.sectionTitle}>Account information</p>
       <form className={styles.section} onSubmit={handleSaveAccount}>
