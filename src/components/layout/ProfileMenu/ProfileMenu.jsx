@@ -1,10 +1,11 @@
 "use client";
 
 import styles from "./ProfileMenu.module.css";
-import Icon from "@mdi/react";
 import Image from "next/image";
-import { mdiAccount } from "@mdi/js";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import Icon from "@mdi/react";
+import { mdiAccount } from "@mdi/js";
 import { usePopover } from "@/hooks/usePopover";
 import ProfileMenuDropdown from "../ProfileMenuDropdown/ProfileMenuDropdown";
 import LoginPopover from "@/components/ui/LoginPopover/LoginPopover";
@@ -13,6 +14,9 @@ export default function ProfileMenu() {
   const { data: session } = useSession();
   const menuPopover = usePopover();
   const loginPopover = usePopover();
+
+  const pathname = usePathname();
+  const isSettingsPage = pathname.startsWith("/settings");
 
   const handleLoginClick = () => {
     menuPopover.close();
@@ -23,7 +27,7 @@ export default function ProfileMenu() {
     <div className={styles.wrapper}>
       {/* Icône profil */}
       <div
-        className={`${styles.avatar} ${menuPopover.isOpen || loginPopover.isOpen ? styles.avatarActive : ""}`}
+        className={`${styles.avatar} ${menuPopover.isOpen || loginPopover.isOpen || isSettingsPage ? styles.avatarActive : ""}`}
         onClick={menuPopover.toggle}
         title={session ? session.user.name : "Account"}
       >

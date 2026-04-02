@@ -30,7 +30,7 @@
   height: 150px;
   object-fit: cover;
   border-radius: 50%;
-  border: 2px solid var(--foreground);
+  border: 2px solid var(--border);
 }
 
 .avatarOverlay {
@@ -95,6 +95,12 @@
   cursor: pointer;
   transition: all 0.15s ease;
   background: var(--background-primary);
+}
+
+.avatarButton:active,
+.avatarButtonValidate:active,
+.avatarButtonCancel:active {
+  transform: scale(0.9);
 }
 
 .avatarButton {

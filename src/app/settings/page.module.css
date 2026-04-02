@@ -1,9 +1,10 @@
 .container {
   max-width: 700px;
   margin: 0 auto;
-  padding: 1.5rem 2rem;
+  padding: 0.75rem 2rem 1.5rem;
   background-color: var(--background-secondary);
-  border: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
 }
 
 .title {

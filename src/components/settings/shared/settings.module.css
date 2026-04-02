@@ -77,6 +77,10 @@
   cursor: not-allowed;
 }
 
+.saveButton:active {
+  transform: scale(0.9);
+}
+
 .divider {
   border-top: 1px solid var(--border);
 }

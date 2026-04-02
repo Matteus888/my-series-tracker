@@ -9,7 +9,7 @@
   height: 34px;
   border-radius: 50%;
   background-color: var(--background-secondary);
-  border: 3px solid var(--foreground);
+  outline: 3px solid rgba(var(--foreground-rgb), 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,8 +21,7 @@
 
 .avatar:hover,
 .avatarActive {
-  border-color: var(--blue);
-  background-color: var(--hover-bg);
+  outline-color: var(--foreground);
 }
 
 .avatarImage {
