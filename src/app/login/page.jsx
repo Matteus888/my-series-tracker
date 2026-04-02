@@ -1,9 +1,12 @@
 "use client";
+
 import styles from "@/app/login/page.module.css";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import Icon from "@mdi/react";
+import { mdiLogin, mdiCheck, mdiUpload } from "@mdi/js";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -36,16 +39,21 @@ export default function LoginPage() {
 
   return (
     <div className={styles.container}>
-      <div className={`${styles.loginCard} card`}>
-        <h1 className={styles.loginTitle}>Connection</h1>
+      <div className={styles.card}>
+        <h1 className={styles.title}>
+          <Icon path={mdiLogin} size={1.2} />
+          Log In
+        </h1>
+
         {error && (
           <div className="alert alert-danger" role="alert">
             {error}
           </div>
         )}
-        <form onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
-            <label htmlFor="email" className={styles.formLabel}>
+
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.field}>
+            <label htmlFor="email" className={styles.label}>
               Email
             </label>
             <input
@@ -53,13 +61,14 @@ export default function LoginPage() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-control"
+              className={styles.input}
               required
               placeholder="your@email.com"
             />
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="password" className={styles.formLabel}>
+
+          <div className={styles.field}>
+            <label htmlFor="password" className={styles.label}>
               Password
             </label>
             <input
@@ -67,23 +76,21 @@ export default function LoginPage() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="form-control"
+              className={styles.input}
               required
               placeholder="••••••••"
             />
           </div>
-          <button type="submit" disabled={isLoading} className="btn">
-            {isLoading ? "Connecting..." : "Log In"}
+
+          <button type="submit" disabled={isLoading} className={styles.submitButton}>
+            {isLoading ? <Icon path={mdiUpload} size={1} /> : <Icon path={mdiCheck} size={1} />}
           </button>
         </form>
 
-        <div className={styles.formFooter}>
-          <p className={styles.mutedText}>
-            Don&#39;t have an account yet?{" "}
-            <Link href="/signup" className={styles.signupLink}>
-              Register
-            </Link>
-          </p>
+        <div className={styles.footer}>
+          <Link href="/signup" className={styles.link}>
+            Don't have an account yet? Register
+          </Link>
         </div>
       </div>
     </div>

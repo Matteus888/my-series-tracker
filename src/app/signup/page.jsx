@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import Icon from "@mdi/react";
+import { mdiAccountPlus, mdiCheck, mdiUpload } from "@mdi/js";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -28,9 +30,7 @@ export default function SignupPage() {
     try {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -54,16 +54,21 @@ export default function SignupPage() {
 
   return (
     <div className={styles.container}>
-      <div className={`card ${styles.signupCard}`}>
-        <h1 className={styles.title}>Registration</h1>
+      <div className={styles.card}>
+        <h1 className={styles.title}>
+          <Icon path={mdiAccountPlus} size={1.2} />
+          Registration
+        </h1>
+
         {error && (
           <div className="alert alert-danger" role="alert">
             {error}
           </div>
         )}
-        <form onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
-            <label htmlFor="username" className={styles.formLabel}>
+
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.field}>
+            <label htmlFor="username" className={styles.label}>
               Username
             </label>
             <input
@@ -72,13 +77,16 @@ export default function SignupPage() {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className="form-control"
+              className={styles.input}
               required
               placeholder="Username"
+              minLength={3}
+              maxLength={30}
             />
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="email" className={styles.formLabel}>
+
+          <div className={styles.field}>
+            <label htmlFor="email" className={styles.label}>
               Email
             </label>
             <input
@@ -87,13 +95,14 @@ export default function SignupPage() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="form-control"
+              className={styles.input}
               required
               placeholder="your@email.com"
             />
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="password" className={styles.formLabel}>
+
+          <div className={styles.field}>
+            <label htmlFor="password" className={styles.label}>
               Password
             </label>
             <input
@@ -102,24 +111,23 @@ export default function SignupPage() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="form-control"
+              className={styles.input}
               required
               placeholder="•••••••• (8 characters min)"
               minLength={8}
             />
+            <p className={styles.hint}>Minimum 8 characters</p>
           </div>
-          <button type="submit" disabled={isLoading} className={`btn ${styles.submitButton}`}>
-            {isLoading ? "Registration in progress..." : "Register"}
+
+          <button type="submit" disabled={isLoading} className={styles.submitButton}>
+            {isLoading ? <Icon path={mdiUpload} size={1} /> : <Icon path={mdiCheck} size={1} />}
           </button>
         </form>
 
         <div className={styles.footer}>
-          <p className={styles.mutedText}>
-            Already have an account?{" "}
-            <Link href="/login" className={styles.loginLink}>
-              Log In
-            </Link>
-          </p>
+          <Link href="/login" className={styles.link}>
+            Already have an account? Log In
+          </Link>
         </div>
       </div>
     </div>

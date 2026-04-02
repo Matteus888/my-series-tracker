@@ -1,9 +1,11 @@
 .footer {
-  background-color: var(--card-bg);
+  background-color: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), rgba(var(--card-bg-rgb), 0.6);
+  /* background-color: var(--background-secondary); */
   padding: 0.5rem 0.85rem;
+  height: 40px;
   font-size: 0.9rem;
   color: var(--foreground);
-  margin-top: auto; /* Pour coller en bas de la page */
+  margin-top: auto;
 }
 
 .content {
@@ -21,7 +23,6 @@
 }
 
 .link {
-  color: var(--foreground);
   text-decoration: none;
   margin: 0 0.75rem; /* Espacement horizontal */
 }
