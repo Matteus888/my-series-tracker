@@ -15,9 +15,7 @@
   justify-content: center;
   cursor: pointer;
   color: var(--foreground);
-  transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease;
+  transition: all 0.15s ease;
   overflow: hidden;
 }
 

@@ -1,16 +1,13 @@
 .avatarSection {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  justify-content: space-evenly;
 }
 
 .avatarPreview {
   position: relative;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  width: 50%;
   background-color: var(--background-secondary);
-  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,57 +16,129 @@
   color: var(--foreground);
 }
 
+.avatarActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  gap: 0.5rem;
+}
+
 .avatarImage {
-  width: 100%;
-  height: 100%;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--foreground);
 }
 
 .avatarOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
   font-size: 0.75rem;
   color: var(--foreground);
-}
-
-.avatarActions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.avatarButton {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.75rem;
-  font-size: 0.8rem;
-  background: var(--background-secondary);
-  border: 1px solid var(--border);
-  color: var(--foreground);
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.avatarButton:hover:not(:disabled) {
-  background-color: var(--hover-bg);
-}
-
-.avatarButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .fileInput {
   display: none;
 }
 
-.urlForm {
+.fileRow {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
   gap: 0.5rem;
-  align-items: flex-start;
+}
+
+.fileName {
+  width: 90%;
+  font-size: 0.7rem;
+  color: var(--foreground);
+  opacity: 0.6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: start;
+}
+
+.urlSection {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+}
+
+.subTitle {
+  width: 90%;
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--foreground);
+  opacity: 0.5;
+}
+
+.avatarButton,
+.avatarButtonValidate,
+.avatarButtonCancel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  padding: 0.2rem 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: var(--background-primary);
+}
+
+.avatarButton {
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  color: var(--foreground);
+}
+
+.avatarButtonValidate {
+  border: 1px solid var(--blue);
+  color: var(--blue);
+}
+
+.avatarButtonCancel {
+  border: 1px solid var(--red);
+  color: var(--red);
+}
+
+.avatarButton:hover:not(:disabled),
+.avatarButtonValidate:hover:not(:disabled) {
+  background-color: var(--blue);
+  color: var(--foreground);
+}
+
+.avatarButtonCancel:hover:not(:disabled) {
+  background-color: var(--red);
+  color: var(--foreground);
+}
+
+.avatarButton:disabled,
+.avatarButtonValidate:disabled,
+.avatarButtonCancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.actionButtons {
+  display: flex;
+  width: 90%;
+  gap: 0.5rem;
+}
+
+.avatarButtonValidate,
+.avatarButtonCancel {
+  flex: 1;
 }

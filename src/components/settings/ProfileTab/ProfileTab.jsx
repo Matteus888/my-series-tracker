@@ -1,6 +1,8 @@
 "use client";
 
 import styles from "../shared/settings.module.css";
+import Icon from "@mdi/react";
+import { mdiUpload, mdiContentSaveMoveOutline } from "@mdi/js";
 import { useState, useEffect } from "react";
 import { useToast } from "@/context/ToastContext";
 
@@ -106,8 +108,8 @@ export default function ProfileTab({ session }) {
           />
           <p className={styles.hint}>{bio.length}/200 characters</p>
         </div>
-        <button type="submit" className={styles.saveButton} disabled={isLoading}>
-          {isLoading ? "Saving..." : "Save"}
+        <button type="submit" className={styles.saveButton} title="Save changes" disabled={isLoading}>
+          {isLoading ? <Icon path={mdiUpload} size={1} /> : <Icon path={mdiContentSaveMoveOutline} size={1} />}
         </button>
       </form>
     </div>

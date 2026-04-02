@@ -21,19 +21,27 @@
   line-height: 1.5;
 }
 
+.input:focus {
+  border-color: var(--red);
+}
+
 .deleteButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
   align-self: flex-start;
-  padding: 0.5rem 1.25rem;
-  font-size: 0.875rem;
-  background: var(--red);
-  border: none;
+  padding: 0.4rem 1rem 0.4rem 0.8rem;
+  background-color: var(--red);
+  border: 1px solid var(--red);
   color: var(--foreground);
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .deleteButton:hover:not(:disabled) {
-  opacity: 0.85;
+  background-color: var(--background-primary);
+  color: var(--red);
 }
 
 .deleteButton:disabled {

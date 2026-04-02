@@ -41,6 +41,7 @@
 
 .validate {
   color: var(--blue);
+  border-color: var(--blue);
 }
 
 .validate:hover {
@@ -50,6 +51,7 @@
 
 .cancel {
   color: var(--red);
+  border-color: var(--red);
 }
 
 .cancel:hover {

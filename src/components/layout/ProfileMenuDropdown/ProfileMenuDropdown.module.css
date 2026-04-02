@@ -88,6 +88,7 @@
 .confirmYes {
   background-color: var(--background-primary);
   color: var(--blue);
+  border-color: var(--blue);
 }
 
 .confirmYes:hover {
@@ -98,6 +99,7 @@
 .confirmNo {
   background-color: var(--background-primary);
   color: var(--red);
+  border-color: var(--red);
 }
 
 .confirmNo:hover {

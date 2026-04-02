@@ -2,6 +2,8 @@
 
 import styles from "../shared/settings.module.css";
 import dangerStyles from "./DangerZoneTab.module.css";
+import Icon from "@mdi/react";
+import { mdiDeleteForeverOutline, mdiUpload } from "@mdi/js";
 import { useState } from "react";
 import { useToast } from "@/context/ToastContext";
 import { signOut } from "next-auth/react";
@@ -56,7 +58,7 @@ export default function DangerZoneTab({ session }) {
               type="text"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
-              className={styles.input}
+              className={`${styles.input} ${dangerStyles.input}`}
               placeholder={session?.user?.name}
               required
             />
@@ -66,7 +68,17 @@ export default function DangerZoneTab({ session }) {
             className={dangerStyles.deleteButton}
             disabled={isLoading || confirm !== session?.user?.name}
           >
-            {isLoading ? "Deleting..." : "Delete my account"}
+            {isLoading ? (
+              <>
+                <Icon path={mdiUpload} size={0.7} />
+                {"Deleting..."}
+              </>
+            ) : (
+              <>
+                <Icon path={mdiDeleteForeverOutline} size={0.7} />
+                {"Delete my account"}
+              </>
+            )}
           </button>
         </form>
       </div>

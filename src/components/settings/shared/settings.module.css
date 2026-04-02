@@ -56,12 +56,12 @@
 }
 
 .saveButton {
-  width: 50%;
-  align-self: flex-end;
+  width: 100%;
+  align-self: center;
   padding: 0.3rem 0 0.15rem;
   font-size: 0.875rem;
   background-color: var(--background-primary);
-  border: 1px solid var(--border);
+  border: 1px solid var(--blue);
   color: var(--blue);
   cursor: pointer;
   transition: all 0.15s ease;

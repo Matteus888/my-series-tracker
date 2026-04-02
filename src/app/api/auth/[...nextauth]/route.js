@@ -50,10 +50,13 @@ export const authOptions = {
     },
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.profilePicture = user.profilePicture || null;
+      }
+      if (trigger === "update" && session?.profilePicture) {
+        token.profilePicture = session.profilePicture;
       }
       return token;
     },
