@@ -1,83 +1,35 @@
 "use client";
 
 import styles from "./SerieCard.module.css";
-import Icon from "@mdi/react";
-import { mdiCheck, mdiBookmarkPlusOutline, mdiPlaylistPlus } from "@mdi/js";
 import Link from "next/link";
 import Image from "next/image";
-import { useSeries } from "@/hooks/useSeries";
-import { useAuthGuard } from "@/hooks/useAuthGuard";
-import { usePopover } from "@/hooks/usePopover";
-import { useList } from "@/context/ListContext";
-import { useToast } from "@/context/ToastContext";
-import { useTrackedSeries } from "@/context/TrackedSeriesContext";
+import { useSerieCard } from "@/hooks/useSerieCard";
 import SerieCardPopovers from "./SerieCardPopovers";
-import HeartRating from "../../ui/HeartRating/HeartRating";
-import { computeAverageScore } from "@/lib/utils/ratings.utils";
+import SerieCardActions from "./SerieCardActions";
 
 export default function SerieCard({ serie, onCheck }) {
-  const { isTracked, isFavorite, toggle, toggleFavorite } = useSeries(serie.id, serie);
-  const { trackedSeries } = useTrackedSeries();
-  const { requireAuth } = useAuthGuard();
-  const { showToast } = useToast();
-  const { lists } = useList();
-  const confirmPopover = usePopover();
-  const watchlistPopover = usePopover();
-  const ratingsPopover = usePopover();
-
-  const tracked = trackedSeries.find((s) => s.tmdbId === serie.id);
-  const ratings = tracked?.seriesId?.ratings ?? null;
-  const score = isTracked && ratings ? computeAverageScore(ratings) : Math.round((serie.vote_average ?? 0) * 10);
-  const inAnyList = lists.some((l) => l.series.some((s) => s.tmdbId === serie.id));
-
-  const handleCheck = () => {
-    requireAuth(() => {
-      if (onCheck) {
-        onCheck(serie);
-        return;
-      }
-      confirmPopover.open();
-    });
-  };
-
-  const handleConfirm = (confirm) => {
-    if (isTracked) {
-      if (confirm) toggle();
-    } else {
-      if (confirm) toggle({ markAllWatched: true, status: "completed" });
-    }
-    confirmPopover.close();
-  };
-
-  const handleFavorite = () => {
-    requireAuth(() => {
-      if (!isTracked) {
-        showToast("Mark this show as watched first to add it to favorites.", "error");
-        return;
-      }
-      toggleFavorite();
-    });
-  };
-
-  const handleWatchlist = () => {
-    requireAuth(() => watchlistPopover.toggle());
-  };
-
-  const handleRatings = () => {
-    requireAuth(() => {
-      if (!isTracked) {
-        showToast("Follow show first to rate it.", "error");
-        return;
-      }
-      ratingsPopover.toggle();
-    });
-  };
+  const {
+    isTracked,
+    isFavorite,
+    tracked,
+    score,
+    inAnyList,
+    confirmPopover,
+    watchlistPopover,
+    ratingsPopover,
+    handleCheck,
+    handleConfirm,
+    handleFavorite,
+    handleWatchlist,
+    handleRatings,
+  } = useSerieCard(serie, onCheck);
 
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
       {/* Tooltip */}
       <div className="tooltip">{serie.name}</div>
       <div className={`card ${styles.card}`}>
+        {/* Popovers */}
         <SerieCardPopovers
           serie={serie}
           isTracked={isTracked}
@@ -86,6 +38,7 @@ export default function SerieCard({ serie, onCheck }) {
           ratingsPopover={ratingsPopover}
           onConfirm={handleConfirm}
         />
+        {/* Image */}
         <div className={styles.imageContainer}>
           <Link href={`/series/${serie.id}`} className={styles.imageLink}>
             {serie.poster_path ? (
@@ -104,48 +57,22 @@ export default function SerieCard({ serie, onCheck }) {
           {/* Badge année */}
           {serie.first_air_date && <span className={styles.yearBadge}>{serie.first_air_date.slice(0, 4)}</span>}
         </div>
+        {/* Footer */}
         <div className={`card-footer ${styles.footer}`}>
-          <div className={styles.buttonsContainer}>
-            {/* Bouton check */}
-            <button
-              className={`btn check ${styles.button} ${isTracked || confirmPopover.isOpen ? "active" : ""}`}
-              onClick={handleCheck}
-              title={isTracked ? "Remove from watched" : "Add to watched"}
-            >
-              <Icon path={mdiCheck} size={1} />
-            </button>
-            {/* Bouton bookmark */}
-            <button
-              className={`btn bookmark ${styles.button} ${isFavorite ? "active" : ""}`}
-              onClick={handleFavorite}
-              title={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            >
-              <Icon path={mdiBookmarkPlusOutline} size={1} />
-            </button>
-            {/* Bouton watchlist */}
-            <div className={styles.watchlistWrapper}>
-              <button
-                className={`btn watchlist ${styles.button} ${inAnyList || watchlistPopover.isOpen ? "active" : ""}`}
-                onClick={handleWatchlist}
-                title={inAnyList ? "Manage list" : "Add to list"}
-              >
-                <Icon path={mdiPlaylistPlus} size={1} />
-              </button>
-            </div>
-          </div>
-          {/* Rating */}
-          <div className={styles.infoContainer}>
-            {(score ?? 0) > 0 && (
-              <div
-                className={`btn heartWrapper ${styles.heartWrapper} ${ratingsPopover.isOpen ? "active" : ""}`}
-                onClick={handleRatings}
-                title={tracked?.rating ? `Your rating: ${tracked.rating}/10` : "Rate this show"}
-              >
-                <HeartRating percentage={score} />
-                <span className={styles.rating}>{score}%</span>
-              </div>
-            )}
-          </div>
+          <SerieCardActions
+            isTracked={isTracked}
+            isFavorite={isFavorite}
+            inAnyList={inAnyList}
+            score={score}
+            tracked={tracked}
+            confirmPopover={confirmPopover}
+            watchlistPopover={watchlistPopover}
+            ratingsPopover={ratingsPopover}
+            onCheck={handleCheck}
+            onFavorite={handleFavorite}
+            onWatchlist={handleWatchlist}
+            onRatings={handleRatings}
+          />
         </div>
       </div>
     </div>
