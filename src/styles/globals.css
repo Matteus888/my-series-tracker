@@ -2,6 +2,7 @@
 :root {
   --background-primary: #0a0a0a;
   --background-secondary: #1a1a1a;
+  --background-third: #2a2a2a;
   --foreground: #ededed;
   --foreground-rgb: 237, 237, 237;
   --blue: #0082ce;
@@ -9,7 +10,7 @@
   --green: #0fbe58;
   --yellow: #f5c518;
   --border: #333333;
-  --card-bg: #1a1a1a;
+  --card-bg: #2a2a2a;
   --card-bg-rgb: 26, 26, 26;
   --hover-bg: #2a2a2a;
   --z-tooltip: 100;

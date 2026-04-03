@@ -7,6 +7,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useToast } from "@/context/ToastContext";
 import Link from "next/link";
+import PasswordInput from "../PasswordInput/PasswordInput";
 
 export default function LoginPopover({ onClose, popoverRef }) {
   const [email, setEmail] = useState("");
@@ -48,16 +49,22 @@ export default function LoginPopover({ onClose, popoverRef }) {
           className={styles.input}
           required
         />
-        <input
+        {/* <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className={styles.input}
           required
+        /> */}
+        <PasswordInput
+          value={password}
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+          className={styles.input}
+          required
         />
         <button type="submit" className={styles.submitButton} disabled={isLoading}>
-          {/* {isLoading ? "Logging in..." : "Log in"} */}
           <Icon path={mdiCheck} size={0.8} />
         </button>
       </form>

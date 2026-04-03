@@ -7,6 +7,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Icon from "@mdi/react";
 import { mdiAccountPlus, mdiCheck, mdiUpload } from "@mdi/js";
+import PasswordInput from "@/components/ui/PasswordInput/PasswordInput";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -105,15 +106,14 @@ export default function SignupPage() {
             <label htmlFor="password" className={styles.label}>
               Password
             </label>
-            <input
-              type="password"
+            <PasswordInput
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className={styles.input}
               required
               placeholder="•••••••• (8 characters min)"
+              className={styles.input}
               minLength={8}
             />
             <p className={styles.hint}>Minimum 8 characters</p>

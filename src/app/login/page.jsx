@@ -7,6 +7,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Icon from "@mdi/react";
 import { mdiLogin, mdiCheck, mdiUpload } from "@mdi/js";
+import PasswordInput from "@/components/ui/PasswordInput/PasswordInput";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -71,14 +72,11 @@ export default function LoginPage() {
             <label htmlFor="password" className={styles.label}>
               Password
             </label>
-            <input
-              type="password"
-              id="password"
+            <PasswordInput
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={styles.input}
-              required
               placeholder="••••••••"
+              className={styles.input}
             />
           </div>
 
@@ -89,7 +87,7 @@ export default function LoginPage() {
 
         <div className={styles.footer}>
           <Link href="/signup" className={styles.link}>
-            Don't have an account yet? Register
+            Don&apos;t have an account yet? Register
           </Link>
         </div>
       </div>

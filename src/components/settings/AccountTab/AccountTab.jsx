@@ -8,6 +8,7 @@ import Image from "next/image";
 import Icon from "@mdi/react";
 import { mdiContentSaveMoveOutline, mdiAccount, mdiUpload, mdiLink, mdiCancel } from "@mdi/js";
 import { useToast } from "@/context/ToastContext";
+import PasswordInput from "@/components/ui/PasswordInput/PasswordInput";
 
 export default function AccountTab({ session }) {
   const { update } = useSession();
@@ -280,8 +281,7 @@ export default function AccountTab({ session }) {
       <form onSubmit={handleSavePassword} className={styles.section}>
         <div className={styles.field}>
           <label className={styles.label}>Current password</label>
-          <input
-            type="password"
+          <PasswordInput
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             className={styles.input}
@@ -290,8 +290,7 @@ export default function AccountTab({ session }) {
         </div>
         <div className={styles.field}>
           <label className={styles.label}>New password</label>
-          <input
-            type="password"
+          <PasswordInput
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             className={styles.input}
@@ -302,8 +301,7 @@ export default function AccountTab({ session }) {
         </div>
         <div className={styles.field}>
           <label className={styles.label}>Confirm new password</label>
-          <input
-            type="password"
+          <PasswordInput
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             className={styles.input}
