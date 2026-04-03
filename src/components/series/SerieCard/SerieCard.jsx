@@ -11,9 +11,7 @@ import { usePopover } from "@/hooks/usePopover";
 import { useList } from "@/context/ListContext";
 import { useToast } from "@/context/ToastContext";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
-import ConfirmPopover from "../../ui/ConfirmPopover/ConfirmPopover";
-import WatchlistPopover from "../../ui/WatchlistPopover/WatchlistPopover";
-import RatingsPopover from "../../ui/RatingsPopover/RatingsPopover";
+import SerieCardPopovers from "./SerieCardPopovers";
 import HeartRating from "../../ui/HeartRating/HeartRating";
 import { computeAverageScore } from "@/lib/utils/ratings.utils";
 
@@ -80,21 +78,14 @@ export default function SerieCard({ serie, onCheck }) {
       {/* Tooltip */}
       <div className="tooltip">{serie.name}</div>
       <div className={`card ${styles.card}`}>
-        {/* Confirm Popover */}
-        {confirmPopover.isOpen && (
-          <ConfirmPopover
-            serieName={serie.name}
-            isTracked={isTracked}
-            onConfirm={handleConfirm}
-            popoverRef={confirmPopover.popoverRef}
-          />
-        )}
-        {/* Watchlist Popover */}
-        {watchlistPopover.isOpen && (
-          <WatchlistPopover serie={serie} onClose={watchlistPopover.close} popoverRef={watchlistPopover.popoverRef} />
-        )}
-        {/* Rating Popover */}
-        {ratingsPopover.isOpen && <RatingsPopover serie={serie} popoverRef={ratingsPopover.popoverRef} />}
+        <SerieCardPopovers
+          serie={serie}
+          isTracked={isTracked}
+          confirmPopover={confirmPopover}
+          watchlistPopover={watchlistPopover}
+          ratingsPopover={ratingsPopover}
+          onConfirm={handleConfirm}
+        />
         <div className={styles.imageContainer}>
           <Link href={`/series/${serie.id}`} className={styles.imageLink}>
             {serie.poster_path ? (
