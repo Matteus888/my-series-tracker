@@ -52,12 +52,13 @@ export default function WatchlistPopover({ serie, onClose, popoverRef }) {
               key={list._id}
               className={`${styles.listItem} ${inList ? "active" : ""}`}
               onClick={() => handleToggleList(list)}
+              title={inList ? "Remove from list" : "Add to list"}
             >
               <span className={styles.listName}>
                 {list.name}
                 {list.isDefault && <span className={styles.defaultBadge}>default</span>}
               </span>
-              <div className={styles.listActions}>
+              <div className={styles.listActions} title="Delete list">
                 <Icon path={mdiCheck} size={0.7} style={{ opacity: inList ? 1 : 0 }} />
                 {isDeletable && (
                   <span className={styles.deleteList} onClick={(e) => handleDeleteList(e, list._id)}>
@@ -77,8 +78,13 @@ export default function WatchlistPopover({ serie, onClose, popoverRef }) {
           onChange={(e) => setNewListName(e.target.value)}
           className={styles.input}
         />
-        <button type="submit" className={styles.createButton} disabled={!newListName.trim()}>
-          <Icon path={mdiPlus} size={0.8} />
+        <button
+          type="submit"
+          className={styles.createButton}
+          disabled={!newListName.trim()}
+          title={newListName.trim() && "Create list"}
+        >
+          <Icon path={mdiCheck} size={0.8} />
         </button>
       </form>
     </div>

@@ -24,7 +24,7 @@ export async function POST(request) {
 
     await UserList.create({
       userId: user._id,
-      name: "Watchlist",
+      name: "Plan to watch",
       description: "Series I plan to watch",
       isDefault: true,
       isPublic: false,

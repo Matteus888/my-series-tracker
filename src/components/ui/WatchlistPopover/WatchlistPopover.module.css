@@ -1,7 +1,8 @@
 .popover {
   position: absolute;
-  bottom: 0;
-  left: 100%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%);
   z-index: var(--z-popover);
   background-color: var(--background-secondary);
   color: var(--foreground);
@@ -37,15 +38,17 @@
   font-size: 0.75rem;
   cursor: pointer;
   color: var(--foreground);
-  background-color: var(--background-primary);
-  border: 1px solid var(--border);
+  /* background-color: var(--background-primary); */
+  /* border: 1px solid var(--border); */
+  opacity: 0.7;
   transition: all 0.15s ease;
   min-height: 28px;
 }
 
 .listItem:hover {
-  background-color: var(--foreground);
-  color: var(--background-primary);
+  /* background-color: var(--foreground); */
+  /* color: var(--background-primary); */
+  opacity: 1;
 }
 
 .listName {
@@ -96,17 +99,14 @@
   outline: none;
 }
 
-.input:hover,
 .input:focus {
-  /* border-color: var(--foreground); */
-  background-color: var(--foreground);
-  color: var(--background-primary);
+  border-color: var(--blue);
 }
 
 .createButton {
   background-color: var(--background-primary);
-  border: 1px solid var(--foreground);
-  color: var(--foreground);
+  border: 1px solid var(--blue);
+  color: var(--blue);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -116,8 +116,8 @@
 }
 
 .createButton:hover:not(:disabled) {
-  background-color: var(--foreground);
-  color: var(--background-primary);
+  background-color: var(--blue);
+  color: var(--foreground);
 }
 
 .createButton:disabled {

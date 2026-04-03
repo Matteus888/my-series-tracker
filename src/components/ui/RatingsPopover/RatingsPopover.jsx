@@ -4,8 +4,10 @@ import styles from "./RatingsPopover.module.css";
 import Icon from "@mdi/react";
 import { mdiStar, mdiStarOutline } from "@mdi/js";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
+import { useState } from "react";
 
 export default function RatingsPopover({ serie, popoverRef }) {
+  const [hoverRating, setHoverRating] = useState(null);
   const { trackedSeries, updateSeries } = useTrackedSeries();
 
   const tracked = trackedSeries.find((s) => s.tmdbId === serie.id);
@@ -24,9 +26,17 @@ export default function RatingsPopover({ serie, popoverRef }) {
       <div className={styles.stars}>
         {Array.from({ length: 10 }).map((_, i) => {
           const starValue = i + 1;
-          const isFilled = userRating !== null && starValue <= userRating;
+          const activeRating = hoverRating ?? userRating;
+          const isFilled = activeRating !== null && starValue <= activeRating;
           return (
-            <span key={i} className={styles.star} onClick={() => handleRate(starValue)} title={`${starValue}/10`}>
+            <span
+              key={i}
+              className={styles.star}
+              onClick={() => handleRate(starValue)}
+              onMouseEnter={() => setHoverRating(starValue)}
+              onMouseLeave={() => setHoverRating(null)}
+              title={`${starValue}/10`}
+            >
               <Icon
                 path={isFilled ? mdiStar : mdiStarOutline}
                 size={0.6}

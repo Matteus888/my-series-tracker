@@ -1,7 +1,8 @@
 .popover {
   position: absolute;
-  bottom: 100%;
-  right: 0;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%);
   z-index: var(--z-popover);
   background-color: var(--background-secondary);
   color: var(--foreground);
@@ -34,7 +35,7 @@
 }
 
 .star:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 
 .userRatingValue {

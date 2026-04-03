@@ -85,15 +85,11 @@ a {
 
 /* ===== CARTES ===== */
 .card {
-  background-color: var(--card-bg);
+  background-color: var(--background-secondary);
   border-bottom: 1px solid var(--border);
   border-right: 1px solid var(--border);
   color: var(--foreground);
   transition: background-color 0.2s ease;
-}
-
-.card:hover {
-  background-color: var(--hover-bg);
 }
 
 .card-footer {
@@ -152,9 +148,8 @@ a {
   opacity: 1;
 }
 
-/* Utilitaires (réutilisables) */
-.text-center {
-  text-align: center;
+.tooltip-wrapper:hover .card-footer {
+  background-color: var(--background-third);
 }
 
 /* Liens (réutilisables) */
@@ -169,7 +164,7 @@ a {
 
 /* ===== BADGES & ICÔNES ===== */
 .check {
-  background-color: var(--background-secondary);
+  background-color: transparent;
   color: var(--blue);
 }
 
@@ -180,7 +175,7 @@ a {
 }
 
 .bookmark {
-  background-color: var(--background-secondary);
+  background-color: transparent;
   color: var(--green);
 }
 
@@ -191,7 +186,7 @@ a {
 }
 
 .watchlist {
-  background-color: var(--background-secondary);
+  background-color: transparent;
   color: var(--foreground);
 }
 
@@ -202,7 +197,6 @@ a {
 }
 
 .heartWrapper {
-  background-color: var(--background-secondary);
   color: var(--red);
 }
 

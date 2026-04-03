@@ -4,10 +4,14 @@ import styles from "./ConfirmPopover.module.css";
 import Icon from "@mdi/react";
 import { mdiCheck, mdiCancel } from "@mdi/js";
 
-export default function ConfirmPopover({ isTracked, onConfirm, popoverRef }) {
+export default function ConfirmPopover({ serieName, isTracked, onConfirm, popoverRef }) {
   return (
     <div className={styles.confirmPopover} ref={popoverRef}>
-      <p>{isTracked ? "Remove from" : "Add to"} watched shows?</p>
+      <p>
+        {isTracked
+          ? `Remove all episodes of "${serieName}" from watched?`
+          : `Mark all episodes of "${serieName}" as watched?`}
+      </p>
       <div className={styles.confirmButtons}>
         <span className={styles.validate} onClick={() => onConfirm(true)}>
           <Icon path={mdiCheck} size={0.8} />

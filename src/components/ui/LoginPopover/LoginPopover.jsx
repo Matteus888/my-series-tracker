@@ -49,14 +49,6 @@ export default function LoginPopover({ onClose, popoverRef }) {
           className={styles.input}
           required
         />
-        {/* <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={styles.input}
-          required
-        /> */}
         <PasswordInput
           value={password}
           placeholder="Password"

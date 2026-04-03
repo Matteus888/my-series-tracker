@@ -80,6 +80,21 @@ export default function SerieCard({ serie, onCheck }) {
       {/* Tooltip */}
       <div className="tooltip">{serie.name}</div>
       <div className={`card ${styles.card}`}>
+        {/* Confirm Popover */}
+        {confirmPopover.isOpen && (
+          <ConfirmPopover
+            serieName={serie.name}
+            isTracked={isTracked}
+            onConfirm={handleConfirm}
+            popoverRef={confirmPopover.popoverRef}
+          />
+        )}
+        {/* Watchlist Popover */}
+        {watchlistPopover.isOpen && (
+          <WatchlistPopover serie={serie} onClose={watchlistPopover.close} popoverRef={watchlistPopover.popoverRef} />
+        )}
+        {/* Rating Popover */}
+        {ratingsPopover.isOpen && <RatingsPopover serie={serie} popoverRef={ratingsPopover.popoverRef} />}
         <div className={styles.imageContainer}>
           <Link href={`/series/${serie.id}`} className={styles.imageLink}>
             {serie.poster_path ? (
@@ -100,12 +115,9 @@ export default function SerieCard({ serie, onCheck }) {
         </div>
         <div className={`card-footer ${styles.footer}`}>
           <div className={styles.buttonsContainer}>
-            {confirmPopover.isOpen && (
-              <ConfirmPopover isTracked={isTracked} onConfirm={handleConfirm} popoverRef={confirmPopover.popoverRef} />
-            )}
             {/* Bouton check */}
             <button
-              className={`btn check ${styles.button} ${isTracked ? "active" : ""}`}
+              className={`btn check ${styles.button} ${isTracked || confirmPopover.isOpen ? "active" : ""}`}
               onClick={handleCheck}
               title={isTracked ? "Remove from watched" : "Add to watched"}
             >
@@ -122,21 +134,15 @@ export default function SerieCard({ serie, onCheck }) {
             {/* Bouton watchlist */}
             <div className={styles.watchlistWrapper}>
               <button
-                className={`btn watchlist ${styles.button} ${inAnyList ? "active" : ""}`}
+                className={`btn watchlist ${styles.button} ${inAnyList || watchlistPopover.isOpen ? "active" : ""}`}
                 onClick={handleWatchlist}
                 title={inAnyList ? "Manage list" : "Add to list"}
               >
                 <Icon path={mdiPlaylistPlus} size={1} />
               </button>
-              {watchlistPopover.isOpen && (
-                <WatchlistPopover
-                  serie={serie}
-                  onClose={watchlistPopover.close}
-                  popoverRef={watchlistPopover.popoverRef}
-                />
-              )}
             </div>
           </div>
+          {/* Rating */}
           <div className={styles.infoContainer}>
             {(score ?? 0) > 0 && (
               <div
@@ -146,7 +152,6 @@ export default function SerieCard({ serie, onCheck }) {
               >
                 <HeartRating percentage={score} />
                 <span className={styles.rating}>{score}%</span>
-                {ratingsPopover.isOpen && <RatingsPopover serie={serie} popoverRef={ratingsPopover.popoverRef} />}
               </div>
             )}
           </div>
