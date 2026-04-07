@@ -50,7 +50,7 @@
 }
 
 .deleteButton:active {
-  transform: scale(0.9);
+  transform: scale(0.95);
 }
 
 .confirmBox {
@@ -117,5 +117,5 @@
 
 .confirmYes:active,
 .confirmNo:active {
-  transform: scale(0.9);
+  transform: scale(0.95);
 }
