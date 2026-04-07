@@ -99,6 +99,7 @@ export default function SignupPage() {
               className={styles.input}
               required
               placeholder="your@email.com"
+              autoFocus
             />
           </div>
 

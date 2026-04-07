@@ -48,6 +48,7 @@ export default function LoginPopover({ onClose, popoverRef }) {
           onChange={(e) => setEmail(e.target.value)}
           className={styles.input}
           required
+          autoFocus
         />
         <PasswordInput
           value={password}

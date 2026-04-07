@@ -65,6 +65,7 @@ export default function LoginPage() {
               className={styles.input}
               required
               placeholder="your@email.com"
+              autoFocus
             />
           </div>
 
