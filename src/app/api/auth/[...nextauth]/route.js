@@ -55,8 +55,10 @@ export const authOptions = {
         token.id = user.id;
         token.profilePicture = user.profilePicture || null;
       }
-      if (trigger === "update" && session?.profilePicture) {
-        token.profilePicture = session.profilePicture;
+      if (trigger === "update") {
+        if (session?.profilePicture) token.profilePicture = session.profilePicture;
+        if (session?.name) token.name = session.name;
+        if (session?.email) token.email = session.email;
       }
       return token;
     },

@@ -4,9 +4,11 @@ import styles from "../shared/settings.module.css";
 import Icon from "@mdi/react";
 import { mdiContentSaveMoveOutline } from "@mdi/js";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { useToast } from "@/context/ToastContext";
 
 export default function AccountInfoForm({ session }) {
+  const { update } = useSession();
   const { showToast } = useToast();
 
   const [username, setUsername] = useState(session?.user?.name || "");
@@ -38,6 +40,7 @@ export default function AccountInfoForm({ session }) {
         const data = await response.json();
         throw new Error(data.error || "An error occurred.");
       }
+      await update({ name: username, email });
       showToast("Account updated ✓");
     } catch (err) {
       showToast(err.message, "error");
