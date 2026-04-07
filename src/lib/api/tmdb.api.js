@@ -7,6 +7,7 @@ export const getAllSeries = async (page = 1, filters = {}) => {
       api_key: TMDB_API_KEY,
       page,
       sort_by: "popularity.desc",
+      without_genres: "10763,10764,10767,10766", // ← news, reality, talk, soap
       ...filters,
     });
 
@@ -27,6 +28,8 @@ export const getAllSeries = async (page = 1, filters = {}) => {
   }
 };
 
+const EXCLUDED_GENRE_IDS = [10763, 10764, 10767, 10766]; // news, reality, talk, soap
+
 export const searchSeries = async (query, page = 1) => {
   try {
     const response = await fetch(
@@ -34,8 +37,14 @@ export const searchSeries = async (query, page = 1) => {
     );
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
+
+    // Filtrer les genres exclus
+    const filteredResults = data.results.filter(
+      (serie) => !serie.genre_ids.some((id) => EXCLUDED_GENRE_IDS.includes(id)),
+    );
+
     return {
-      results: data.results,
+      results: filteredResults,
       totalResults: data.total_results,
       totalPages: data.total_pages,
       currentPage: data.page,

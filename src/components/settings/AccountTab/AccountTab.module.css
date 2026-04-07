@@ -138,6 +138,12 @@
   cursor: not-allowed;
 }
 
+.avatarButton:disabled:hover,
+.avatarButtonValidate:disabled:hover,
+.avatarButtonCancel:disabled:hover {
+  background-color: var(--background-primary);
+}
+
 .actionButtons {
   display: flex;
   width: 90%;

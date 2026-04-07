@@ -167,7 +167,7 @@ export default function AccountAvatarSection({ session }) {
               disabled={isLoading || (!pendingFile && !externalUrl.trim())}
               title="Save"
             >
-              {isLoading ? <Icon path={mdiUpload} size={0.8} /> : <Icon path={mdiContentSaveMoveOutline} size={0.8} />}
+              <Icon path={mdiContentSaveMoveOutline} size={0.8} />
             </button>
             <button
               className={avatarStyles.avatarButtonCancel}

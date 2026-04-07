@@ -52,3 +52,70 @@
 .deleteButton:active {
   transform: scale(0.9);
 }
+
+.confirmBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--red);
+  background-color: rgba(255, 107, 107, 0.05);
+}
+
+.confirmText {
+  font-size: 0.8rem;
+  color: var(--red);
+  margin: 0;
+  font-weight: 600;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.confirmYes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  flex: 1;
+  padding: 0.4rem;
+  font-size: 0.8rem;
+  background: var(--red);
+  border: 1px solid var(--red);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.confirmYes:hover:not(:disabled) {
+  color: var(--red);
+  background-color: var(--background-primary);
+}
+
+.confirmYes:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.confirmNo {
+  flex: 1;
+  padding: 0.4rem;
+  font-size: 0.8rem;
+  background-color: var(--background-primary);
+  border: 1px solid var(--red);
+  color: var(--red);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.confirmNo:hover {
+  color: var(--foreground);
+  background-color: var(--red);
+}
+
+.confirmYes:active,
+.confirmNo:active {
+  transform: scale(0.9);
+}

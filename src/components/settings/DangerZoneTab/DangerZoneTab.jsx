@@ -14,9 +14,14 @@ export default function DangerZoneTab({ session }) {
   const router = useRouter();
   const [confirm, setConfirm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleDelete = async (e) => {
     e.preventDefault();
+    if (!showConfirm) {
+      setShowConfirm(true);
+      return;
+    }
     if (confirm !== session?.user?.name) {
       showToast("Username does not match.", "error");
       return;
@@ -63,23 +68,29 @@ export default function DangerZoneTab({ session }) {
               required
             />
           </div>
-          <button
-            type="submit"
-            className={dangerStyles.deleteButton}
-            disabled={isLoading || confirm !== session?.user?.name}
-          >
-            {isLoading ? (
-              <>
-                <Icon path={mdiUpload} size={0.7} />
-                {"Deleting..."}
-              </>
-            ) : (
-              <>
-                <Icon path={mdiDeleteForeverOutline} size={0.7} />
-                {"Delete my account"}
-              </>
-            )}
-          </button>
+          {!showConfirm ? (
+            <button
+              type="submit"
+              className={dangerStyles.deleteButton}
+              disabled={isLoading || confirm !== session?.user?.name}
+            >
+              <Icon path={mdiDeleteForeverOutline} size={0.7} />
+              {isLoading ? "Deleting..." : "Delete my account"}
+            </button>
+          ) : (
+            <div className={dangerStyles.confirmBox}>
+              <p className={dangerStyles.confirmText}>Are you absolutely sure? This cannot be undone.</p>
+              <div className={dangerStyles.confirmActions}>
+                <button type="button" className={dangerStyles.confirmYes}>
+                  <Icon path={mdiDeleteForeverOutline} size={0.7} />
+                  {isLoading ? "Deleting..." : "Yes, delete my account"}
+                </button>
+                <button className={dangerStyles.confirmNo} onClick={() => setShowConfirm(false)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </form>
       </div>
     </div>

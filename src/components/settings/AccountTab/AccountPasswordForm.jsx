@@ -2,7 +2,7 @@
 
 import styles from "../shared/settings.module.css";
 import Icon from "@mdi/react";
-import { mdiUpload, mdiContentSaveMoveOutline } from "@mdi/js";
+import { mdiContentSaveMoveOutline } from "@mdi/js";
 import { useState } from "react";
 import { useToast } from "@/context/ToastContext";
 import PasswordInput from "@/components/ui/PasswordInput/PasswordInput";
@@ -78,7 +78,7 @@ export default function AccountPasswordForm() {
           />
         </div>
         <button type="submit" className={styles.saveButton} title="Save changes" disabled={isLoading}>
-          {isLoading ? <Icon path={mdiUpload} size={1} /> : <Icon path={mdiContentSaveMoveOutline} size={1} />}
+          <Icon path={mdiContentSaveMoveOutline} size={1} />
         </button>
       </form>
     </>
