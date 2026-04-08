@@ -32,11 +32,6 @@ export default function ProfileMenu() {
     }, 800);
   };
 
-  const handleMouseLeave = () => {
-    clearTimeout(hoverTimeout.current);
-    menuPopover.close();
-  };
-
   return (
     <div className={styles.wrapper} onMouseEnter={handleMouseEnter}>
       {/* Icône profil */}

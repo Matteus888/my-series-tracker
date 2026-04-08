@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { getAllSeries } from "@/lib/api/tmdb.api";
 import { getTmdbPagesForUiPage, sliceResultsForUiPage, calcTotalUiPages } from "@/lib/utils/pagination.utils";
 import SidebarFilterHeader from "@/components/layout/SidebarFilterHeader/SidebarFilterHeader";
+import SortSidebar from "@/components/ui/SortSidebar/SortSidebar";
 import SerieCard from "@/components/series/SerieCard/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton/SerieCardSkeleton";
 import Pagination from "@/components/ui/Pagination/Pagination";
@@ -20,6 +21,7 @@ export default function AllSeriesPage() {
   const [currentPage, setCurrentPage] = useState(pageParam ? parseInt(pageParam) : 1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalResults, setTotalResults] = useState(0);
+  const [sortBy, setSortBy] = useState("popularity.desc");
 
   useEffect(() => {
     setCurrentPage(pageParam ? parseInt(pageParam) : 1);
@@ -32,7 +34,9 @@ export default function AllSeriesPage() {
         const { startIndex, startTmdbPage, endTmdbPage } = getTmdbPagesForUiPage(currentPage);
 
         const responses = await Promise.all(
-          Array.from({ length: endTmdbPage - startTmdbPage + 1 }, (_, i) => getAllSeries(startTmdbPage + i)),
+          Array.from({ length: endTmdbPage - startTmdbPage + 1 }, (_, i) =>
+            getAllSeries(startTmdbPage + i, { sort_by: sortBy }),
+          ),
         );
 
         const allResults = responses.flatMap((r) => r.results);
@@ -50,11 +54,17 @@ export default function AllSeriesPage() {
       }
     };
     fetchSeries();
-  }, [currentPage]);
+  }, [currentPage, sortBy]);
 
   const handleChangePage = (page) => {
     setCurrentPage(page);
     router.push(`/series?page=${page}`);
+  };
+
+  const handleSortChange = (value) => {
+    setSortBy(value);
+    setCurrentPage(1);
+    router.push("/series?page=1");
   };
 
   return (
@@ -70,6 +80,7 @@ export default function AllSeriesPage() {
             onNextPage={() => handleChangePage(currentPage + 1)}
             variant="allSeries"
           />
+          <SortSidebar sortBy={sortBy} onSortChange={handleSortChange} />
         </div>
       </div>
       <div className={styles.allSeriesContainer}>

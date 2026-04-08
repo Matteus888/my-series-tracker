@@ -8,6 +8,7 @@ export const getAllSeries = async (page = 1, filters = {}) => {
       page,
       sort_by: "popularity.desc",
       without_genres: "10763,10764,10767,10766", // ← news, reality, talk, soap
+      ...(filters.sort_by === "vote_average.desc" && { "vote_count.gte": 200 }),
       ...filters,
     });
 
