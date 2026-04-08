@@ -81,6 +81,7 @@ export default function SignupPage() {
               className={styles.input}
               required
               placeholder="Username"
+              autoFocus
               minLength={3}
               maxLength={30}
             />
@@ -99,7 +100,6 @@ export default function SignupPage() {
               className={styles.input}
               required
               placeholder="your@email.com"
-              autoFocus
             />
           </div>
 
