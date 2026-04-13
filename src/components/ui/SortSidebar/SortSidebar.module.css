@@ -46,3 +46,27 @@
   border-left-color: var(--blue);
   background-color: var(--hover-bg);
 }
+
+.genreToggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--foreground);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.5;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity 0.15s ease;
+  margin-top: 0.5rem;
+}
+
+.genreToggle:hover {
+  opacity: 1;
+}

@@ -1,16 +1,26 @@
 const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
+const EXCLUDED_GENRE_IDS = [10763, 10764, 10767, 10766]; // news, reality, talk, soap
+const EXCLUDED_GENRES_STRING = EXCLUDED_GENRE_IDS.join(",");
+
 export const getAllSeries = async (page = 1, filters = {}) => {
   try {
     const params = new URLSearchParams({
       api_key: TMDB_API_KEY,
       page,
       sort_by: "popularity.desc",
-      without_genres: "10763,10764,10767,10766", // ← news, reality, talk, soap
-      ...(filters.sort_by === "vote_average.desc" && { "vote_count.gte": 200 }),
+      without_genres: EXCLUDED_GENRES_STRING,
       ...filters,
     });
+
+    if (filters["vote_count.gte"] === undefined) {
+      params.set("vote_count.gte", 10);
+    }
+
+    if (filters.sort_by === "vote_average.desc" && filters["vote_count.gte"] === undefined) {
+      params.set("vote_count.gte", 200);
+    }
 
     const response = await fetch(`${TMDB_BASE_URL}/discover/tv?${params}`);
     if (!response.ok) {
@@ -28,8 +38,6 @@ export const getAllSeries = async (page = 1, filters = {}) => {
     return { results: [], totalResults: 0, totalPages: 0, currentPage: 1 };
   }
 };
-
-const EXCLUDED_GENRE_IDS = [10763, 10764, 10767, 10766]; // news, reality, talk, soap
 
 export const searchSeries = async (query, page = 1) => {
   try {
@@ -52,6 +60,35 @@ export const searchSeries = async (query, page = 1) => {
     };
   } catch (error) {
     console.error("Error searching series:", error);
+    return { results: [], totalResults: 0, totalPages: 0, currentPage: 1 };
+  }
+};
+
+export const getTvGenres = async () => {
+  try {
+    const response = await fetch(`${TMDB_BASE_URL}/genre/tv/list?api_key=${TMDB_API_KEY}&language=en-US`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    return data.genres.filter((g) => !EXCLUDED_GENRE_IDS.includes(g.id));
+  } catch (error) {
+    console.error("Error fetching TV genres:", error);
+    return [];
+  }
+};
+
+export const getTrending = async (page = 1, timeWindow = "week") => {
+  try {
+    const response = await fetch(`${TMDB_BASE_URL}/trending/tv/${timeWindow}?api_key=${TMDB_API_KEY}&page=${page}`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    return {
+      results: data.results.filter((s) => !s.genre_ids.some((id) => EXCLUDED_GENRE_IDS.includes(id))),
+      totalResults: data.total_results,
+      totalPages: data.total_pages,
+      currentPage: data.page,
+    };
+  } catch (error) {
+    console.error("Error fetching trending:", error);
     return { results: [], totalResults: 0, totalPages: 0, currentPage: 1 };
   }
 };

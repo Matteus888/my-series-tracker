@@ -3,7 +3,7 @@
 import styles from "@/app/series/page.module.css";
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { getAllSeries } from "@/lib/api/tmdb.api";
+import { getAllSeries, getTrending } from "@/lib/api/tmdb.api";
 import { getTmdbPagesForUiPage, sliceResultsForUiPage, calcTotalUiPages } from "@/lib/utils/pagination.utils";
 import SidebarFilterHeader from "@/components/layout/SidebarFilterHeader/SidebarFilterHeader";
 import SortSidebar from "@/components/ui/SortSidebar/SortSidebar";
@@ -21,7 +21,8 @@ export default function AllSeriesPage() {
   const [currentPage, setCurrentPage] = useState(pageParam ? parseInt(pageParam) : 1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalResults, setTotalResults] = useState(0);
-  const [sortBy, setSortBy] = useState("popularity.desc");
+  const [sortBy, setSortBy] = useState("popular");
+  const [selectedGenre, setSelectedGenre] = useState(null);
 
   useEffect(() => {
     setCurrentPage(pageParam ? parseInt(pageParam) : 1);
@@ -33,10 +34,39 @@ export default function AllSeriesPage() {
       try {
         const { startIndex, startTmdbPage, endTmdbPage } = getTmdbPagesForUiPage(currentPage);
 
+        const today = new Date().toISOString().slice(0, 10);
+        const twoYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 2)).toISOString().slice(0, 10);
+
+        const fetchFn = (page) => {
+          if (sortBy === "trending") return getTrending(page);
+
+          const sortMap = {
+            popular: "popularity.desc",
+            top_rated: "vote_average.desc",
+            new_releases: "first_air_date.desc",
+            upcoming: "first_air_date.desc",
+            name_asc: "name.asc",
+            name_desc: "name.desc",
+          };
+
+          return getAllSeries(page, {
+            sort_by: sortMap[sortBy] || "popularity.desc",
+            ...(sortBy === "top_rated" && { "vote_count.gte": 200 }),
+            ...(sortBy === "new_releases" && {
+              "first_air_date.lte": today, // déjà sorti
+              "first_air_date.gte": twoYearsAgo, // dynamique
+              "vote_count.gte": 10, // au moins 10 votes
+            }),
+            ...(sortBy === "upcoming" && {
+              "first_air_date.gte": today, // pas encore sorti
+              "vote_count.gte": 0,
+            }),
+            ...(selectedGenre && { with_genres: selectedGenre }),
+          });
+        };
+
         const responses = await Promise.all(
-          Array.from({ length: endTmdbPage - startTmdbPage + 1 }, (_, i) =>
-            getAllSeries(startTmdbPage + i, { sort_by: sortBy }),
-          ),
+          Array.from({ length: endTmdbPage - startTmdbPage + 1 }, (_, i) => fetchFn(startTmdbPage + i)),
         );
 
         const allResults = responses.flatMap((r) => r.results);
@@ -54,7 +84,7 @@ export default function AllSeriesPage() {
       }
     };
     fetchSeries();
-  }, [currentPage, sortBy]);
+  }, [currentPage, sortBy, selectedGenre]);
 
   const handleChangePage = (page) => {
     setCurrentPage(page);
@@ -63,6 +93,12 @@ export default function AllSeriesPage() {
 
   const handleSortChange = (value) => {
     setSortBy(value);
+    setCurrentPage(1);
+    router.push("/series?page=1");
+  };
+
+  const handleGenreChange = (genreId) => {
+    setSelectedGenre(genreId);
     setCurrentPage(1);
     router.push("/series?page=1");
   };
@@ -80,7 +116,12 @@ export default function AllSeriesPage() {
             onNextPage={() => handleChangePage(currentPage + 1)}
             variant="allSeries"
           />
-          <SortSidebar sortBy={sortBy} onSortChange={handleSortChange} />
+          <SortSidebar
+            sortBy={sortBy}
+            selectedGenre={selectedGenre}
+            onSortChange={handleSortChange}
+            onGenreChange={handleGenreChange}
+          />
         </div>
       </div>
       <div className={styles.allSeriesContainer}>
