@@ -7,24 +7,14 @@ const episodeProgressSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "User ID is required."],
     },
-    seriesId: {
+    episodeId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Series",
-      required: [true, "Serie ID is required."],
-    },
-    seasonNumber: {
-      type: Number,
-      required: [true, "Season number is required."],
-      min: [1, "Season number must be at least 1."],
-    },
-    episodeNumber: {
-      type: Number,
-      required: [true, "Episode number is required."],
-      min: [1, "Episode number must be at least 1."],
+      ref: "Episode",
+      required: [true, "Episode ID is required."],
     },
     watched: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     rating: {
       type: Number,
@@ -35,9 +25,6 @@ const episodeProgressSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    tmdbEpisodeId: {
-      type: Number,
-    },
   },
   {
     timestamps: true,
@@ -45,7 +32,7 @@ const episodeProgressSchema = new mongoose.Schema(
 );
 
 // Index pour optimiser les requêtes
-episodeProgressSchema.index({ userId: 1, seriesId: 1, seasonNumber: 1, episodeNumber: 1 }, { unique: true });
+episodeProgressSchema.index({ userId: 1, episodeId: 1 }, { unique: true });
 
 export const EpisodeProgress =
   mongoose.models.EpisodeProgress || mongoose.model("EpisodeProgress", episodeProgressSchema);

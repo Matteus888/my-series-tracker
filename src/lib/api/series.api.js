@@ -1,8 +1,10 @@
 import { Series } from "@/models/series.model";
+import { Episode } from "@/models/episode.model";
 import { UserList } from "@/models/userList.model";
 import { EpisodeProgress } from "@/models/episodeProgress.model";
 import { getAllSeasonsWithEpisodes } from "./tmdb.api";
 import { getOmdbRatings } from "./omdb.api";
+import { upsertEpisodes } from "@/lib/db/upsertEpisodes";
 
 const dbConnect = require("@/lib/db/db.connect").default;
 
@@ -48,6 +50,8 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
     { upsert: true, returnDocument: "after", runValidators: true },
   );
 
+  const episodeIdMap = await upsertEpisodes(series._id, Number(tmdbId), seasons);
+
   const user = await UserModel.findById(userId);
   if (!user) throw new Error("User not found");
 
@@ -67,21 +71,28 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
   await user.save();
 
   if (options.markAllWatched) {
-    const episodeDocs = seasons.flatMap((season) =>
-      season.episodes.map((episode) => ({
-        userId,
-        seriesId: series._id,
-        seasonNumber: season.season_number,
-        episodeNumber: episode.episode_number,
-        tmdbEpisodeId: episode.id,
-        watched: true,
-        watchedAt: new Date(),
-      })),
+    const progressDocs = seasons.flatMap((season) =>
+      season.episodes
+        .map((ep) => {
+          const episodeId = episodeIdMap.get(ep.id) ?? episodeIdMap.get(`${season.season_number}-${ep.episode_number}`);
+
+          if (!episodeId) return null;
+
+          return {
+            userId,
+            episodeId,
+            watched: true,
+            watchedAt: new Date(),
+          };
+        })
+        .filter(Boolean),
     );
 
-    await EpisodeProgress.insertMany(episodeDocs, { ordered: false }).catch((err) => {
-      if (err.code !== 11000) throw err;
-    });
+    if (progressDocs.length > 0) {
+      await EpisodeProgress.insertMany(progressDocs, { ordered: false }).catch((err) => {
+        if (err.code !== 11000) throw err;
+      });
+    }
 
     const watchlist = await UserList.findOne({ userId, isDefault: true });
     if (watchlist) {
@@ -96,8 +107,7 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
 
 export const getTrackedSeries = async (UserModel, userId) => {
   await dbConnect();
-  const userQuery = UserModel.findById(userId);
-  const user = await userQuery.populate({
+  const user = await UserModel.findById(userId).populate({
     path: "trackedSeries.seriesId",
     model: "Series",
   });
@@ -108,20 +118,25 @@ export const getTrackedSeries = async (UserModel, userId) => {
 
 export const removeTrackedSeries = async (UserModel, userId, tmdbId) => {
   await dbConnect();
+
   const user = await UserModel.findById(userId);
   if (!user) throw new Error("User not found");
 
-  const trackedEntry = user.trackedSeries.find((s) => s.tmdbId === tmdbId);
+  const trackedEntry = user.trackedSeries.find((s) => s.tmdbId?.toString() === tmdbId.toString());
 
-  user.trackedSeries = user.trackedSeries.filter((s) => s.tmdbId !== tmdbId);
+  user.trackedSeries = user.trackedSeries.filter((s) => s.tmdbId?.toString() !== tmdbId.toString());
 
   await user.save();
 
-  if (trackedEntry) {
-    await EpisodeProgress.deleteMany({
-      userId,
-      seriesId: trackedEntry.seriesId,
-    });
+  if (trackedEntry?.seriesId) {
+    const episodeIds = await Episode.find({ seriesId: trackedEntry.seriesId })
+      .select("_id")
+      .lean()
+      .then((docs) => docs.map((d) => d._id));
+
+    if (episodeIds.length > 0) {
+      await EpisodeProgress.deleteMany({ userId, episodeId: { $in: episodeIds } });
+    }
   }
 
   return user.trackedSeries;
@@ -143,4 +158,33 @@ export const updateTrackedSeries = async (UserModel, userId, tmdbId, updates) =>
   });
   await user.save();
   return user.trackedSeries;
+};
+
+export const getEpisodeProgressForSeries = async (userId, seriesId) => {
+  await dbConnect();
+
+  const episodes = await Episode.find({ seriesId }).sort({ seasonNumber: 1, episodeNumber: 1 }).lean();
+
+  if (episodes.length === 0) return [];
+
+  const episodeIds = episodes.map((e) => e._id);
+
+  const progressList = await EpisodeProgress.find({
+    userId,
+    episodeId: { $in: episodeIds },
+  })
+    .select("episodeId watched watchedAt rating")
+    .lean();
+
+  const progressMap = new Map(progressList.map((p) => [p.episodeId.toString(), p]));
+
+  return episodes.map((ep) => {
+    const progress = progressMap.get(ep._id.toString());
+    return {
+      ...ep,
+      watched: progress?.watched ?? false,
+      watchedAt: progress?.watchedAt ?? null,
+      rating: progress?.rating ?? null,
+    };
+  });
 };
