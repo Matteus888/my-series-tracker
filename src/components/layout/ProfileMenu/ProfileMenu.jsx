@@ -17,6 +17,7 @@ export default function ProfileMenu() {
   const loginPopover = usePopover();
 
   const hoverTimeout = useRef(null);
+  const closeTimeout = useRef(null);
 
   const pathname = usePathname();
   const isSettingsPage = pathname.startsWith("/settings");
@@ -27,13 +28,21 @@ export default function ProfileMenu() {
   };
 
   const handleMouseEnter = () => {
+    clearTimeout(closeTimeout.current);
     hoverTimeout.current = setTimeout(() => {
       menuPopover.open();
-    }, 800);
+    }, 500);
+  };
+
+  const handleMouseLeave = () => {
+    clearTimeout(hoverTimeout.current);
+    closeTimeout.current = setTimeout(() => {
+      menuPopover.close();
+    }, 2000);
   };
 
   return (
-    <div className={styles.wrapper} onMouseEnter={handleMouseEnter}>
+    <div className={styles.wrapper} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       {/* Icône profil */}
       <div
         className={`${styles.avatar} ${menuPopover.isOpen || loginPopover.isOpen || isSettingsPage ? styles.avatarActive : ""}`}
