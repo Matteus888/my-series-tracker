@@ -10,7 +10,10 @@
   display: none;
   padding: 0.25rem;
   position: sticky;
-  top: calc(45px + 0.5rem);
+  top: 45px;
+  height: calc(100vh - 45px);
+  overflow-y: auto;
+  align-self: flex-start;
 }
 @media (min-width: 768px) {
   .filterSidebar {
@@ -21,8 +24,8 @@
 }
 
 .stickyFilter {
-  position: sticky;
-  top: calc(45px + 0.5rem);
+  display: flex;
+  flex-direction: column;
 }
 
 .resultsArea {

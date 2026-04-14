@@ -41,18 +41,16 @@
   padding: 0.6rem 0.75rem;
   background: none;
   border: none;
-  border-bottom: 2px solid transparent;
   opacity: 0.8;
   color: var(--foreground);
   font-size: 0.8rem;
   cursor: pointer;
   width: 100%;
   text-align: left;
-  transition: background-color 0.15s ease;
+  transition: opacity 0.15s ease;
 }
 
 .menuItem:hover {
-  /* background-color: var(--blue); */
   opacity: 1;
 }
 

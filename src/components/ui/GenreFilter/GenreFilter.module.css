@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  padding: 0 0.75rem;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  opacity: 0.6;
+}
+
+.item:hover,
+.item.active {
+  opacity: 1;
+}

@@ -2,19 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 0.75rem 0;
-  border-right: 1px solid var(--border);
-}
-
-.title {
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--foreground);
-  opacity: 0.5;
-  margin: 0;
-  padding: 0 0.75rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--border);
 }
 
 .list {
@@ -26,25 +15,19 @@
 }
 
 .item {
-  font-size: 0.8rem;
-  padding: 0.35rem 0.75rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  padding: 0 0.75rem;
   color: var(--foreground);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: opacity 0.15s ease;
   opacity: 0.6;
-  border-left: 2px solid transparent;
 }
 
-.item:hover {
-  opacity: 1;
-  background-color: var(--hover-bg);
-}
-
+.item:hover,
 .item.active {
   opacity: 1;
-  color: var(--blue);
-  border-left-color: var(--blue);
-  background-color: var(--hover-bg);
 }
 
 .genreToggle {
