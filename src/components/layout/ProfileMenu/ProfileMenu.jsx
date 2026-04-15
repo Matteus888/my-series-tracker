@@ -49,7 +49,7 @@ export default function ProfileMenu() {
         onClick={menuPopover.toggle}
         title={session ? session.user.name : "Account"}
       >
-        {session?.user?.profilePicture && session.user.profilePicture !== "/account.webp" ? (
+        {session?.user?.profilePicture && session.user.profilePicture !== "/account.svg" ? (
           <Image
             src={session.user.profilePicture}
             alt="profile"

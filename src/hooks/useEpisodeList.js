@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 
 export function useEpisodeList(initialProgress, tmdbId, serieData) {
   const [episodes, setEpisodes] = useState(initialProgress);
   const [isTracking, setIsTracking] = useState(false);
+  const { refresh } = useTrackedSeries();
 
   const toggleEpisode = useCallback(
     async (episodeId, currentWatched, seasonNumber, episodeNumber) => {
@@ -20,6 +22,8 @@ export function useEpisodeList(initialProgress, tmdbId, serieData) {
             body: JSON.stringify({ seriesId: tmdbId, serieData, status: "watching" }),
           });
           if (!trackRes.ok) throw new Error("Failed to track series");
+
+          await refresh();
 
           // 2. Récupérer les vrais _id depuis la base
           const progressRes = await fetch(`/api/series/${tmdbId}/progress`);

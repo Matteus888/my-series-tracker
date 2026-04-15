@@ -24,7 +24,7 @@ export function useContinueWatching() {
   }, []);
 
   const checkEpisode = useCallback(
-    async (getSeriesDetails, episodeId) => {
+    async (seriesId, episodeId) => {
       const previous = items;
 
       setItems((current) =>

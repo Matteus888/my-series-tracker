@@ -71,8 +71,11 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
   await user.save();
 
   if (options.markAllWatched) {
+    const now = new Date();
+
     const progressDocs = seasons.flatMap((season) =>
       season.episodes
+        .filter((ep) => ep.air_date && new Date(ep.air_date) <= now)
         .map((ep) => {
           const episodeId = episodeIdMap.get(ep.id) ?? episodeIdMap.get(`${season.season_number}-${ep.episode_number}`);
 

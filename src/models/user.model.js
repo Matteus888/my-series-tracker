@@ -58,14 +58,14 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String, // URL de l'image
-      default: "/account.webp", // Chemin vers une image par défaut
+      default: "/account.svg", // Chemin vers une image par défaut
       validate: {
         validator: function (value) {
           return (
             validator.isURL(value, {
               protocols: ["http", "https"],
               require_protocol: true,
-            }) || value === "/account.webp"
+            }) || value === "/account.svg"
           );
         },
         message: "Profile picture URL is invalid.",

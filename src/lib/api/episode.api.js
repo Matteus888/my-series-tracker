@@ -10,9 +10,7 @@ export const getContinueWatching = async (UserModel, userId) => {
 
   if (!user) throw new Error("User not found");
 
-  const watchingSeries = user.trackedSeries.filter(
-    (t) => t.seriesId && t.status !== "completed" && t.status !== "dropped",
-  );
+  const watchingSeries = user.trackedSeries.filter((t) => t.seriesId && t.status !== "dropped");
   if (watchingSeries.length === 0) return [];
 
   const results = await Promise.all(
@@ -39,7 +37,9 @@ export const getContinueWatching = async (UserModel, userId) => {
       if (watchedIds.size === 0) return null;
       if (watchedIds.size === allEpisodes.length) return null;
 
-      const nextEpisode = allEpisodes.find((e) => !watchedIds.has(e._id.toString()));
+      const now = new Date();
+
+      const nextEpisode = allEpisodes.find((e) => !watchedIds.has(e._id.toString()) && e.airDate && e.airDate <= now);
       if (!nextEpisode) return null;
 
       const lastWatchedAt = progressList.reduce(
@@ -49,11 +49,13 @@ export const getContinueWatching = async (UserModel, userId) => {
 
       const series = tracked.seriesId;
 
+      const seasonData = series.seasons?.find((s) => s.seasonNumber === nextEpisode.seasonNumber);
+
       return {
         seriesId: seriesId.toString(),
         tmdbId: tracked.tmdbId,
         title: series.title,
-        posterPath: series.posterPath ?? null,
+        posterPath: seasonData?.posterPath ?? series.posterPath ?? null,
         watchedCount: watchedIds.size,
         totalCount: allEpisodes.length,
         lastWatchedAt,

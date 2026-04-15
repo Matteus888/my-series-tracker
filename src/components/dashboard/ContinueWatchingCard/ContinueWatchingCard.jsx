@@ -19,7 +19,6 @@ export default function ContinueWatchingCard({ item, onCheck }) {
     <div className={`tooltip-wrapper ${styles.container}`}>
       <div className="tooltip">{title}</div>
       <div className={`card ${styles.card}`}>
-
         {/* Poster */}
         <div className={styles.imageContainer}>
           <Link href={`/series/${tmdbId}`} className={styles.imageLink}>
@@ -44,15 +43,6 @@ export default function ContinueWatchingCard({ item, onCheck }) {
 
         {/* Footer */}
         <div className={`card-footer ${styles.footer}`}>
-          {/* Infos épisode suivant */}
-          <div className={styles.episodeInfo}>
-            {episodeLabel ? (
-              <span className={styles.episodeLabel}>{episodeLabel}</span>
-            ) : (
-              <span className={styles.episodeLabelFallback}>…</span>
-            )}
-          </div>
-
           {/* Bouton check */}
           <button
             className={`btn check ${styles.checkButton}`}
@@ -62,8 +52,16 @@ export default function ContinueWatchingCard({ item, onCheck }) {
           >
             <Icon path={mdiCheck} size={0.9} />
           </button>
-        </div>
 
+          {/* Infos épisode suivant */}
+          <div className={styles.episodeInfo}>
+            {episodeLabel ? (
+              <span className={styles.episodeLabel}>{episodeLabel}</span>
+            ) : (
+              <span className={styles.episodeLabelFallback}>…</span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

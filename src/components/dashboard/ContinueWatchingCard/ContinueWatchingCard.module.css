@@ -46,7 +46,6 @@
   color: var(--foreground);
 }
 
-/* ── Barre de progression ── */
 .progressBar {
   position: absolute;
   bottom: 0;
@@ -62,11 +61,10 @@
   transition: width 0.3s ease;
 }
 
-/* ── Footer ── */
 .footer {
   height: 40px;
   min-width: 100%;
-  padding: 0 0 0 0.4rem;
+  padding: 0 0.4 0 0rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -97,7 +95,6 @@
   opacity: 0.4;
 }
 
-/* ── Bouton check ── */
 .checkButton {
   height: 100%;
   width: 30px;
