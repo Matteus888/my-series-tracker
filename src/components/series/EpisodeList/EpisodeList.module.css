@@ -1,0 +1,121 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+/* ── Saison ── */
+.season {
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.seasonHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--foreground);
+  transition: background-color 0.15s ease;
+}
+
+.seasonHeader:hover {
+  background-color: var(--hover-bg);
+}
+
+.seasonLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.seasonTitle {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.seasonCount {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+/* ── Épisodes ── */
+.episodeList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--border);
+}
+
+.episodeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 1rem 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.15s ease;
+}
+
+.episodeRow:last-child {
+  border-bottom: none;
+}
+
+.episodeRow:hover {
+  background-color: var(--hover-bg);
+}
+
+.checkButton {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.episodeCode {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: #6c757d;
+  min-width: 30px;
+}
+
+.episodeTitle {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.episodeTitle.watched {
+  opacity: 0.45;
+}
+
+.airDate {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: #6c757d;
+}
+
+.trackingLabel {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--blue);
+}

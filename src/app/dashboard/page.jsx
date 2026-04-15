@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getUserProfile } from "@/lib/api/user.api";
 import { User } from "@/models/user.model";
 import ProfileHeader from "@/components/dashboard/ProfileHeader/ProfileHeader";
+import ContinueWatchingSection from "@/components/dashboard/ContinueWatchingSection/ContinueWatchingSection";
 
 export const metadata = {
   title: "Dashboard — My Series Tracker",
@@ -21,6 +22,7 @@ export default async function DashboardPage() {
       <section className={styles.section}>
         <ProfileHeader username={user.username} profilePicture={user.profilePicture} />
       </section>
+      <ContinueWatchingSection />
     </div>
   );
 }

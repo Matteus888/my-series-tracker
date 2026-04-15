@@ -104,7 +104,7 @@ export default function AccountAvatarSection({ session }) {
       <p className={styles.sectionTitle}>Profile picture</p>
       <div className={avatarStyles.avatarSection}>
         <div className={avatarStyles.avatarPreview}>
-          {previewUrl || (avatarUrl && avatarUrl !== "/images/default-profile.png") ? (
+          {previewUrl || (avatarUrl && avatarUrl !== "/account.webp") ? (
             <Image
               src={previewUrl || avatarUrl}
               alt="avatar"

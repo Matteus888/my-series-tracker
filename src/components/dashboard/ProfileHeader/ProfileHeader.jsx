@@ -6,7 +6,7 @@ export default function ProfileHeader({ username, profilePicture }) {
     <div className={styles.wrapper}>
       <div className={styles.avatarWrapper}>
         <Image
-          src={profilePicture || "/images/default-profile.png"}
+          src={profilePicture || "https://api.dicebear.com/7.x/initials/svg?seed=" + username}
           alt={`${username}'s avatar`}
           width={80}
           height={80}
