@@ -8,12 +8,14 @@ import { useList } from "./ListContext";
 const TrackedSeriesContext = createContext(null);
 
 export const TrackedSeriesProvider = ({ children }) => {
-  const { data: session } = useSession();
-  const { showToast } = useToast();
-  const { refresh: refreshLists } = useList();
   const [trackedSeries, setTrackedSeries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [watchedCount, setWatchedCount] = useState(0);
+
+  const { data: session } = useSession();
+  const { showToast } = useToast();
+  const { refresh: refreshLists } = useList();
 
   const fetchTrackedSeries = useCallback(async () => {
     if (!session) {
@@ -121,6 +123,10 @@ export const TrackedSeriesProvider = ({ children }) => {
     [trackedSeries],
   );
 
+  const incrementWatched = useCallback(() => {
+    setWatchedCount((c) => c + 1);
+  }, []);
+
   return (
     <TrackedSeriesContext.Provider
       value={{
@@ -134,6 +140,8 @@ export const TrackedSeriesProvider = ({ children }) => {
         isTracked,
         isFavorite,
         refresh: fetchTrackedSeries,
+        watchedCount,
+        incrementWatched,
       }}
     >
       {children}

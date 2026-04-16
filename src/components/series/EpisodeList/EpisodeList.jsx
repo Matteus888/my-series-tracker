@@ -51,7 +51,12 @@ function SeasonBlock({ seasonNumber, episodes, onToggle }) {
       {open && (
         <div className={styles.episodeGrid}>
           {episodes.map((ep) => (
-            <EpisodeCard key={ep._id ?? `${ep.seasonNumber}-${ep.episodeNumber}`} ep={ep} onToggle={onToggle} />
+            <EpisodeCard
+              key={ep._id ?? `${ep.seasonNumber}-${ep.episodeNumber}`}
+              ep={ep}
+              onToggle={onToggle}
+              disableTooltip
+            />
           ))}
         </div>
       )}

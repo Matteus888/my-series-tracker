@@ -75,11 +75,14 @@
 
 .title {
   flex: 1;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   color: var(--foreground);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .checkButton {

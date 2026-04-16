@@ -7,6 +7,7 @@ import { User } from "@/models/user.model";
 import ProfileHeader from "@/components/dashboard/ProfileHeader/ProfileHeader";
 import ContinueWatchingSection from "@/components/dashboard/ContinueWatchingSection/ContinueWatchingSection";
 import StartWatchingSection from "@/components/dashboard/StartWatchingSection/StartWatchingSection";
+import RecentlyWatchedSection from "@/components/dashboard/RecentlyWatchedSection/RecentlyWatchedSection";
 
 export const metadata = {
   title: "Dashboard — My Series Tracker",
@@ -24,6 +25,7 @@ export default async function DashboardPage() {
         <ProfileHeader username={user.username} profilePicture={user.profilePicture} />
       </section>
       <ContinueWatchingSection />
+      <RecentlyWatchedSection />
       <StartWatchingSection />
     </div>
   );

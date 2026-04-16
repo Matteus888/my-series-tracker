@@ -8,7 +8,7 @@ export function useContinueWatching() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { trackedSeries } = useTrackedSeries();
+  const { trackedSeries, incrementWatched, watchedCount } = useTrackedSeries();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +24,7 @@ export function useContinueWatching() {
       }
     };
     fetchData();
-  }, [trackedSeries]);
+  }, [trackedSeries, watchedCount]);
 
   const checkEpisode = useCallback(
     async (seriesId, episodeId) => {
@@ -58,6 +58,9 @@ export function useContinueWatching() {
 
         const refreshed = await fetch("/api/dashboard/continue-watching");
         if (!refreshed.ok) throw new Error("Failed to refresh");
+
+        incrementWatched();
+
         const data = await refreshed.json();
         setItems(data.continueWatching);
       } catch (err) {

@@ -142,3 +142,51 @@ export const getStartWatching = async (UserModel, userId) => {
 
   return results.filter(Boolean);
 };
+
+export const getRecentlyWatched = async (userId) => {
+  await dbConnect();
+
+  // 10 derniers EpisodeProgress triés par watchedAt décroissant
+  const progressList = await EpisodeProgress.find({ userId, watched: true }).sort({ watchedAt: -1 }).limit(10).lean();
+
+  if (progressList.length === 0) return [];
+
+  const episodeIds = progressList.map((p) => p.episodeId);
+
+  const episodes = await Episode.find({ _id: { $in: episodeIds } })
+    .select("_id seriesId seasonNumber episodeNumber title stillPath airDate")
+    .lean();
+
+  // Récupère les Series pour avoir le titre
+  const seriesIds = [...new Set(episodes.map((e) => e.seriesId.toString()))];
+  const { Series } = await import("@/models/series.model");
+  const seriesList = await Series.find({ _id: { $in: seriesIds } })
+    .select("_id title tmdbId")
+    .lean();
+
+  const seriesMap = new Map(seriesList.map((s) => [s._id.toString(), s]));
+  const episodeMap = new Map(episodes.map((e) => [e._id.toString(), e]));
+
+  return progressList
+    .map((p) => {
+      const ep = episodeMap.get(p.episodeId.toString());
+      if (!ep) return null;
+      const series = seriesMap.get(ep.seriesId.toString());
+      if (!series) return null;
+
+      return {
+        _id: ep._id.toString(),
+        seriesId: ep.seriesId.toString(),
+        tmdbId: series.tmdbId,
+        seriesTitle: series.title,
+        seasonNumber: ep.seasonNumber,
+        episodeNumber: ep.episodeNumber,
+        title: ep.title ?? null,
+        stillPath: ep.stillPath ?? null,
+        airDate: ep.airDate ? ep.airDate.toISOString() : null,
+        watchedAt: p.watchedAt ? p.watchedAt.toISOString() : null,
+        watched: true,
+      };
+    })
+    .filter(Boolean);
+};
