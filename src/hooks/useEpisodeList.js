@@ -2,11 +2,13 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
+import { useToast } from "@/context/ToastContext";
 
 export function useEpisodeList(initialProgress, tmdbId, serieData) {
   const [episodes, setEpisodes] = useState(initialProgress);
   const [isTracking, setIsTracking] = useState(false);
   const { refresh, removeSeries, addSeriesOptimistic, isTracked } = useTrackedSeries();
+  const { showToast } = useToast();
 
   useEffect(() => {
     setEpisodes(initialProgress);
@@ -33,6 +35,7 @@ export function useEpisodeList(initialProgress, tmdbId, serieData) {
           // 2. Mise à jour optimiste immédiate du contexte
           const newTracked = trackData.trackedSeries[trackData.trackedSeries.length - 1];
           addSeriesOptimistic(newTracked);
+          showToast(`${serieData.name} added to watched shows ✓`);
 
           // 3. Récupérer les vrais _id depuis la base
           const progressRes = await fetch(`/api/series/${tmdbId}/progress`);

@@ -4,18 +4,15 @@ import { useState } from "react";
 import styles from "./EpisodeList.module.css";
 import { useEpisodeList } from "@/hooks/useEpisodeList";
 import Icon from "@mdi/react";
-import { mdiCheck, mdiChevronDown, mdiChevronUp } from "@mdi/js";
+import { mdiChevronDown, mdiChevronUp } from "@mdi/js";
 import EpisodeCard from "../EpisodeCard/EpisodeCard";
 
 export default function EpisodeList({ initialProgress, tmdbId, serieData }) {
-  const { seasons, toggleEpisode, isTracking } = useEpisodeList(initialProgress, tmdbId, serieData);
+  const { seasons, toggleEpisode } = useEpisodeList(initialProgress, tmdbId, serieData);
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.sectionTitle}>
-        Episodes
-        {isTracking && <span className={styles.trackingLabel}> — Adding to your list…</span>}
-      </h3>
+      <h3 className={styles.sectionTitle}>Episodes</h3>
       {Object.entries(seasons)
         .sort(([a], [b]) => Number(a) - Number(b))
         .map(([seasonNumber, episodes]) => (
