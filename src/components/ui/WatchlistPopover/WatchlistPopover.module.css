@@ -1,18 +1,19 @@
 .popover {
   position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: var(--z-popover);
   background-color: var(--background-secondary);
   color: var(--foreground);
   border: 1px solid var(--border);
   padding: 0.5rem 0.7rem;
-  width: 200px;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  overflow: auto;
 }
 
 .title {

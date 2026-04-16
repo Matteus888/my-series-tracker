@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route.js";
 import { UserList } from "@/models/userList.model";
 import { Series } from "@/models/series.model";
+import { getAllSeasonsWithEpisodes } from "@/lib/api/tmdb.api";
+import { upsertEpisodes } from "@/lib/db/upsertEpisodes";
 import dbConnect from "@/lib/db/db.connect";
 
 // Ajouter une série à une liste
@@ -38,6 +40,12 @@ export const POST = async (request, context) => {
       { returnDocument: "after" },
     );
     if (!list) return NextResponse.json({ error: "List not found" }, { status: 404 });
+
+    // Upsert épisodes en arrière-plan — ne bloque pas la réponse
+    getAllSeasonsWithEpisodes(tmdbId)
+      .then(({ seasons }) => upsertEpisodes(series._id, Number(tmdbId), seasons))
+      .catch((err) => console.error("upsertEpisodes after watchlist add error:", err.message));
+
     return NextResponse.json({ success: true, list }, { status: 200 });
   } catch (err) {
     console.error("POST /api/lists/[listId]/series error:", err.message);
@@ -45,7 +53,7 @@ export const POST = async (request, context) => {
   }
 };
 
-// Retirer une série d'une liste
+// Retirer une série d'une liste — inchangé
 export const DELETE = async (request, context) => {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

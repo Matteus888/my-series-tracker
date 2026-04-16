@@ -1,11 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 
 export function useContinueWatching() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const { trackedSeries } = useTrackedSeries();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +24,7 @@ export function useContinueWatching() {
       }
     };
     fetchData();
-  }, []);
+  }, [trackedSeries]);
 
   const checkEpisode = useCallback(
     async (seriesId, episodeId) => {

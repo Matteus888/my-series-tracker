@@ -2,7 +2,7 @@
 
 import styles from "./WatchlistPopover.module.css";
 import Icon from "@mdi/react";
-import { mdiCheck, mdiPlus, mdiClose } from "@mdi/js";
+import { mdiCheck, mdiClose } from "@mdi/js";
 import { useState } from "react";
 import { useList } from "@/context/ListContext";
 

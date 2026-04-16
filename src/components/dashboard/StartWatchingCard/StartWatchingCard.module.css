@@ -10,14 +10,13 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .container:last-child .card {
   border-right: none;
 }
 
-/* ── Poster ── */
 .imageContainer {
   position: relative;
   width: 100%;
@@ -50,56 +49,24 @@
   color: var(--foreground);
 }
 
-.progressBar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: var(--border);
-}
-
-.progressFill {
-  height: 100%;
-  background: var(--blue);
-  transition: width 0.3s ease;
-}
-
+/* ── Footer ── */
 .footer {
   height: 40px;
   min-width: 100%;
-  padding: 0 0.4 0 0rem;
+  padding: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex-shrink: 0;
-  gap: 0.25rem;
-  overflow: hidden;
+  position: relative;
 }
 
-.episodeInfo {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
+.buttonsLeft {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
 }
 
-.episodeLabel {
-  font-size: 0.65rem;
-  color: var(--foreground);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  opacity: 0.85;
-}
-
-.episodeLabelFallback {
-  font-size: 0.65rem;
-  color: var(--foreground);
-  opacity: 0.4;
-}
-
-.checkButton {
+.button {
   height: 100%;
   width: 30px;
   min-width: 30px;

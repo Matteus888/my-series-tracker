@@ -29,17 +29,17 @@ export default function SerieCard({ serie, onCheck }) {
       {/* Tooltip */}
       <div className="tooltip">{serie.name}</div>
       <div className={`card ${styles.card}`}>
-        {/* Popovers */}
-        <SerieCardPopovers
-          serie={serie}
-          isTracked={isTracked}
-          confirmPopover={confirmPopover}
-          watchlistPopover={watchlistPopover}
-          ratingsPopover={ratingsPopover}
-          onConfirm={handleConfirm}
-        />
         {/* Image */}
         <div className={styles.imageContainer}>
+          {/* Popovers */}
+          <SerieCardPopovers
+            serie={serie}
+            isTracked={isTracked}
+            confirmPopover={confirmPopover}
+            watchlistPopover={watchlistPopover}
+            ratingsPopover={ratingsPopover}
+            onConfirm={handleConfirm}
+          />
           <Link href={`/series/${serie.id}`} className={styles.imageLink}>
             {serie.poster_path ? (
               <Image

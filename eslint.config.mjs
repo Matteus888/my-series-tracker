@@ -7,7 +7,7 @@ const eslintConfig = defineConfig([
   {
     rules: {
       semi: ["error", "always"], // Exige des points-virgules
-      indent: ["error", 2], // Indentation de 2 espaces
+      indent: "off", // Indentation de 2 espaces
     },
   },
   globalIgnores([

@@ -1,4 +1,5 @@
 import { Episode } from "@/models/episode.model";
+import { UserList } from "@/models/userList.model";
 import { EpisodeProgress } from "@/models/episodeProgress.model";
 
 const dbConnect = require("@/lib/db/db.connect").default;
@@ -7,7 +8,6 @@ export const getContinueWatching = async (UserModel, userId) => {
   await dbConnect();
 
   const user = await UserModel.findById(userId).populate({ path: "trackedSeries.seriesId", model: "Series" }).lean();
-
   if (!user) throw new Error("User not found");
 
   const watchingSeries = user.trackedSeries.filter((t) => t.seriesId && t.status !== "dropped");
@@ -90,4 +90,55 @@ export const markEpisodeWatched = async (EpisodeModel, userId, episodeId, watche
   }
 
   return { watched };
+};
+
+export const getStartWatching = async (UserModel, userId) => {
+  await dbConnect();
+
+  const user = await UserModel.findById(userId)
+    .populate({
+      path: "trackedSeries.seriesId",
+      model: "Series",
+    })
+    .lean();
+
+  if (!user) throw new Error("User not found");
+
+  // Récupère la watchlist par défaut
+  const watchlist = await UserList.findOne({ userId, isDefault: true })
+    .populate({ path: "series", model: "Series" })
+    .lean();
+  if (!watchlist || watchlist.series.length === 0) return [];
+
+  const now = new Date();
+
+  const results = await Promise.all(
+    watchlist.series.map(async (series) => {
+      // Premier épisode diffusé
+      const firstEpisode = await Episode.findOne({
+        seriesId: series._id,
+        airDate: { $lte: now },
+      })
+        .sort({ seasonNumber: 1, episodeNumber: 1 })
+        .select("_id seasonNumber episodeNumber title airDate")
+        .lean();
+      if (!firstEpisode) return null;
+
+      const seasonData = series.seasons?.find((s) => s.seasonNumber === firstEpisode.seasonNumber);
+
+      return {
+        seriesId: series._id.toString(),
+        tmdbId: series.tmdbId,
+        title: series.title,
+        posterPath: seasonData?.posterPath ?? series.posterPath ?? null,
+        firstEpisode: {
+          _id: firstEpisode._id.toString(),
+          seasonNumber: firstEpisode.seasonNumber,
+          episodeNumber: firstEpisode.episodeNumber,
+        },
+      };
+    }),
+  );
+
+  return results.filter(Boolean);
 };

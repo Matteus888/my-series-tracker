@@ -109,7 +109,18 @@ export function useEpisodeList(initialProgress, tmdbId, serieData) {
         );
       }
     },
-    [episodes, isTracking, tmdbId, serieData, initialProgress, refresh, removeSeries, addSeriesOptimistic, isTracked],
+    [
+      episodes,
+      isTracking,
+      tmdbId,
+      serieData,
+      initialProgress,
+      refresh,
+      removeSeries,
+      addSeriesOptimistic,
+      isTracked,
+      showToast,
+    ],
   );
 
   const seasons = episodes.reduce((acc, ep) => {
