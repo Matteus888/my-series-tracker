@@ -122,6 +122,10 @@ const seriesSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    lastSyncedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

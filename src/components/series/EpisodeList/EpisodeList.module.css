@@ -11,7 +11,12 @@
   margin-bottom: 0.5rem;
 }
 
-/* ── Saison ── */
+.trackingLabel {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--blue);
+}
+
 .season {
   background-color: var(--background-secondary);
   border: 1px solid var(--border);
@@ -52,74 +57,38 @@
   color: #6c757d;
 }
 
-/* ── Épisodes ── */
-.episodeList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* ── Grille épisodes ── */
+.episodeGrid {
+  display: flex;
+  flex-wrap: wrap;
   border-top: 1px solid var(--border);
 }
 
-.episodeRow {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.4rem 1rem 0.4rem 0.5rem;
+.episodeGrid > * {
+  flex: 0 0 50%;
+  max-width: 50%;
+  border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  transition: background-color 0.15s ease;
+  box-sizing: border-box;
 }
 
-.episodeRow:last-child {
-  border-bottom: none;
+@media (min-width: 640px) {
+  .episodeGrid > * {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+  }
 }
 
-.episodeRow:hover {
-  background-color: var(--hover-bg);
+@media (min-width: 1024px) {
+  .episodeGrid > * {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
 }
 
-.checkButton {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  padding: 0;
-}
-
-.episodeCode {
-  flex-shrink: 0;
-  font-size: 0.75rem;
-  color: #6c757d;
-  min-width: 30px;
-}
-
-.episodeTitle {
-  flex: 1;
-  font-size: 0.875rem;
-  color: var(--foreground);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.episodeTitle.watched {
-  opacity: 0.45;
-}
-
-.airDate {
-  flex-shrink: 0;
-  font-size: 0.75rem;
-  color: #6c757d;
-}
-
-.trackingLabel {
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: var(--blue);
-}
-
-.notAired {
-  opacity: 0.4;
+@media (min-width: 1280px) {
+  .episodeGrid > * {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
 }

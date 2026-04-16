@@ -21,7 +21,6 @@ export const TrackedSeriesProvider = ({ children }) => {
       return;
     }
     setIsLoading(true);
-
     try {
       const response = await fetch("/api/series/tracked");
       const data = await response.json();
@@ -62,6 +61,11 @@ export const TrackedSeriesProvider = ({ children }) => {
     },
     [fetchTrackedSeries, showToast, refreshLists],
   );
+
+  // Mise à jour optimiste — ajoute immédiatement une série au state sans attendre le refetch
+  const addSeriesOptimistic = useCallback((seriesData) => {
+    setTrackedSeries((prev) => [...prev, seriesData]);
+  }, []);
 
   const removeSeries = useCallback(
     async (seriesId) => {
@@ -124,6 +128,7 @@ export const TrackedSeriesProvider = ({ children }) => {
         isLoading,
         error,
         addSeries,
+        addSeriesOptimistic,
         removeSeries,
         updateSeries,
         isTracked,

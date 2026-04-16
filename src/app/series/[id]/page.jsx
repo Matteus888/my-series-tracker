@@ -5,16 +5,21 @@ import { formatDate } from "@/lib/utils/date";
 import EpisodeList from "@/components/series/EpisodeList/EpisodeList";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getEpisodeProgressForSeries } from "@/lib/api/series.api";
+import { getEpisodeProgressForSeries, syncSeriesIfStale } from "@/lib/api/series.api";
 import { getAllSeasonsWithEpisodes } from "@/lib/api/tmdb.api";
 import { Series } from "@/models/series.model";
 import dbConnect from "@/lib/db/db.connect";
+
+export const dynamic = "force-dynamic";
 
 export default async function SeriesPage({ params }) {
   const { id } = await params;
 
   const serie = await getSeriesDetails(id);
   if (!serie) return <p className={styles.notFoundMessage}>Series not found</p>;
+
+  // Sync en arrière-plan si stale — ne bloque pas le rendu
+  syncSeriesIfStale(Series, id).catch((err) => console.error("syncSeriesIfStale failed:", err.message));
 
   // Récupère la progression si l'utilisateur est connecté
   const session = await getServerSession(authOptions);
@@ -47,6 +52,8 @@ export default async function SeriesPage({ params }) {
         seasonNumber: season.season_number,
         episodeNumber: ep.episode_number,
         title: ep.name ?? null,
+        overview: ep.overview ?? null,
+        stillPath: ep.still_path ?? null,
         airDate: ep.air_date ? new Date(ep.air_date).toISOString() : null,
         duration: ep.runtime ?? null,
         watched: false,

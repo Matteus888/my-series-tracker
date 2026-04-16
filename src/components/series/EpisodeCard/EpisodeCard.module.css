@@ -1,0 +1,92 @@
+.container {
+  min-width: 0;
+  flex: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: visible;
+}
+
+.notAired {
+  opacity: 0.45;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  flex-grow: 0;
+  display: flex;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--background-third);
+  color: var(--foreground);
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.episodeBadge {
+  position: absolute;
+  bottom: 0.4rem;
+  left: 0.4rem;
+  padding: 0.15rem 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--border);
+  color: var(--foreground);
+}
+
+.footer {
+  height: 40px;
+  min-width: 100%;
+  padding: 0 0 0 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.title {
+  flex: 1;
+  font-size: 0.75rem;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.checkButton {
+  height: 100%;
+  width: 30px;
+  min-width: 30px;
+  padding: 2px 0 0;
+  border-radius: 0;
+  flex-shrink: 0;
+}
