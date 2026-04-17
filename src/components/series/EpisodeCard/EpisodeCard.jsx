@@ -37,7 +37,7 @@ export default function EpisodeCard({ ep, onToggle, seriesTitle, showSeason, dis
         {/* Footer */}
         <div className={`card-footer ${styles.footer}`}>
           <span className={styles.title}>
-            {episodeCode + " -"}
+            {episodeCode + " | "}
             {ep.title ?? "—"}
           </span>
           <button

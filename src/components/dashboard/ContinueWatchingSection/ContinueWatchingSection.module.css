@@ -12,10 +12,10 @@
 .carousel {
   display: flex;
   overflow-x: auto;
-  min-height: calc(175px * 3 / 2 + 40px + 21px);
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
   scrollbar-gutter: stable;
+  align-items: flex-start;
 }
 
 .carousel::-webkit-scrollbar {
@@ -27,6 +27,12 @@
 .carousel::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 2px;
+}
+
+.carousel::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .error {
