@@ -147,7 +147,7 @@ export const getRecentlyWatched = async (userId) => {
   await dbConnect();
 
   // 10 derniers EpisodeProgress triés par watchedAt décroissant
-  const progressList = await EpisodeProgress.find({ userId, watched: true }).sort({ watchedAt: -1 }).limit(10).lean();
+  const progressList = await EpisodeProgress.find({ userId, watched: true }).sort({ watchedAt: -1 }).limit(500).lean();
 
   if (progressList.length === 0) return [];
 
@@ -184,11 +184,25 @@ export const getRecentlyWatched = async (userId) => {
         title: ep.title ?? null,
         stillPath: ep.stillPath ?? null,
         airDate: ep.airDate ? ep.airDate.toISOString() : null,
-        watchedAt: p.watchedAt ? p.watchedAt.toISOString() : null,
+        watchedAt: p.watchedAt,
         watched: true,
       };
     })
-    .filter(Boolean);
+    .filter(Boolean)
+    .sort((a, b) => {
+      // Arrondit à la seconde pour grouper les insertions simultanées
+      const timeA = Math.floor(new Date(a.watchedAt) / 1000);
+      const timeB = Math.floor(new Date(b.watchedAt) / 1000);
+      const timeDiff = timeB - timeA;
+      if (timeDiff !== 0) return timeDiff;
+      if (a.seasonNumber !== b.seasonNumber) return b.seasonNumber - a.seasonNumber;
+      return b.episodeNumber - a.episodeNumber;
+    })
+    .slice(0, 10)
+    .map((item) => ({
+      ...item,
+      watchedAt: item.watchedAt ? item.watchedAt.toISOString() : null,
+    }));
 };
 
 export const getCalendar = async (UserModel, userId) => {

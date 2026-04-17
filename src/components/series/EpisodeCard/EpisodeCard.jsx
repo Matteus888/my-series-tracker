@@ -36,10 +36,6 @@ export default function EpisodeCard({ ep, onToggle, seriesTitle, showSeason, dis
 
         {/* Footer */}
         <div className={`card-footer ${styles.footer}`}>
-          <span className={styles.title}>
-            {episodeCode + " | "}
-            {ep.title ?? "—"}
-          </span>
           <button
             className={`btn check ${styles.checkButton} ${ep.watched ? "active" : ""}`}
             onClick={() => isAired && onToggle(ep._id, ep.watched, ep.seasonNumber, ep.episodeNumber)}
@@ -48,6 +44,10 @@ export default function EpisodeCard({ ep, onToggle, seriesTitle, showSeason, dis
           >
             <Icon path={mdiCheck} size={0.9} />
           </button>
+          <span className={styles.title}>
+            {episodeCode + " | "}
+            {ep.title ?? "—"}
+          </span>
         </div>
       </div>
     </div>
