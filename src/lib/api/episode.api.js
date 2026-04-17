@@ -221,7 +221,7 @@ export const getCalendar = async (UserModel, userId) => {
   const user = await UserModel.findById(userId).populate({ path: "trackedSeries.seriesId", model: "Series" }).lean();
   if (!user) throw new Error("User not found");
 
-  const watchingSeries = user.trackedSeries.filter((t) => t.seriesId && t.status === "watching");
+  const watchingSeries = user.trackedSeries.filter((t) => t.seriesId && t.status !== "dropped");
   if (watchingSeries.length === 0) return [];
 
   const now = new Date();
