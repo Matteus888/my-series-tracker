@@ -1,7 +1,7 @@
 import styles from "@/app/series/[id]/page.module.css";
 import Image from "next/image";
 import { getSeriesDetails } from "@/lib/api/tmdb.api";
-import { formatDate } from "@/lib/utils/date";
+import { formatDate } from "@/lib/utils/date.utils";
 import EpisodeList from "@/components/series/EpisodeList/EpisodeList";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";

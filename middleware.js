@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const protectedRoutes = ["/profile", "/watchlist", "/dashboard", "/favorites", "/settings"];
+const protectedRoutes = ["/profile", "/watching", "/dashboard", "/favorites", "/settings"];
 const publicRoutes = ["/login", "/signup", "/verify-email", "/series"];
 
 export async function middleware(request) {

@@ -28,13 +28,23 @@ export default function NavBar() {
           </Link>
         </li>
         <li>
-          <Link className={`${styles.navLink} ${isActive("/watchlist") ? styles.active : ""}`} href="/watchlist">
-            <span className={styles.navText}>Watchlist</span>
+          <Link className={`${styles.navLink} ${isActive("/watching") ? styles.active : ""}`} href="/watching">
+            <span className={styles.navText}>Watching</span>
           </Link>
         </li>
         <li>
-          <Link className={`${styles.navLink} ${isActive("/profile") ? styles.active : ""}`} href="/profile">
-            <span className={styles.navText}>Profile</span>
+          <Link className={`${styles.navLink} ${isActive("/lists") ? styles.active : ""}`} href="/lists">
+            <span className={styles.navText}>Lists</span>
+          </Link>
+        </li>
+        <li>
+          <Link className={`${styles.navLink} ${isActive("/history") ? styles.active : ""}`} href="/history">
+            <span className={styles.navText}>History</span>
+          </Link>
+        </li>
+        <li>
+          <Link className={`${styles.navLink} ${isActive("/calendar") ? styles.active : ""}`} href="/calendar">
+            <span className={styles.navText}>Calendar</span>
           </Link>
         </li>
       </ul>

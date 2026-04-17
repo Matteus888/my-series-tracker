@@ -19,7 +19,7 @@ export const getContinueWatching = async (UserModel, userId) => {
 
       const allEpisodes = await Episode.find({ seriesId })
         .sort({ seasonNumber: 1, episodeNumber: 1 })
-        .select("_id seasonNumber episodeNumber title airDate")
+        .select("_id seasonNumber episodeNumber title airDate duration")
         .lean();
       if (allEpisodes.length === 0) return null;
 
@@ -47,6 +47,13 @@ export const getContinueWatching = async (UserModel, userId) => {
         null,
       );
 
+      const remainingEpisodes = allEpisodes.filter(
+        (e) => !watchedIds.has(e._id.toString()) && e.airDate && e.airDate <= now,
+      );
+
+      const remainingCount = remainingEpisodes.length;
+      const totalRemainingDuration = remainingEpisodes.reduce((sum, e) => sum + (e.duration ?? 0), 0);
+
       const series = tracked.seriesId;
 
       const seasonData = series.seasons?.find((s) => s.seasonNumber === nextEpisode.seasonNumber);
@@ -59,12 +66,15 @@ export const getContinueWatching = async (UserModel, userId) => {
         watchedCount: watchedIds.size,
         totalCount: allEpisodes.length,
         lastWatchedAt,
+        remainingCount,
+        totalRemainingDuration,
         nextEpisode: {
           _id: nextEpisode._id.toString(),
           seasonNumber: nextEpisode.seasonNumber,
           episodeNumber: nextEpisode.episodeNumber,
           title: nextEpisode.title ?? null,
           airDate: nextEpisode.airDate ?? null,
+          duration: nextEpisode.duration ?? null,
         },
       };
     }),
