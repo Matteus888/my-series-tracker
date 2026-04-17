@@ -1,0 +1,20 @@
+.container {
+  margin-bottom: 0.8rem;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  text-decoration: none;
+  color: var(--foreground);
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.arrow {
+  color: var(--foreground);
+}

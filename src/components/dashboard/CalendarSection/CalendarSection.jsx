@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useCalendar } from "@/hooks/useCalendar";
 import Image from "next/image";
 import Link from "next/link";
+import SectionHeader from "../SectionHeader/SectionHeader";
 
 export default function CalendarSection() {
   const { items, loading, error } = useCalendar();
@@ -15,7 +16,7 @@ export default function CalendarSection() {
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.title}>Upcoming</h2>
+      <SectionHeader title="Upcoming" href="/calendar" />
       <div className={styles.carousel}>
         {items.map((day) => (
           <CalendarDayCard key={day.date} day={day} />

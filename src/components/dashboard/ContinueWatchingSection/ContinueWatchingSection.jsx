@@ -3,6 +3,7 @@
 import styles from "./ContinueWatchingSection.module.css";
 import { useContinueWatching } from "@/hooks/useContinueWatching";
 import ContinueWatchingCard from "@/components/dashboard/ContinueWatchingCard/ContinueWatchingCard";
+import SectionHeader from "../SectionHeader/SectionHeader";
 
 export default function ContinueWatchingSection() {
   const { items, loading, error, checkEpisode } = useContinueWatching();
@@ -13,7 +14,7 @@ export default function ContinueWatchingSection() {
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.title}>Continue watching</h2>
+      <SectionHeader title="Continue watching" href="/watching" />
       <div className={styles.carousel}>
         {items.map((item) => (
           <ContinueWatchingCard key={item.seriesId} item={item} onCheck={checkEpisode} />

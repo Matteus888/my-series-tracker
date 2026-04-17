@@ -3,6 +3,7 @@
 import styles from "./RecentlyWatchedSection.module.css";
 import { useRecentlyWatched } from "@/hooks/useRecentlyWatched";
 import EpisodeCard from "@/components/series/EpisodeCard/EpisodeCard";
+import SectionHeader from "../SectionHeader/SectionHeader";
 
 export default function RecentlyWatchedSection() {
   const { items, loading, error, uncheckEpisode } = useRecentlyWatched();
@@ -13,7 +14,7 @@ export default function RecentlyWatchedSection() {
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.title}>Recently watched</h2>
+      <SectionHeader title="Recently watched" href="/history" />
       <div className={styles.carousel}>
         {items.map((item) => (
           <div key={item._id} className={styles.cardWrapper}>

@@ -3,6 +3,7 @@
 import styles from "./StartWatchingSection.module.css";
 import { useStartWatching } from "@/hooks/useStartWatching";
 import StartWatchingCard from "@/components/dashboard/StartWatchingCard/StartWatchingCard";
+import SectionHeader from "../SectionHeader/SectionHeader";
 
 export default function StartWatchingSection() {
   const { items, loading, error, checkFirstEpisode, checkingId } = useStartWatching();
@@ -13,7 +14,7 @@ export default function StartWatchingSection() {
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.title}>Start watching</h2>
+      <SectionHeader title="Start watching" href="/lists" />
       <div className={styles.carousel}>
         {items.map((item) => (
           <StartWatchingCard
