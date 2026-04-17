@@ -190,3 +190,59 @@ export const getRecentlyWatched = async (userId) => {
     })
     .filter(Boolean);
 };
+
+export const getCalendar = async (UserModel, userId) => {
+  await dbConnect();
+
+  const user = await UserModel.findById(userId).populate({ path: "trackedSeries.seriesId", model: "Series" }).lean();
+  if (!user) throw new Error("User not found");
+
+  const watchingSeries = user.trackedSeries.filter((t) => t.seriesId && t.status === "watching");
+  if (watchingSeries.length === 0) return [];
+
+  const now = new Date();
+  const seriesIds = watchingSeries.map((t) => t.seriesId._id);
+
+  // Récupère tous les épisodes futurs des séries en cours
+  const upcomingEpisodes = await Episode.find({
+    seriesId: { $in: seriesIds },
+    airDate: { $gt: now },
+  })
+    .sort({ airDate: 1 })
+    .select("_id seriesId seasonNumber episodeNumber title airDate")
+    .lean();
+  if (upcomingEpisodes.length === 0) return [];
+
+  // Map seriesId: données série pour lookup rapide
+  const seriesMap = new Map(watchingSeries.map((t) => [t.seriesId._id.toString(), t.seriesId]));
+
+  // Groupe par date (YYYY-MM-DD)
+  const grouped = {};
+  for (const ep of upcomingEpisodes) {
+    const series = seriesMap.get(ep.seriesId.toString());
+    if (!series) continue;
+
+    const dateKey = ep.airDate.toISOString().slice(0, 10);
+    if (!grouped[dateKey]) grouped[dateKey] = [];
+
+    // Poster de la saison
+    const seasonData = seriesIds.seasons?.find((s) => s.seasonNumber === ep.seasonNumber);
+    const posterPath = seasonData?.posterPath ?? series.posterPath ?? null;
+
+    grouped[dateKey].push({
+      episodeId: ep._id.toString(),
+      seriesId: ep.seriesId.toString(),
+      tmdbId: series.tmdbId,
+      seriesTitle: series.title,
+      seasonNumber: ep.seasonNumber,
+      episodeNumber: ep.episodeNumber,
+      title: ep.title ?? null,
+      posterPath,
+      airDate: ep.airDate.toISOString(),
+    });
+  }
+
+  return Object.entries(grouped)
+    .slice(0, 10)
+    .map(([date, episodes]) => ({ date, episodes }));
+};

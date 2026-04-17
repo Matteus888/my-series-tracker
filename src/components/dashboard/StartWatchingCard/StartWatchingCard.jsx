@@ -35,6 +35,7 @@ export default function StartWatchingCard({ item, onCheck, isChecking }) {
                 alt={title}
                 fill
                 sizes="175px"
+                loading="eager"
                 className={styles.image}
               />
             ) : (

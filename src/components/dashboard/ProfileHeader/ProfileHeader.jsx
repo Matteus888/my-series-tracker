@@ -10,6 +10,7 @@ export default function ProfileHeader({ username, profilePicture }) {
           alt={`${username}'s avatar`}
           width={80}
           height={80}
+          loading="eager"
           className={styles.avatar}
           priority
         />

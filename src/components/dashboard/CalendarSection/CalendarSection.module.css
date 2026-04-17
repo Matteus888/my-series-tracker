@@ -1,0 +1,218 @@
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 1rem;
+}
+
+.carousel {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  scrollbar-gutter: stable;
+  align-items: flex-start;
+}
+
+.carousel::-webkit-scrollbar {
+  height: 3px;
+}
+.carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+.carousel::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+.carousel::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* ── Day card ── */
+.dayCard {
+  flex: 0 0 auto;
+  width: 300px;
+  display: flex;
+  flex-direction: row;
+  min-height: 175px;
+  height: 175px;
+  overflow: hidden;
+}
+
+.dayCard:last-child {
+  border-right: none;
+}
+
+/* Poster gauche */
+.posterSection {
+  position: relative;
+  width: 117px;
+  flex-shrink: 0;
+  background: var(--background-third);
+  overflow: hidden;
+  align-self: stretch;
+}
+
+.poster {
+  object-fit: cover;
+  transition: opacity 0.2s ease;
+}
+
+.posterPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: var(--background-third);
+}
+
+/* Contenu droite */
+.contentSection {
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  overflow: hidden;
+}
+
+.dateLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.divider {
+  width: 100%;
+  height: 0.5px;
+  background-color: var(--foreground);
+}
+
+.episodeList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.episodeItem {
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background-color 0.15s ease;
+}
+
+.episodeItem:hover {
+  background-color: var(--hover-bg);
+}
+
+.episodeLink {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: 0.1rem 0.25rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.epCode {
+  font-size: 0.65rem;
+  color: var(--foreground);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.epTitle {
+  font-size: 0.75rem;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Skeleton ── */
+.skeletonCard {
+  flex: 0 0 auto;
+  width: 280px;
+  display: flex;
+  flex-direction: row;
+  min-height: 150px;
+  overflow: hidden;
+}
+
+.skeletonPoster {
+  width: 100px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.skeletonPulse {
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-secondary);
+  border: 1px solid transparent;
+  animation: pulseBorder 1.5s infinite ease-in-out;
+}
+
+.skeletonContent {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skeletonDate {
+  height: 12px;
+  width: 70%;
+  background-color: var(--background-secondary);
+  border-radius: 2px;
+  border: 1px solid transparent;
+  animation: pulseBorder 1.5s infinite ease-in-out;
+}
+
+.skeletonLine {
+  height: 10px;
+  width: 90%;
+  background-color: var(--background-secondary);
+  border-radius: 2px;
+  border: 1px solid transparent;
+  animation: pulseBorder 1.5s infinite ease-in-out;
+}
+
+.skeletonLineShort {
+  height: 10px;
+  width: 60%;
+  background-color: var(--background-secondary);
+  border-radius: 2px;
+  border: 1px solid transparent;
+  animation: pulseBorder 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseBorder {
+  0% {
+    border-color: transparent;
+    opacity: 0.7;
+  }
+  50% {
+    border-color: rgba(255, 255, 255, 0.3);
+    opacity: 1;
+  }
+  100% {
+    border-color: transparent;
+    opacity: 0.7;
+  }
+}
+
+.error {
+  font-size: 0.875rem;
+  color: var(--red);
+}

@@ -28,6 +28,7 @@ export default function ContinueWatchingCard({ item, onCheck }) {
                 alt={title}
                 fill
                 sizes="150px"
+                loading="eager"
                 className={styles.image}
               />
             ) : (

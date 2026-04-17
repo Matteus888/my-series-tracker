@@ -6,6 +6,7 @@ import { getUserProfile } from "@/lib/api/user.api";
 import { User } from "@/models/user.model";
 import ProfileHeader from "@/components/dashboard/ProfileHeader/ProfileHeader";
 import ContinueWatchingSection from "@/components/dashboard/ContinueWatchingSection/ContinueWatchingSection";
+import CalendarSection from "@/components/dashboard/CalendarSection/CalendarSection";
 import StartWatchingSection from "@/components/dashboard/StartWatchingSection/StartWatchingSection";
 import RecentlyWatchedSection from "@/components/dashboard/RecentlyWatchedSection/RecentlyWatchedSection";
 
@@ -25,6 +26,7 @@ export default async function DashboardPage() {
         <ProfileHeader username={user.username} profilePicture={user.profilePicture} />
       </section>
       <ContinueWatchingSection />
+      <CalendarSection />
       <RecentlyWatchedSection />
       <StartWatchingSection />
     </div>
