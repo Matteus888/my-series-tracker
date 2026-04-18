@@ -92,6 +92,7 @@
   width: 100%;
   height: 0.5px;
   background-color: var(--foreground);
+  opacity: 0.5;
 }
 
 .episodeList {

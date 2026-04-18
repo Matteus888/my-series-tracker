@@ -79,22 +79,38 @@
 
 .episodeInfo {
   flex: 1;
-  min-width: 0;
+  height: 100%;
   overflow: hidden;
 }
 
-.episodeLabel {
-  font-size: 0.65rem;
+.content {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.2rem;
+}
+
+.title {
   color: var(--foreground);
+  font-size: 0.7rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;
   display: block;
-  opacity: 0.85;
+}
+
+.epCode {
+  font-size: 0.65rem;
+  opacity: 0.5;
 }
 
 .episodeLabelFallback {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   color: var(--foreground);
   opacity: 0.4;
 }

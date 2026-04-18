@@ -11,30 +11,46 @@ import SectionHeader from "../SectionHeader/SectionHeader";
 export default function CalendarSection() {
   const { items, loading, error } = useCalendar();
 
-  if (loading) return <SectionSkeleton />;
   if (error) return <p className={styles.error}>Failed to load.</p>;
-  if (!items?.length) return null;
+  if (!loading && !items?.length) return null;
 
   return (
     <section className={styles.section}>
-      <SectionHeader title="Upcoming" href="/calendar" />
-      <div className={styles.carousel}>
-        {items.map((day) => (
-          <CalendarDayCard key={day.date} day={day} />
-        ))}
-      </div>
+      <SectionHeader title="Upcoming" href="/calendar">
+        {loading ? (
+          <div className={styles.carousel}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className={`card ${styles.skeletonCard}`}>
+                <div className={styles.skeletonPoster}>
+                  <div className={styles.skeletonPulse} />
+                </div>
+                <div className={styles.skeletonContent}>
+                  <div className={styles.skeletonDate} />
+                  <div className={styles.skeletonLine} />
+                  <div className={styles.skeletonLine} />
+                  <div className={styles.skeletonLineShort} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.carousel}>
+            {items.map((day) => (
+              <CalendarDayCard key={day.date} day={day} />
+            ))}
+          </div>
+        )}
+      </SectionHeader>
     </section>
   );
 }
 
 function CalendarDayCard({ day }) {
   const [hoveredPoster, setHoveredPoster] = useState(day.episodes[0]?.posterPath ?? null);
-
   const dateLabel = formatDateLabel(day.date);
 
   return (
     <div className={styles.dayCard}>
-      {/* Partie gauche - poster */}
       <div className={styles.posterSection}>
         {hoveredPoster ? (
           <Image
@@ -50,8 +66,6 @@ function CalendarDayCard({ day }) {
           <div className={styles.posterPlaceholder} />
         )}
       </div>
-
-      {/* Partie droite - date + épisode */}
       <div className={styles.contentSection}>
         <p className={styles.dateLabel}>{dateLabel}</p>
         <div className={styles.divider} />
@@ -75,28 +89,5 @@ function CalendarDayCard({ day }) {
         </ul>
       </div>
     </div>
-  );
-}
-
-function SectionSkeleton() {
-  return (
-    <section className={styles.section}>
-      <h2 className={styles.title}>Upcoming</h2>
-      <div className={styles.carousel}>
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className={`card ${styles.skeletonCard}`}>
-            <div className={styles.skeletonPoster}>
-              <div className={styles.skeletonPulse} />
-            </div>
-            <div className={styles.skeletonContent}>
-              <div className={styles.skeletonDate} />
-              <div className={styles.skeletonLine} />
-              <div className={styles.skeletonLine} />
-              <div className={styles.skeletonLineShort} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
   );
 }

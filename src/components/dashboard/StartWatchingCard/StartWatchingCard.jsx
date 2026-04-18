@@ -9,7 +9,7 @@ import { usePopover } from "@/hooks/usePopover";
 import WatchlistPopover from "@/components/ui/WatchlistPopover/WatchlistPopover";
 import { useList } from "@/context/ListContext";
 
-export default function StartWatchingCard({ item, onCheck, isChecking }) {
+export default function StartWatchingCard({ item, onCheck, isChecking, showCheck = false }) {
   const { tmdbId, title, posterPath } = item;
   const watchlistPopover = usePopover();
   const { lists } = useList();
@@ -48,14 +48,16 @@ export default function StartWatchingCard({ item, onCheck, isChecking }) {
         <div className={`card-footer ${styles.footer}`}>
           <div className={styles.buttonsLeft}>
             {/* Check */}
-            <button
-              className={`btn check ${styles.button} ${isChecking ? "active" : ""}`}
-              onClick={() => onCheck(item)}
-              disabled={isChecking}
-              title="Start watching"
-            >
-              <Icon path={mdiCheck} size={1} />
-            </button>
+            {showCheck && (
+              <button
+                className={`btn check ${styles.button} ${isChecking ? "active" : ""}`}
+                onClick={() => onCheck(item)}
+                disabled={isChecking}
+                title="Start watching"
+              >
+                <Icon path={mdiCheck} size={1} />
+              </button>
+            )}
 
             {/* Watchlist */}
             <button

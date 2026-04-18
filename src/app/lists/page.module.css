@@ -1,0 +1,36 @@
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.carousel {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  scrollbar-gutter: stable;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.carousel::-webkit-scrollbar {
+  height: 3px;
+}
+.carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+.carousel::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+.carousel::-webkit-scrollbar-button {
+  display: none;
+}
+
+.empty {
+  font-size: 0.875rem;
+  color: #6c757d;
+  padding: 0.5rem 0;
+}

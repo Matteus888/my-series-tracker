@@ -12,7 +12,7 @@ export default function ContinueWatchingCard({ item, onCheck }) {
   const progressPercent = Math.round((watchedCount / totalCount) * 100);
 
   const episodeLabel = nextEpisode
-    ? `S${String(nextEpisode.seasonNumber).padStart(2, "0")}E${String(nextEpisode.episodeNumber).padStart(2, "0")}${nextEpisode.title ? ` | ${nextEpisode.title}` : ""}`
+    ? `S${String(nextEpisode.seasonNumber).padStart(2, "0")}E${String(nextEpisode.episodeNumber).padStart(2, "0")}`
     : null;
 
   return (
@@ -57,7 +57,10 @@ export default function ContinueWatchingCard({ item, onCheck }) {
           {/* Infos épisode suivant */}
           <div className={styles.episodeInfo}>
             {episodeLabel ? (
-              <span className={styles.episodeLabel}>{episodeLabel}</span>
+              <div className={styles.content}>
+                <span className={styles.title}>{nextEpisode.title}</span>
+                <span className={styles.epCode}>{episodeLabel}</span>
+              </div>
             ) : (
               <span className={styles.episodeLabelFallback}>…</span>
             )}

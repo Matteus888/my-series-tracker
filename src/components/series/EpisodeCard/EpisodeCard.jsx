@@ -44,10 +44,10 @@ export default function EpisodeCard({ ep, onToggle, seriesTitle, showSeason, dis
           >
             <Icon path={mdiCheck} size={0.9} />
           </button>
-          <span className={styles.title}>
-            {episodeCode + " | "}
-            {ep.title ?? "—"}
-          </span>
+          <div className={styles.content}>
+            <span className={styles.title}>{ep.title ?? "—"}</span>
+            <span className={styles.epCode}>{episodeCode}</span>
+          </div>
         </div>
       </div>
     </div>
