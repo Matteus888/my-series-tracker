@@ -3,6 +3,7 @@
 import styles from "./CalendarSection.module.css";
 import { useState } from "react";
 import { useCalendar } from "@/hooks/useCalendar";
+import { formatDateLabel } from "@/lib/utils/date.utils";
 import Image from "next/image";
 import Link from "next/link";
 import SectionHeader from "../SectionHeader/SectionHeader";
@@ -29,11 +30,7 @@ export default function CalendarSection() {
 function CalendarDayCard({ day }) {
   const [hoveredPoster, setHoveredPoster] = useState(day.episodes[0]?.posterPath ?? null);
 
-  const dateLabel = new Date(day.date).toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
+  const dateLabel = formatDateLabel(day.date);
 
   return (
     <div className={styles.dayCard}>

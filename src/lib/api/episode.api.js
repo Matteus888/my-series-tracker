@@ -180,21 +180,20 @@ export const getStartWatching = async (UserModel, userId) => {
   return results.filter(Boolean);
 };
 
-export const getRecentlyWatched = async (userId) => {
-  await dbConnect();
+// Fonction privée partagée — fetch + join + tri
+const _fetchWatchedEpisodes = async (userId, since = null) => {
+  const query = { userId, watched: true };
+  if (since) query.watchedAt = { $gte: since };
 
-  // 10 derniers EpisodeProgress triés par watchedAt décroissant
-  const progressList = await EpisodeProgress.find({ userId, watched: true }).sort({ watchedAt: -1 }).limit(500).lean();
+  const progressList = await EpisodeProgress.find(query).sort({ watchedAt: -1 }).limit(500).lean();
 
   if (progressList.length === 0) return [];
 
   const episodeIds = progressList.map((p) => p.episodeId);
-
   const episodes = await Episode.find({ _id: { $in: episodeIds } })
     .select("_id seriesId seasonNumber episodeNumber title stillPath airDate")
     .lean();
 
-  // Récupère les Series pour avoir le titre
   const seriesIds = [...new Set(episodes.map((e) => e.seriesId.toString()))];
   const seriesList = await Series.find({ _id: { $in: seriesIds } })
     .select("_id title tmdbId")
@@ -209,7 +208,6 @@ export const getRecentlyWatched = async (userId) => {
       if (!ep) return null;
       const series = seriesMap.get(ep.seriesId.toString());
       if (!series) return null;
-
       return {
         _id: ep._id.toString(),
         seriesId: ep.seriesId.toString(),
@@ -220,25 +218,53 @@ export const getRecentlyWatched = async (userId) => {
         title: ep.title ?? null,
         stillPath: ep.stillPath ?? null,
         airDate: ep.airDate ? ep.airDate.toISOString() : null,
-        watchedAt: p.watchedAt,
+        watchedAt: p.watchedAt, // Date pour le tri
         watched: true,
       };
     })
     .filter(Boolean)
     .sort((a, b) => {
-      // Arrondit à la seconde pour grouper les insertions simultanées
       const timeA = Math.floor(new Date(a.watchedAt) / 1000);
       const timeB = Math.floor(new Date(b.watchedAt) / 1000);
       const timeDiff = timeB - timeA;
       if (timeDiff !== 0) return timeDiff;
       if (a.seasonNumber !== b.seasonNumber) return b.seasonNumber - a.seasonNumber;
       return b.episodeNumber - a.episodeNumber;
-    })
-    .slice(0, 10)
-    .map((item) => ({
-      ...item,
-      watchedAt: item.watchedAt ? item.watchedAt.toISOString() : null,
-    }));
+    });
+};
+
+// Pour le dashboard — 10 épisodes plats
+export const getRecentlyWatchedFlat = async (userId) => {
+  await dbConnect();
+  const items = await _fetchWatchedEpisodes(userId);
+  return items.slice(0, 10).map((item) => ({
+    ...item,
+    watchedAt: item.watchedAt ? item.watchedAt.toISOString() : null,
+  }));
+};
+
+// Pour /history — groupé par jour sur 30 jours
+export const getRecentlyWatched = async (userId) => {
+  await dbConnect();
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const items = await _fetchWatchedEpisodes(userId, thirtyDaysAgo);
+
+  // Convertit watchedAt en string et groupe par jour
+  const grouped = {};
+  for (const item of items) {
+    const watchedAtStr = item.watchedAt ? item.watchedAt.toISOString() : null;
+    if (!watchedAtStr) continue;
+    const dateKey = watchedAtStr.slice(0, 10);
+    if (!grouped[dateKey]) grouped[dateKey] = [];
+    grouped[dateKey].push({ ...item, watchedAt: watchedAtStr });
+  }
+
+  return Object.entries(grouped)
+    .sort(([a], [b]) => b.localeCompare(a))
+    .map(([date, episodes]) => ({ date, episodes }));
 };
 
 export const getCalendar = async (UserModel, userId) => {
