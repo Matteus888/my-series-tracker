@@ -1,6 +1,8 @@
 import { Episode } from "@/models/episode.model";
+import { Series } from "@/models/series.model";
 import { UserList } from "@/models/userList.model";
 import { EpisodeProgress } from "@/models/episodeProgress.model";
+import { User } from "@/models/user.model";
 
 const dbConnect = require("@/lib/db/db.connect").default;
 
@@ -95,8 +97,42 @@ export const markEpisodeWatched = async (EpisodeModel, userId, episodeId, watche
       { $set: { watched: true, watchedAt: new Date() } },
       { upsert: true, runValidators: true },
     );
+
+    const now = new Date();
+    const allEpisodes = await Episode.find({
+      seriesId: episode.seriesId,
+      airDate: { $lte: now },
+    })
+      .select("_id")
+      .lean();
+
+    const watchedCount = await EpisodeProgress.countDocuments({
+      userId,
+      episodeId: { $in: allEpisodes.map((e) => e._id) },
+      watched: true,
+    });
+
+    if (watchedCount === allEpisodes.length) {
+      const user = await User.findById(userId);
+      if (user) {
+        const trackedEntry = user.trackedSeries.find((s) => s.seriesId?.toString() === episode.seriesId.toString());
+        if (trackedEntry && trackedEntry.status === "watching") {
+          trackedEntry.status = "completed";
+          await user.save();
+        }
+      }
+    }
   } else {
     await EpisodeProgress.findOneAndDelete({ userId, episodeId });
+
+    const user = await User.findById(userId);
+    if (user) {
+      const trackedEntry = user.trackedSeries.find((s) => s.seriesId?.toString() === episode.seriesId.toString());
+      if (trackedEntry && trackedEntry.status === "completed") {
+        trackedEntry.status = "watching";
+        await user.save();
+      }
+    }
   }
 
   return { watched };
@@ -104,15 +140,6 @@ export const markEpisodeWatched = async (EpisodeModel, userId, episodeId, watche
 
 export const getStartWatching = async (UserModel, userId) => {
   await dbConnect();
-
-  const user = await UserModel.findById(userId)
-    .populate({
-      path: "trackedSeries.seriesId",
-      model: "Series",
-    })
-    .lean();
-
-  if (!user) throw new Error("User not found");
 
   // Récupère la watchlist par défaut
   const watchlist = await UserList.findOne({ userId, isDefault: true })
@@ -169,7 +196,6 @@ export const getRecentlyWatched = async (userId) => {
 
   // Récupère les Series pour avoir le titre
   const seriesIds = [...new Set(episodes.map((e) => e.seriesId.toString()))];
-  const { Series } = await import("@/models/series.model");
   const seriesList = await Series.find({ _id: { $in: seriesIds } })
     .select("_id title tmdbId")
     .lean();
@@ -250,7 +276,7 @@ export const getCalendar = async (UserModel, userId) => {
     if (!grouped[dateKey]) grouped[dateKey] = [];
 
     // Poster de la saison
-    const seasonData = seriesIds.seasons?.find((s) => s.seasonNumber === ep.seasonNumber);
+    const seasonData = series.seasons?.find((s) => s.seasonNumber === ep.seasonNumber);
     const posterPath = seasonData?.posterPath ?? series.posterPath ?? null;
 
     grouped[dateKey].push({
