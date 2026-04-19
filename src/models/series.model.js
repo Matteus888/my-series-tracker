@@ -114,6 +114,13 @@ const seriesSchema = new mongoose.Schema(
         airDate: { type: Date },
       },
     ],
+    networks: [
+      {
+        id: { type: Number },
+        name: { type: String, trim: true },
+        logoPath: { type: String, trim: true },
+      },
+    ],
     isPopular: {
       type: Boolean,
       default: false, // Peut être mis à jour via un cron job (ex: séries les plus suivies)

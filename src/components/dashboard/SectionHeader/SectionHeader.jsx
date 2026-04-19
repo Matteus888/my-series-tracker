@@ -3,7 +3,7 @@
 import styles from "./SectionHeader.module.css";
 import Link from "next/link";
 import Icon from "@mdi/react";
-import { mdiChevronRight, mdiChevronDownCircleOutline, mdiChevronUpCircleOutline } from "@mdi/js";
+import { mdiChevronRight, mdiArrowDownDropCircleOutline, mdiArrowUpDropCircleOutline } from "@mdi/js";
 import { useState } from "react";
 
 export default function SectionHeader({ title, href, defaultOpen = true, children }) {
@@ -18,7 +18,7 @@ export default function SectionHeader({ title, href, defaultOpen = true, childre
       <div className={styles.container}>
         <button className={styles.toggleBtn} onClick={handleToggle}>
           <Icon
-            path={isOpen ? mdiChevronUpCircleOutline : mdiChevronDownCircleOutline}
+            path={isOpen ? mdiArrowUpDropCircleOutline : mdiArrowDownDropCircleOutline}
             size={0.8}
             className={styles.chevron}
           />

@@ -39,6 +39,12 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
         numberOfSeasons: seriesDetails.number_of_seasons,
         numberOfEpisodes: seriesDetails.number_of_episodes,
         seasons: seasonsData,
+        networks:
+          seriesDetails.networks?.map((n) => ({
+            id: n.id,
+            name: n.name,
+            logoPath: n.logo_path ?? null,
+          })) ?? [],
         imdbId,
         "ratings.tmdb.score": serieData.vote_average,
         "ratings.tmdb.voteCount": serieData.vote_count,
@@ -230,6 +236,12 @@ export const syncSeriesIfStale = async (SeriesModel, tmdbId) => {
         numberOfEpisodes: seriesDetails.number_of_episodes,
         status: seriesDetails.status,
         seasons: seasonsData,
+        networks:
+          seriesDetails.networks?.map((n) => ({
+            id: n.id,
+            name: n.name,
+            logoPath: n.logo_path ?? null,
+          })) ?? [],
         lastSyncedAt: new Date(),
         imdbId,
         "ratings.tmdb.score": seriesDetails.vote_average,

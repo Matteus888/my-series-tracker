@@ -1,38 +1,33 @@
-.container {
-  width: 100%;
-  display: flex;
-}
-
 .card {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
   overflow: hidden;
-  min-height: 140px;
 }
 
-/* ── Poster gauche ── */
 .posterSection {
   position: relative;
-  width: 95px;
-  flex-shrink: 0;
+  width: 50%;
+  flex-grow: 0;
+  aspect-ratio: 2/3;
   overflow: hidden;
 }
 
 .posterLink {
   position: relative;
-  display: block;
+  display: flex;
   width: 100%;
   height: 100%;
 }
 
 .poster {
   object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 
 .posterPlaceholder {
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,15 +53,20 @@
   transition: width 0.3s ease;
 }
 
-/* ── Contenu droite ── */
 .content {
-  flex: 1;
-  min-width: 0;
-  padding: 0.6rem 0.75rem;
+  width: 50%;
+  flex-shrink: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
   justify-content: space-between;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+}
+
+.titleContainer {
+  height: 50%;
+  padding: 0.5rem;
 }
 
 .titleLink {
@@ -82,28 +82,40 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color 0.15s ease;
 }
 
-.titleLink:hover .title {
-  color: var(--blue);
+.divider {
+  background-color: var(--border);
+  height: 1px;
+  width: 100%;
+}
+
+.nextEpisodeWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.5rem 0 0 0.5rem;
+  height: 50%;
 }
 
 .nextEpisode {
-  font-size: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.7rem;
   color: var(--foreground);
   margin: 0;
+}
+
+.epTitle {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .epCode {
+  font-size: 0.65rem;
   font-weight: 600;
-  opacity: 0.8;
-}
-
-.epTitle {
   opacity: 0.6;
 }
 
@@ -119,14 +131,32 @@
   opacity: 0.6;
 }
 
+.network {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  color: var(--foreground);
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+}
+
+.networkLogo {
+  object-fit: contain;
+  flex-shrink: 0;
+  padding: 0.1rem;
+  border-radius: 2px;
+  background-color: white;
+}
+
 .checkButton {
   align-self: flex-end;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
   padding: 0;
   flex-shrink: 0;
 }

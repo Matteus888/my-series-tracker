@@ -315,10 +315,10 @@ export const getCalendar = async (UserModel, userId) => {
       title: ep.title ?? null,
       posterPath,
       airDate: ep.airDate.toISOString(),
+      networks: series.networks ?? [],
+      seasonEpisodeCount: seasonData?.episodeCount ?? null,
     });
   }
 
-  return Object.entries(grouped)
-    .slice(0, 10)
-    .map(([date, episodes]) => ({ date, episodes }));
+  return Object.entries(grouped).map(([date, episodes]) => ({ date, episodes }));
 };
