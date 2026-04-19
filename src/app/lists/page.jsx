@@ -14,6 +14,7 @@ export default function ListsPage() {
 
   return (
     <div className={styles.page}>
+      <h2 className={styles.title}>Lists</h2>
       {/* Plan to Watch */}
       <SectionHeader title="Plan to watch">
         <div className={styles.carousel}>

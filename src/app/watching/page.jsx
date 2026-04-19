@@ -50,12 +50,18 @@ export default function WatchingPage() {
     [items, incrementWatched],
   );
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <div className={styles.page}>
+        <h3 className={styles.title}>Continue watching</h3>
+        <p className={styles.muted}>Loading...</p>
+      </div>
+    );
   if (items.length === 0) return <p className={styles.empty}>No series in progress.</p>;
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Continue watching</h1>
+      <h3 className={styles.title}>Continue watching</h3>
       <p className={styles.count}>{items.length} series in progress</p>
       <div className={styles.grid}>
         {items.map((item) => (

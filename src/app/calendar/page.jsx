@@ -21,7 +21,7 @@ export default function CalendarPage() {
   if (loading)
     return (
       <div className={styles.page}>
-        <h1 className={styles.title}>Upcoming</h1>
+        <h2 className={styles.title}>Upcoming</h2>
         <p className={styles.muted}>Loading...</p>
       </div>
     );
@@ -29,14 +29,14 @@ export default function CalendarPage() {
   if (days.length === 0)
     return (
       <div className={styles.page}>
-        <h1 className={styles.title}>Upcoming</h1>
+        <h2 className={styles.title}>Upcoming</h2>
         <p className={styles.muted}>No upcoming episodes.</p>
       </div>
     );
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Upcoming</h1>
+      <h2 className={styles.title}>Upcoming</h2>
       {days.map((day) => (
         <div key={day.date} className={styles.daySection}>
           <h2 className={styles.dateLabel}>{formatDateLabel(day.date)}</h2>

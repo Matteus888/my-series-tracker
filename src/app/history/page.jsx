@@ -50,7 +50,7 @@ export default function HistoryPage() {
   if (loading)
     return (
       <div className={styles.page}>
-        <h1 className={styles.title}>History</h1>
+        <h2 className={styles.title}>History</h2>
         <p className={styles.muted}>Loading...</p>
       </div>
     );
@@ -58,17 +58,17 @@ export default function HistoryPage() {
   if (days.length === 0)
     return (
       <div className={styles.page}>
-        <h1 className={styles.title}>History</h1>
+        <h2 className={styles.title}>History</h2>
         <p className={styles.muted}>No episodes watched in the last 30 days.</p>
       </div>
     );
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>History</h1>
+      <h2 className={styles.title}>History</h2>
       {days.map((day) => (
         <div key={day.date} className={styles.daySection}>
-          <h2 className={styles.dateLabel}>{formatDateLabel(day.date)}</h2>
+          <h3 className={styles.dateLabel}>{formatDateLabel(day.date)}</h3>
           <div className={styles.episodeGrid}>
             {day.episodes.map((ep) => (
               <div key={ep._id} className={styles.cardWrapper}>

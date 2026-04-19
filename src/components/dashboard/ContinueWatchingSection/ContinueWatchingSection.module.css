@@ -76,8 +76,14 @@
   background-color: var(--background-primary);
 }
 
-.skeletonLabel {
+.skeletonText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   flex: 1;
+}
+
+.skeletonLabel {
   height: 10px;
   background-color: var(--background-secondary);
   border-radius: 2px;

@@ -11,6 +11,7 @@
   flex-direction: column;
   position: relative;
   overflow: visible;
+  border-top: 1px solid var(--border);
 }
 
 .container:last-child .card {

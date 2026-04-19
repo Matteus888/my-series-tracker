@@ -11,10 +11,7 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-}
-
-.container:last-child .card {
-  border-right: none;
+  border-top: 1px solid var(--border);
 }
 
 .imageContainer {
