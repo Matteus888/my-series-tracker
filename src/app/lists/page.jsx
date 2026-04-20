@@ -3,18 +3,28 @@
 import styles from "./page.module.css";
 import { useList } from "@/context/ListContext";
 import { useStartWatching } from "@/hooks/useStartWatching";
+import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import StartWatchingCard from "@/components/dashboard/StartWatchingCard/StartWatchingCard";
 import SectionHeader from "@/components/dashboard/SectionHeader/SectionHeader";
+import PageLoader from "@/components/ui/PageLoader/PageLoader";
 
 export default function ListsPage() {
-  const { lists } = useList();
+  const { lists, isLoading: listsLoading } = useList();
   const { items, loading, checkFirstEpisode, checkingId } = useStartWatching();
 
   const customLists = lists.filter((l) => !l.isDefault);
 
+  if (listsLoading)
+    return (
+      <div className={styles.page}>
+        <PageTitle title="Lists" />
+        <PageLoader />
+      </div>
+    );
+
   return (
     <div className={styles.page}>
-      <h2 className={styles.title}>Lists</h2>
+      <PageTitle title="Lists" />
       {/* Plan to Watch */}
       <SectionHeader title="Plan to watch">
         <div className={styles.carousel}>

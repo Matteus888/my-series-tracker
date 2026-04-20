@@ -2,7 +2,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import styles from "./page.module.css";
+import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import EpisodeCard from "@/components/series/EpisodeCard/EpisodeCard";
+import SectionHeader from "@/components/dashboard/SectionHeader/SectionHeader";
+import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import { formatDateLabel } from "@/lib/utils/date.utils";
 
@@ -50,32 +53,33 @@ export default function HistoryPage() {
   if (loading)
     return (
       <div className={styles.page}>
-        <h2 className={styles.title}>History</h2>
-        <p className={styles.muted}>Loading...</p>
+        <PageTitle title="History" />
+        <PageLoader />
       </div>
     );
 
   if (days.length === 0)
     return (
       <div className={styles.page}>
-        <h2 className={styles.title}>History</h2>
+        <PageTitle title="History" />
         <p className={styles.muted}>No episodes watched in the last 30 days.</p>
       </div>
     );
 
   return (
     <div className={styles.page}>
-      <h2 className={styles.title}>History</h2>
+      <PageTitle title="History" />
       {days.map((day) => (
         <div key={day.date} className={styles.daySection}>
-          <h3 className={styles.dateLabel}>{formatDateLabel(day.date)}</h3>
-          <div className={styles.episodeGrid}>
-            {day.episodes.map((ep) => (
-              <div key={ep._id} className={styles.cardWrapper}>
-                <EpisodeCard ep={ep} onToggle={uncheckEpisode} seriesTitle={ep.seriesTitle} showSeason />
-              </div>
-            ))}
-          </div>
+          <SectionHeader title={formatDateLabel(day.date)}>
+            <div className={styles.episodeGrid}>
+              {day.episodes.map((ep) => (
+                <div key={ep._id} className={styles.cardWrapper}>
+                  <EpisodeCard ep={ep} onToggle={uncheckEpisode} seriesTitle={ep.seriesTitle} showSeason />
+                </div>
+              ))}
+            </div>
+          </SectionHeader>
         </div>
       ))}
     </div>

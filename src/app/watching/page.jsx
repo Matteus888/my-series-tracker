@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import styles from "./page.module.css";
+import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import ProgressCard from "@/components/series/ProgressCard/ProgressCard";
+import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 
 export default function WatchingPage() {
@@ -53,16 +55,26 @@ export default function WatchingPage() {
   if (loading)
     return (
       <div className={styles.page}>
-        <h3 className={styles.title}>Continue watching</h3>
-        <p className={styles.muted}>Loading...</p>
+        <PageTitle title="Continue watching" />
+        <PageLoader />
       </div>
     );
-  if (items.length === 0) return <p className={styles.empty}>No series in progress.</p>;
+
+  if (items.length === 0)
+    return (
+      <div className={styles.page}>
+        <PageTitle title="Continue watching" />
+        <p className={styles.empty}>No series in progress.</p>
+      </div>
+    );
 
   return (
     <div className={styles.page}>
-      <h3 className={styles.title}>Continue watching</h3>
-      <p className={styles.count}>{items.length} series in progress</p>
+      <PageTitle title="Continue watching" />
+      <p className={styles.subtitle}>Pick up where you left off</p>
+      <p className={styles.count}>
+        {items.length} serie{items.length > 1 ? "s" : ""} in progress
+      </p>
       <div className={styles.grid}>
         {items.map((item) => (
           <div key={item.seriesId} className={styles.gridItem}>

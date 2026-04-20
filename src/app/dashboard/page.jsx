@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { getUserProfile } from "@/lib/api/user.api";
 import { User } from "@/models/user.model";
+import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import ProfileHeader from "@/components/dashboard/ProfileHeader/ProfileHeader";
 import ContinueWatchingSection from "@/components/dashboard/ContinueWatchingSection/ContinueWatchingSection";
 import CalendarSection from "@/components/dashboard/CalendarSection/CalendarSection";
@@ -11,7 +12,7 @@ import StartWatchingSection from "@/components/dashboard/StartWatchingSection/St
 import RecentlyWatchedSection from "@/components/dashboard/RecentlyWatchedSection/RecentlyWatchedSection";
 
 export const metadata = {
-  title: "Dashboard — My Series Tracker",
+  title: "Dashboard - My Series Tracker",
 };
 
 export default async function DashboardPage() {
@@ -22,9 +23,8 @@ export default async function DashboardPage() {
 
   return (
     <div className={styles.page}>
-      <section className={styles.section}>
-        <ProfileHeader username={user.username} profilePicture={user.profilePicture} />
-      </section>
+      <PageTitle title="Dashboard" />
+      <ProfileHeader username={user.username} profilePicture={user.profilePicture} />
       <ContinueWatchingSection />
       <CalendarSection />
       <RecentlyWatchedSection />
