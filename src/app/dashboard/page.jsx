@@ -12,7 +12,7 @@ import StartWatchingSection from "@/components/dashboard/StartWatchingSection/St
 import RecentlyWatchedSection from "@/components/dashboard/RecentlyWatchedSection/RecentlyWatchedSection";
 
 export const metadata = {
-  title: "Dashboard - My Series Tracker",
+  title: "Dashboard",
 };
 
 export default async function DashboardPage() {

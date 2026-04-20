@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Providers from "@/components/layout/Providers";
 import Header from "@/components/layout/Header/Header";
 import Footer from "@/components/layout/Footer/Footer";
+import { APP_NAME } from "@/lib/constants/app.constants";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "my series tracker",
+  title: {
+    default: APP_NAME,
+    template: `%s - ${APP_NAME}`,
+  },
   description: "Follow your favorites shows",
   icons: {
     icon: "/favicon.ico",

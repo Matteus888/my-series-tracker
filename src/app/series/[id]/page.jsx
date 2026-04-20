@@ -9,6 +9,15 @@ import { getEpisodeProgressForSeries, syncSeriesIfStale } from "@/lib/api/series
 import { getAllSeasonsWithEpisodes } from "@/lib/api/tmdb.api";
 import { Series } from "@/models/series.model";
 import dbConnect from "@/lib/db/db.connect";
+import { APP_NAME } from "@/lib/constants/app.constants";
+
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const serie = await getSeriesDetails(id);
+  return {
+    title: serie?.name ? `${serie.name} - ${APP_NAME}` : `Series - ${APP_NAME}`,
+  };
+}
 
 export const dynamic = "force-dynamic";
 
