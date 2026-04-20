@@ -79,28 +79,29 @@ export default function ProgressCard({ item, onCheck, compact = false }) {
         </div>
         <div className={styles.divider} />
         <div className={styles.nextEpisodeWrapper}>
-          {episodeLabel && (
-            <p className={styles.nextEpisode}>
-              {nextEpisode.title && <span className={styles.epTitle}>{nextEpisode.title}</span>}
-              <span className={styles.epCode}>{episodeLabel}</span>
-              {nextEpisode?.duration && <span className={styles.stat}>{formatDuration(nextEpisode.duration)}</span>}
-            </p>
-          )}
-          {compact && networks?.[0] && (
-            <div className={styles.network}>
-              {networks[0].logoPath && (
-                <Image
-                  src={`https://image.tmdb.org/t/p/w92${networks[0].logoPath}`}
-                  alt={networks[0].name}
-                  width={40}
-                  height={40}
-                  loading="eager"
-                  className={styles.networkLogo}
-                />
-              )}
-              {/* <span>{networks[0].name}</span> */}
-            </div>
-          )}
+          <div className={styles.nextEpisodeContent}>
+            {episodeLabel && (
+              <p className={styles.nextEpisode}>
+                {nextEpisode.title && <span className={styles.epTitle}>{nextEpisode.title}</span>}
+                <span className={styles.epCode}>{episodeLabel}</span>
+                {nextEpisode?.duration && <span className={styles.stat}>{formatDuration(nextEpisode.duration)}</span>}
+              </p>
+            )}
+            {compact && networks?.[0] && (
+              <div className={styles.network}>
+                {networks[0].logoPath && (
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w92${networks[0].logoPath}`}
+                    alt={networks[0].name}
+                    width={40}
+                    height={40}
+                    loading="eager"
+                    className={styles.networkLogo}
+                  />
+                )}
+              </div>
+            )}
+          </div>
 
           {onCheck && (
             <button
