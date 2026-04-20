@@ -6,7 +6,7 @@ import Icon from "@mdi/react";
 import { mdiChevronRight, mdiArrowDownDropCircleOutline, mdiArrowUpDropCircleOutline } from "@mdi/js";
 import { useState } from "react";
 
-export default function SectionHeader({ title, href, defaultOpen = true, children }) {
+export default function SectionHeader({ title, subtitle, href, defaultOpen = true, children }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   const handleToggle = () => {
@@ -31,6 +31,7 @@ export default function SectionHeader({ title, href, defaultOpen = true, childre
         ) : (
           <h2 className={styles.title}>{title}</h2>
         )}
+        {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
       </div>
       {isOpen && children}
     </div>

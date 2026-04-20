@@ -42,3 +42,9 @@
 .toggleBtn:active {
   transform: scale(0.9);
 }
+
+.subtitle {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-left: 0.5rem;
+}
