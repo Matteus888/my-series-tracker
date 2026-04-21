@@ -39,7 +39,8 @@ export function useSerieCard(serie, onCheckExternal) {
     if (isTracked) {
       if (confirm) toggle();
     } else {
-      if (confirm) toggle({ markAllWatched: true, status: "completed" });
+      if (confirm === "first") toggle({ markFirstWatched: true, status: "watching" });
+      if (confirm === "all") toggle({ markAllWatched: true, status: "completed" });
     }
     confirmPopover.close();
   };

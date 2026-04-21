@@ -125,11 +125,29 @@ export const markEpisodeWatched = async (EpisodeModel, userId, episodeId, watche
   } else {
     await EpisodeProgress.findOneAndDelete({ userId, episodeId });
 
+    // Vérifie s'il reste des épisodes vus pour cette série
+    const allEpisodeIds = await Episode.find({ seriesId: episode.seriesId })
+      .select("_id")
+      .lean()
+      .then((docs) => docs.map((d) => d._id));
+
+    const remainingWatched = await EpisodeProgress.countDocuments({
+      userId,
+      episodeId: { $in: allEpisodeIds },
+      watched: true,
+    });
+
     const user = await User.findById(userId);
     if (user) {
       const trackedEntry = user.trackedSeries.find((s) => s.seriesId?.toString() === episode.seriesId.toString());
-      if (trackedEntry && trackedEntry.status === "completed") {
-        trackedEntry.status = "watching";
+      if (trackedEntry) {
+        if (remainingWatched === 0) {
+          // Plus aucun épisode vu → dé-tracke complètement
+          user.trackedSeries = user.trackedSeries.filter((s) => s.seriesId?.toString() !== episode.seriesId.toString());
+        } else if (trackedEntry.status === "completed") {
+          // Repassé à watching
+          trackedEntry.status = "watching";
+        }
         await user.save();
       }
     }

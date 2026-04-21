@@ -111,6 +111,34 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
     }
   }
 
+  if (options.markFirstWatched) {
+    const now = new Date();
+
+    let firstEpisodeId = null;
+    outer: for (const season of seasons) {
+      const sorted = [...season.episodes].sort((a, b) => a.episode_number - b.episode_number);
+      for (const ep of sorted) {
+        if (ep.air_date && new Date(ep.air_date) <= now) {
+          firstEpisodeId = episodeIdMap.get(ep.id) ?? episodeIdMap.get(`${season.season_number}-${ep.episode_number}`);
+          if (firstEpisodeId) break outer;
+        }
+      }
+    }
+
+    if (firstEpisodeId) {
+      await EpisodeProgress.findOneAndUpdate(
+        { userId, episodeId: firstEpisodeId },
+        { $set: { watched: true, watchedAt: new Date() } },
+        { upsert: true, runValidators: true },
+      );
+    }
+
+    const watchlist = await UserList.findOne({ userId, isDefault: true });
+    if (watchlist) {
+      await UserList.findByIdAndUpdate(watchlist._id, { $pull: { series: series._id } });
+    }
+  }
+
   return user.trackedSeries;
 };
 

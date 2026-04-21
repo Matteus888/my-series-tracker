@@ -7,7 +7,7 @@ export function useRecentlyWatched() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { trackedSeries, watchedCount, incrementWatched } = useTrackedSeries();
+  const { trackedSeries, watchedCount, incrementWatched, refresh } = useTrackedSeries();
 
   const fetchData = useCallback(async () => {
     try {
@@ -35,12 +35,13 @@ export function useRecentlyWatched() {
         });
         if (!res.ok) throw new Error("Failed");
         incrementWatched();
+        await refresh();
       } catch {
         // Rollback
         fetchData();
       }
     },
-    [fetchData, incrementWatched],
+    [fetchData, incrementWatched, refresh],
   );
 
   useEffect(() => {

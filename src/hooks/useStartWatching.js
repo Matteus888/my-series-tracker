@@ -33,13 +33,12 @@ export function useStartWatching() {
   }, [lists, fetchData]);
 
   const checkFirstEpisode = useCallback(
-    async (item) => {
+    async (item, mode = "first") => {
       if (checkingId) return;
       setCheckingId(item.seriesId);
       setItems((prev) => prev.filter((i) => i.seriesId !== item.seriesId));
 
       try {
-        // 1. Tracker la série
         const trackResponse = await fetch("/api/series/tracked", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -49,7 +48,9 @@ export function useStartWatching() {
               name: item.title,
               poster_path: item.posterPath,
             },
-            status: "watching",
+            status: mode === "all" ? "completed" : "watching",
+            markFirstWatched: mode === "first",
+            markAllWatched: mode === "all",
           }),
         });
         if (!trackResponse.ok) throw new Error("Failed to track series");
@@ -58,16 +59,8 @@ export function useStartWatching() {
         const newTracked = trackData.trackedSeries[trackData.trackedSeries.length - 1];
         addSeriesOptimistic(newTracked);
 
-        // 2. Cocher 1er épisode
-        const watchResponse = await fetch(`/api/episodes/${item.firstEpisode._id}/watched`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ watched: true }),
-        });
-        if (!watchResponse.ok) throw new Error("Failed to mark episode");
-
         const watchlist = lists.find((l) => l.isDefault);
-        if (watchlist) {
+        if (watchlist && item.firstEpisode) {
           await fetch(`/api/lists/${watchlist._id}/series`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },

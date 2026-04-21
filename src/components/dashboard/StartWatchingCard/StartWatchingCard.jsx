@@ -7,16 +7,24 @@ import Icon from "@mdi/react";
 import { mdiCheck, mdiPlaylistPlus } from "@mdi/js";
 import { usePopover } from "@/hooks/usePopover";
 import WatchlistPopover from "@/components/ui/WatchlistPopover/WatchlistPopover";
+import ConfirmPopover from "@/components/ui/ConfirmPopover/ConfirmPopover";
 import { useList } from "@/context/ListContext";
 
 export default function StartWatchingCard({ item, onCheck, isChecking, showCheck = false }) {
   const { tmdbId, title, posterPath } = item;
   const watchlistPopover = usePopover();
+  const confirmPopover = usePopover();
   const { lists } = useList();
 
   // Objet serie compatible avec WatchlistPopover
   const serie = { id: tmdbId, name: title, poster_path: posterPath };
   const inAnyList = lists.some((l) => l.series.some((s) => s.tmdbId === tmdbId));
+
+  const handleConfirm = (confirm) => {
+    if (confirm === "first") onCheck(item, "first");
+    if (confirm === "all") onCheck(item, "all");
+    confirmPopover.close();
+  };
 
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
@@ -27,6 +35,14 @@ export default function StartWatchingCard({ item, onCheck, isChecking, showCheck
           {/* Popovers */}
           {watchlistPopover.isOpen && (
             <WatchlistPopover serie={serie} onClose={watchlistPopover.close} popoverRef={watchlistPopover.popoverRef} />
+          )}
+          {confirmPopover.isOpen && (
+            <ConfirmPopover
+              serieName={title}
+              isTracked={false}
+              onConfirm={handleConfirm}
+              popoverRef={confirmPopover.popoverRef}
+            />
           )}
           <Link href={`/series/${tmdbId}`} className={styles.imageLink}>
             {posterPath ? (
@@ -50,8 +66,8 @@ export default function StartWatchingCard({ item, onCheck, isChecking, showCheck
             {/* Check */}
             {showCheck && (
               <button
-                className={`btn check ${styles.button} ${isChecking ? "active" : ""}`}
-                onClick={() => onCheck(item)}
+                className={`btn check ${styles.button} ${isChecking || confirmPopover.isOpen ? "active" : ""}`}
+                onClick={() => confirmPopover.open()}
                 disabled={isChecking}
                 title="Start watching"
               >
