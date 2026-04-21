@@ -16,7 +16,7 @@ export default function CalendarSection() {
 
   return (
     <section className={styles.section}>
-      <SectionHeader title="Upcoming" href="/calendar">
+      <SectionHeader title="Upcoming" href="/calendar" storageKey="section-calendar">
         {loading ? (
           <div className={styles.carousel}>
             {Array.from({ length: 5 }).map((_, i) => (

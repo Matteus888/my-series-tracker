@@ -13,7 +13,7 @@ export default function RecentlyWatchedSection() {
 
   return (
     <section className={styles.section}>
-      <SectionHeader title="Recently watched" href="/history">
+      <SectionHeader title="Recently watched" href="/history" storageKey="section-recently-watched">
         {loading ? (
           <div className={styles.carousel}>
             {Array.from({ length: 5 }).map((_, i) => (

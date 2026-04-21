@@ -13,7 +13,7 @@ export default function StartWatchingSection() {
 
   return (
     <section className={styles.section}>
-      <SectionHeader title="Start watching" href="/lists">
+      <SectionHeader title="Start watching" href="/lists" storageKey="section-start-watching">
         {loading ? (
           <div className={styles.carousel}>
             {Array.from({ length: 6 }).map((_, i) => (

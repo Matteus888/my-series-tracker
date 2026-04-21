@@ -26,7 +26,7 @@ export default function ListsPage() {
     <div className={styles.page}>
       <PageTitle title="Lists" />
       {/* Plan to Watch */}
-      <SectionHeader title="Plan to watch">
+      <SectionHeader title="Plan to watch" storageKey="section-list-plan-to-watch">
         <div className={styles.carousel}>
           {loading ? (
             Array.from({ length: 5 }).map((_, i) => (
@@ -60,7 +60,11 @@ export default function ListsPage() {
 
       {/* Listes custom */}
       {customLists.map((list) => (
-        <SectionHeader key={list._id} title={`${list.name} (${list.series.length})`}>
+        <SectionHeader
+          key={list._id}
+          title={`${list.name} (${list.series.length})`}
+          storageKey={`section-list-${list._id}`}
+        >
           <div className={styles.carousel}>
             {list.series.length === 0 ? (
               <p className={styles.empty}>No series in this list.</p>

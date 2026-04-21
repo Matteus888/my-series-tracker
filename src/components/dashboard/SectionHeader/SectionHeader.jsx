@@ -4,10 +4,14 @@ import styles from "./SectionHeader.module.css";
 import Link from "next/link";
 import Icon from "@mdi/react";
 import { mdiChevronRight, mdiArrowDownDropCircleOutline, mdiArrowUpDropCircleOutline } from "@mdi/js";
+import { usePersistedOpen } from "@/hooks/usePersistedOpen";
 import { useState } from "react";
 
-export default function SectionHeader({ title, subtitle, href, defaultOpen = true, children }) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+export default function SectionHeader({ title, subtitle, href, defaultOpen = true, children, storageKey }) {
+  const persistedState = usePersistedOpen(storageKey ?? null, defaultOpen);
+  const localState = useState(defaultOpen);
+
+  const [isOpen, setIsOpen] = storageKey ? persistedState : localState;
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
