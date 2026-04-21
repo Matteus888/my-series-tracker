@@ -1,4 +1,5 @@
 import { Series } from "@/models/series.model";
+import { User } from "@/models/user.model";
 import { Episode } from "@/models/episode.model";
 import { UserList } from "@/models/userList.model";
 import { EpisodeProgress } from "@/models/episodeProgress.model";
@@ -283,4 +284,22 @@ export const syncSeriesIfStale = async (SeriesModel, tmdbId) => {
   );
 
   await upsertEpisodes(series._id, Number(tmdbId), seasons);
+};
+
+export const getSeriesProgress = async (userId, UserModel) => {
+  await dbConnect();
+
+  const user = await UserModel.findById(userId).lean();
+  if (!user) throw new Error("User not found");
+
+  const results = await Promise.all(
+    user.trackedSeries.map(async ({ tmdbId, seriesId }) => {
+      const episodes = await getEpisodeProgressForSeries(userId, seriesId);
+      const watchedCount = episodes.filter((ep) => ep.watched).length;
+      const totalCount = episodes.length;
+      return { tmdbId, watchedCount, totalCount };
+    }),
+  );
+
+  return results;
 };

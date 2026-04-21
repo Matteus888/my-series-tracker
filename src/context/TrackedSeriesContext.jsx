@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import { useSession } from "next-auth/react";
 import { useToast } from "./ToastContext";
 import { useList } from "./ListContext";
+import { useSeriesProgress } from "@/hooks/useSeriesProgress";
 
 const TrackedSeriesContext = createContext(null);
 
@@ -16,6 +17,7 @@ export const TrackedSeriesProvider = ({ children }) => {
   const { data: session } = useSession();
   const { showToast } = useToast();
   const { refresh: refreshLists } = useList();
+  const { progressMap, refetchProgress } = useSeriesProgress(trackedSeries);
 
   const fetchTrackedSeries = useCallback(async () => {
     if (!session) {
@@ -125,7 +127,8 @@ export const TrackedSeriesProvider = ({ children }) => {
 
   const incrementWatched = useCallback(() => {
     setWatchedCount((c) => c + 1);
-  }, []);
+    refetchProgress();
+  }, [refetchProgress]);
 
   return (
     <TrackedSeriesContext.Provider
@@ -142,6 +145,7 @@ export const TrackedSeriesProvider = ({ children }) => {
         refresh: fetchTrackedSeries,
         watchedCount,
         incrementWatched,
+        progressMap,
       }}
     >
       {children}

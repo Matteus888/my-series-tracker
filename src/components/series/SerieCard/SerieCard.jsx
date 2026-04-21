@@ -4,6 +4,7 @@ import styles from "./SerieCard.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import { useSerieCard } from "@/hooks/useSerieCard";
+import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import SerieCardPopovers from "./SerieCardPopovers";
 import SerieCardActions from "./SerieCardActions";
 
@@ -23,6 +24,9 @@ export default function SerieCard({ serie, onCheck }) {
     handleWatchlist,
     handleRatings,
   } = useSerieCard(serie, onCheck);
+
+  const { progressMap } = useTrackedSeries();
+  const progress = progressMap?.[String(serie.id)];
 
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
@@ -54,6 +58,15 @@ export default function SerieCard({ serie, onCheck }) {
               <div className={styles.placeholderContainer}>{serie.name}</div>
             )}
           </Link>
+          {/* Barre de progression */}
+          {progress?.totalCount > 0 && (
+            <div className={styles.progressBar}>
+              <div
+                className={styles.progressFill}
+                style={{ width: `${Math.round((progress.watchedCount / progress.totalCount) * 100)}%` }}
+              />
+            </div>
+          )}
           {/* Badge année */}
           {serie.first_air_date && <span className={styles.yearBadge}>{serie.first_air_date.slice(0, 4)}</span>}
         </div>
