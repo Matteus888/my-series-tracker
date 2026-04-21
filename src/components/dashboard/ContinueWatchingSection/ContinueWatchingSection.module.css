@@ -10,6 +10,7 @@
 }
 
 .carousel {
+  --card-width: 175px;
   display: flex;
   overflow-x: auto;
   scrollbar-width: thin;

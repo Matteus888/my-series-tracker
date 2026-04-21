@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import styles from "./page.module.css";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
-import ProgressCard from "@/components/series/ProgressCard/ProgressCard";
+import ContinueWatchingCard from "@/components/dashboard/ContinueWatchingCard/ContinueWatchingCard";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 
@@ -78,7 +78,7 @@ export default function WatchingPage() {
       <div className={styles.grid}>
         {items.map((item) => (
           <div key={item.seriesId} className={styles.gridItem}>
-            <ProgressCard item={item} onCheck={checkEpisode} />
+            <ContinueWatchingCard item={item} onCheck={checkEpisode} />
           </div>
         ))}
       </div>
