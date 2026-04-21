@@ -87,7 +87,7 @@
 
 .title {
   color: var(--foreground);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -98,6 +98,7 @@
 .epCode {
   font-size: 0.65rem;
   opacity: 0.5;
+  letter-spacing: 0.05rem;
 }
 
 .checkButton {

@@ -3,7 +3,7 @@
 }
 
 .daySection {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .dateLabel {
@@ -53,4 +53,10 @@
     flex: 0 0 16.666%;
     max-width: 16.666%;
   }
+}
+
+.muted {
+  color: #6c757d;
+  font-size: 0.9rem;
+  padding: 0 0 1rem 1.25rem;
 }

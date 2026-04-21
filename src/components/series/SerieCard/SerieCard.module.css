@@ -55,7 +55,6 @@
   width: 100%;
   height: 4px;
   background-color: var(--border);
-  z-index: 1;
 }
 
 .progressFill {

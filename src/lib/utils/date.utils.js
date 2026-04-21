@@ -19,11 +19,15 @@ export const formatDateLabel = (dateStr) => {
   const yesterday = new Date();
   yesterday.setDate(today.getDate() - 1);
 
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+
   const isSameDay = (a, b) =>
     a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
   if (isSameDay(date, today)) return "Today";
   if (isSameDay(date, yesterday)) return "Yesterday";
+  if (isSameDay(date, tomorrow)) return "Tomorrow";
 
   return date.toLocaleDateString("en-GB", {
     weekday: "long",

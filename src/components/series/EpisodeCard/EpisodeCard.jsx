@@ -9,7 +9,7 @@ export default function EpisodeCard({ ep, onToggle, seriesTitle, showSeason, dis
   const now = new Date();
   const isAired = ep.airDate ? new Date(ep.airDate) <= now : false;
   const episodeCode = showSeason
-    ? `S${String(ep.seasonNumber).padStart(2, "0")}E${String(ep.episodeNumber).padStart(2, "0")}`
+    ? `S${String(ep.seasonNumber).padStart(2, "0")} • E${String(ep.episodeNumber).padStart(2, "0")}`
     : `E${String(ep.episodeNumber).padStart(2, "0")}`;
 
   return (
