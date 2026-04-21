@@ -45,7 +45,7 @@
 
 @media (min-width: 1280px) {
   .episodeGrid > * {
-    flex: 0 0 20%;
-    max-width: 20%;
+    flex: 0 0 16.67%;
+    max-width: 16.67%;
   }
 }

@@ -2,12 +2,14 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
+import { useAuthGuard } from "./useAuthGuard";
 import { useToast } from "@/context/ToastContext";
 
 export function useEpisodeList(initialProgress, tmdbId, serieData) {
   const [episodes, setEpisodes] = useState(initialProgress);
   const [isTracking, setIsTracking] = useState(false);
   const { refresh, removeSeries, addSeriesOptimistic, isTracked } = useTrackedSeries();
+  const { requireAuth } = useAuthGuard();
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -19,8 +21,12 @@ export function useEpisodeList(initialProgress, tmdbId, serieData) {
       const serieIsTracked = isTracked(tmdbId);
 
       if (!serieIsTracked) {
+        const authed = requireAuth(() => {});
+        if (!authed) return;
+
         if (isTracking) return;
         setIsTracking(true);
+
         try {
           // 1. Tracker la série
           const trackRes = await fetch("/api/series/tracked", {
