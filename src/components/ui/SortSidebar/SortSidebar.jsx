@@ -9,8 +9,6 @@ const SORT_OPTIONS = [
   { label: "Trending", value: "trending" },
   { label: "New releases", value: "new_releases" },
   { label: "Upcoming", value: "upcoming" },
-  // { label: "A → Z", value: "name_asc" },
-  // { label: "Z → A", value: "name_desc" },
 ];
 
 export default function SortSidebar({ sortBy, selectedGenre, onSortChange, onGenreChange }) {

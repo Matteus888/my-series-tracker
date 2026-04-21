@@ -9,7 +9,6 @@ import SidebarFilterHeader from "@/components/layout/SidebarFilterHeader/Sidebar
 import SerieCard from "@/components/series/SerieCard/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton/SerieCardSkeleton";
 import Pagination from "@/components/ui/Pagination/Pagination";
-import GenreFilter from "@/components/ui/GenreFilter/GenreFilter";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -22,18 +21,12 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(pageParam ? parseInt(pageParam) : 1);
   const [totalPages, setTotalPages] = useState(0);
-  const [selectedGenre, setSelectedGenre] = useState(null);
 
-  // Réinitialiser currentPage à 1 si la requête change
   useEffect(() => {
     if (query) {
       setCurrentPage(pageParam ? parseInt(pageParam) : 1);
     }
   }, [query, pageParam]);
-
-  useEffect(() => {
-    setSelectedGenre(null);
-  }, [query]);
 
   useEffect(() => {
     if (!query) return;
@@ -43,7 +36,9 @@ export default function SearchPage() {
         const { startIndex, startTmdbPage, endTmdbPage } = getTmdbPagesForUiPage(currentPage);
 
         const responses = await Promise.all(
-          Array.from({ length: endTmdbPage - startTmdbPage + 1 }, (_, i) => searchSeries(query, startTmdbPage + i)),
+          Array.from({ length: endTmdbPage - startTmdbPage + 1 }, (_, i) =>
+            searchSeries(query, startTmdbPage + i),
+          ),
         );
 
         const allResults = responses.flatMap((r) => r.results);
@@ -68,8 +63,6 @@ export default function SearchPage() {
     router.push(`/search?query=${encodeURIComponent(query)}&page=${page}`);
   };
 
-  const filteredResults = selectedGenre ? results.filter((s) => s.genre_ids.includes(selectedGenre)) : results;
-
   return (
     <div className={styles.searchLayout}>
       <div className={styles.filterSidebar}>
@@ -84,25 +77,22 @@ export default function SearchPage() {
             onNextPage={() => handleChangePage(currentPage + 1)}
             variant="search"
           />
-          <GenreFilter selectedGenre={selectedGenre} onGenreChange={setSelectedGenre} />
         </div>
       </div>
       <div className={styles.resultsArea}>
         {loading ? (
-          <>
-            <div className={styles.seriesGrid}>
-              <div className={styles.gridRow}>
-                {Array.from({ length: 36 }).map((_, index) => (
-                  <SerieCardSkeleton key={index} />
-                ))}
-              </div>
+          <div className={styles.seriesGrid}>
+            <div className={styles.gridRow}>
+              {Array.from({ length: 36 }).map((_, index) => (
+                <SerieCardSkeleton key={index} />
+              ))}
             </div>
-          </>
+          </div>
         ) : results.length > 0 ? (
           <>
             <div className={styles.seriesGrid}>
               <div className={styles.gridRow}>
-                {filteredResults.map((serie) => (
+                {results.map((serie) => (
                   <div key={serie.id} className={styles.gridColumn}>
                     <SerieCard serie={serie} score={Math.round(serie.vote_average * 10)} />
                   </div>
