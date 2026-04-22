@@ -13,7 +13,7 @@ export function formatDate(dateStr, locale = "fr-FR") {
  * @param {string} dateStr - date au format YYYY-MM-DD ou ISO
  * @returns {string}
  */
-export const formatDateLabel = (dateStr) => {
+export const formatDateLabel = (dateStr, { showTomorrow = true } = {}) => {
   const date = new Date(dateStr);
   const today = new Date();
   const yesterday = new Date();
@@ -27,7 +27,7 @@ export const formatDateLabel = (dateStr) => {
 
   if (isSameDay(date, today)) return "Today";
   if (isSameDay(date, yesterday)) return "Yesterday";
-  if (isSameDay(date, tomorrow)) return "Tomorrow";
+  if (showTomorrow && isSameDay(date, tomorrow)) return "Tomorrow";
 
   return date.toLocaleDateString("en-GB", {
     weekday: "long",

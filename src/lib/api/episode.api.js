@@ -294,13 +294,14 @@ export const getCalendar = async (UserModel, userId) => {
   const watchingSeries = user.trackedSeries.filter((t) => t.seriesId && t.status !== "dropped");
   if (watchingSeries.length === 0) return [];
 
-  const now = new Date();
+  const starOfToday = new Date();
+  starOfToday.setHours(0, 0, 0, 0); // Minuit aujourd'hui
   const seriesIds = watchingSeries.map((t) => t.seriesId._id);
 
   // Récupère tous les épisodes futurs des séries en cours
   const upcomingEpisodes = await Episode.find({
     seriesId: { $in: seriesIds },
-    airDate: { $gt: now },
+    airDate: { $gte: starOfToday },
   })
     .sort({ airDate: 1 })
     .select("_id seriesId seasonNumber episodeNumber title airDate")

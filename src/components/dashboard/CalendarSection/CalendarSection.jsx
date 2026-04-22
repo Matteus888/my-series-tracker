@@ -11,6 +11,8 @@ import SectionHeader from "../SectionHeader/SectionHeader";
 export default function CalendarSection() {
   const { items, loading, error } = useCalendar();
 
+  const today = new Date().toISOString().slice(0, 10);
+
   if (error) return <p className={styles.error}>Failed to load.</p>;
   if (!loading && !items?.length) return null;
 
@@ -35,9 +37,11 @@ export default function CalendarSection() {
           </div>
         ) : (
           <div className={styles.carousel}>
-            {items.map((day) => (
-              <CalendarDayCard key={day.date} day={day} />
-            ))}
+            {items
+              .filter((day) => day.date !== today)
+              .map((day) => (
+                <CalendarDayCard key={day.date} day={day} />
+              ))}
           </div>
         )}
       </SectionHeader>
@@ -47,7 +51,7 @@ export default function CalendarSection() {
 
 function CalendarDayCard({ day }) {
   const [hoveredPoster, setHoveredPoster] = useState(day.episodes[0]?.posterPath ?? null);
-  const dateLabel = formatDateLabel(day.date);
+  const dateLabel = formatDateLabel(day.date, { showTomorrow: false });
 
   return (
     <div className={styles.dayCard}>
