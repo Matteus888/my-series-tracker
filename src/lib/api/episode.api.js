@@ -77,6 +77,7 @@ export const getContinueWatching = async (UserModel, userId) => {
           title: nextEpisode.title ?? null,
           airDate: nextEpisode.airDate ?? null,
           duration: nextEpisode.duration ?? null,
+          seasonEpisodeCount: seasonData?.episodeCount ?? null,
         },
       };
     }),

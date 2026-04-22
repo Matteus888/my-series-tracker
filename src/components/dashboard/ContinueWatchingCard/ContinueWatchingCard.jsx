@@ -15,6 +15,16 @@ export default function ContinueWatchingCard({ item, onCheck }) {
     ? `S${String(nextEpisode.seasonNumber).padStart(2, "0")} • E${String(nextEpisode.episodeNumber).padStart(2, "0")}`
     : null;
 
+  const isPremiere = nextEpisode?.episodeNumber === 1;
+  const isFinale =
+    nextEpisode?.seasonEpisodeCount != null && nextEpisode.episodeNumber === nextEpisode.seasonEpisodeCount;
+
+  const badge = isPremiere
+    ? { label: "Premiere", className: styles.badgePremiere }
+    : isFinale
+      ? { label: "Final", className: styles.badgeFinal }
+      : null;
+
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
       <div className="tooltip">{title}</div>
@@ -35,6 +45,8 @@ export default function ContinueWatchingCard({ item, onCheck }) {
               <div className={styles.placeholder}>{title}</div>
             )}
           </Link>
+          {/* Bandeau premiere/final */}
+          {badge && <div className={`${styles.badge} ${badge.className}`}>{badge.label}</div>}
 
           {/* Barre de progression */}
           <div className={styles.progressBar}>

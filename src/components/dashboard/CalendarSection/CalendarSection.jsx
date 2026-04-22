@@ -75,7 +75,14 @@ function CalendarDayCard({ day }) {
         <div className={styles.divider} />
         <ul className={styles.episodeList}>
           {day.episodes.map((ep) => {
-            const epCode = `S${String(ep.seasonNumber).padStart(2, "0")}E${String(ep.episodeNumber).padStart(2, "0")}`;
+            const epCode = `S${String(ep.seasonNumber).padStart(2, "0")} • E${String(ep.episodeNumber).padStart(2, "0")}`;
+            const isPremiere = ep.episodeNumber === 1;
+            const isFinale = ep.seasonEpisodeCount != null && ep.episodeNumber === ep.seasonEpisodeCount;
+            const badge = isPremiere
+              ? { label: "Premiere", className: styles.badgePremiere }
+              : isFinale
+                ? { label: "Final", className: styles.badgeFinal }
+                : null;
             return (
               <li
                 key={ep.episodeId}
@@ -85,7 +92,10 @@ function CalendarDayCard({ day }) {
               >
                 <Link href={`/series/${ep.tmdbId}`} className={styles.episodeLink}>
                   <span className={styles.epTitle}>{ep.seriesTitle}</span>
-                  <span className={styles.epCode}>{epCode}</span>
+                  <span className={styles.epCodeRow}>
+                    <span className={styles.epCode}>{epCode}</span>
+                    {badge && <span className={`${styles.badge} ${badge.className}`}>{badge.label}</span>}
+                  </span>
                 </Link>
               </li>
             );

@@ -124,11 +124,36 @@
   color: inherit;
 }
 
+.epCodeRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .epCode {
   font-size: 0.65rem;
   color: var(--foreground);
   opacity: 0.5;
   flex-shrink: 0;
+}
+
+.badge {
+  padding: 0.08rem 0.3rem;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04rem;
+  color: var(--foreground);
+  border-radius: 2px;
+  line-height: 1.2;
+}
+
+.badgePremiere {
+  background-color: var(--green);
+}
+
+.badgeFinal {
+  background-color: var(--red);
 }
 
 .epTitle {

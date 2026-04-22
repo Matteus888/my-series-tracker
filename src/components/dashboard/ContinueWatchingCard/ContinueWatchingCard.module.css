@@ -50,6 +50,29 @@
   color: var(--foreground);
 }
 
+.badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  text-align: center;
+  color: var(--foreground);
+}
+
+.badgePremiere {
+  background-color: var(--green);
+}
+
+.badgeFinal {
+  background-color: var(--red);
+}
+
 .progressBar {
   position: absolute;
   bottom: 0;
