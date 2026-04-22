@@ -6,19 +6,31 @@ import { mdiStar, mdiStarOutline } from "@mdi/js";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import { useState } from "react";
 
-export default function RatingsPopover({ serie, popoverRef }) {
+export default function RatingsPopover({ serie, episode, currentRating, onRate, popoverRef }) {
   const [hoverRating, setHoverRating] = useState(null);
   const { trackedSeries, updateSeries } = useTrackedSeries();
 
-  const tracked = trackedSeries.find((s) => s.tmdbId === serie.id);
-  const userRating = tracked?.rating ?? null;
+  // Mode épisode : props directes ; mode série : via contexte (legacy)
+  const isEpisodeMode = !!episode;
 
-  const handleRate = (rating) => {
-    if (!tracked) return;
-    // Si on reclique sur la même note, on la retire
-    const newRating = userRating === rating ? null : rating;
-    updateSeries(serie.id, { rating: newRating });
-  };
+  let userRating;
+  let handleRate;
+
+  if (isEpisodeMode) {
+    userRating = currentRating ?? null;
+    handleRate = (rating) => {
+      const newRating = userRating === rating ? null : rating;
+      onRate(newRating);
+    };
+  } else {
+    const tracked = trackedSeries.find((s) => s.tmdbId === serie.id);
+    userRating = tracked?.rating ?? null;
+    handleRate = (rating) => {
+      if (!tracked) return;
+      const newRating = userRating === rating ? null : rating;
+      updateSeries(serie.id, { rating: newRating });
+    };
+  }
 
   return (
     <div className={styles.popover} ref={popoverRef}>

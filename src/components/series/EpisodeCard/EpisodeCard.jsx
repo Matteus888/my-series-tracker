@@ -4,13 +4,23 @@ import styles from "./EpisodeCard.module.css";
 import Image from "next/image";
 import Icon from "@mdi/react";
 import { mdiCheck } from "@mdi/js";
+import HeartRating from "@/components/ui/HeartRating/HeartRating";
+import RatingsPopover from "@/components/ui/RatingsPopover/RatingsPopover";
+import { computeAverageScore } from "@/lib/utils/ratings.utils";
+import { usePopover } from "@/hooks/usePopover";
+import { useEpisodeRating } from "@/hooks/useEpisodeRating";
 
-export default function EpisodeCard({ ep, onToggle, seriesTitle, showSeason, disableTooltip }) {
+export default function EpisodeCard({ ep, onToggle, onRate, seriesTitle, showSeason, disableTooltip }) {
   const now = new Date();
   const isAired = ep.airDate ? new Date(ep.airDate) <= now : false;
   const episodeCode = showSeason
     ? `S${String(ep.seasonNumber).padStart(2, "0")} • E${String(ep.episodeNumber).padStart(2, "0")}`
     : `E${String(ep.episodeNumber).padStart(2, "0")}`;
+
+  const score = ep.watched ? computeAverageScore(ep.ratings) : null;
+
+  const ratingsPopover = usePopover();
+  const { rating, updateRating } = useEpisodeRating(ep._id, ep.rating, onRate);
 
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
@@ -48,7 +58,31 @@ export default function EpisodeCard({ ep, onToggle, seriesTitle, showSeason, dis
             <span className={styles.title}>{ep.title ?? "—"}</span>
             <span className={styles.epCode}>{episodeCode}</span>
           </div>
+          {ep.watched && (
+            <div
+              className={`btn heartWrapper ${styles.heartWrapper} ${ratingsPopover.isOpen ? "active" : ""}`}
+              onClick={ratingsPopover.toggle}
+              title={rating ? `Your rating: ${rating}/10` : "Rate this episode"}
+            >
+              {score > 0 ? (
+                <>
+                  <HeartRating percentage={score} />
+                  <span className={styles.rating}>{score}%</span>
+                </>
+              ) : (
+                <HeartRating percentage={0} />
+              )}
+            </div>
+          )}
         </div>
+        {ratingsPopover.isOpen && (
+          <RatingsPopover
+            episode={ep}
+            currentRating={rating}
+            onRate={updateRating}
+            popoverRef={ratingsPopover.popoverRef}
+          />
+        )}
       </div>
     </div>
   );

@@ -30,6 +30,9 @@ export const upsertEpisodes = async (seriesId, tmdbSeriesId, seasons) => {
           stillPath: ep.still_path ?? null,
           airDate: ep.air_date ? new Date(ep.air_date) : null,
           duration: ep.runtime ?? null,
+          "ratings.tmdb.score": ep.vote_average ?? null,
+          "ratings.tmdb.voteCount": ep.vote_count ?? 0,
+          "ratings.lastFetched": new Date(),
         },
       };
 

@@ -45,6 +45,37 @@ const episodeSchema = new mongoose.Schema(
     duration: {
       type: Number, // en minutes
     },
+    ratings: {
+      tmdb: {
+        score: {
+          type: Number,
+          min: [0, "Score cannot be less than 0."],
+          max: [10, "Score cannot be greater than 10."],
+        },
+        voteCount: {
+          type: Number,
+          default: 0,
+        },
+      },
+      imdb: {
+        score: {
+          type: Number,
+          min: [0, "Score cannot be less than 0."],
+          max: [10, "Score cannot be greater than 10."],
+        },
+        voteCount: {
+          type: Number,
+          default: 0,
+        },
+      },
+      lastFetched: {
+        type: Date,
+      },
+    },
+    imdbId: {
+      type: String,
+      trim: true,
+    },
   },
   {
     timestamps: true,

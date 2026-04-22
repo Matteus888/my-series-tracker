@@ -199,60 +199,6 @@ export const getStartWatching = async (UserModel, userId) => {
   return results.filter(Boolean);
 };
 
-// Fonction privée partagée — fetch + join + tri
-const _fetchWatchedEpisodes = async (userId, since = null) => {
-  const query = { userId, watched: true };
-  if (since) query.watchedAt = { $gte: since };
-
-  const progressList = await EpisodeProgress.find(query).sort({ watchedAt: -1 }).limit(500).lean();
-
-  if (progressList.length === 0) return [];
-
-  const episodeIds = progressList.map((p) => p.episodeId);
-  const episodes = await Episode.find({ _id: { $in: episodeIds } })
-    .select("_id seriesId seasonNumber episodeNumber title stillPath airDate")
-    .lean();
-
-  const seriesIds = [...new Set(episodes.map((e) => e.seriesId.toString()))];
-  const seriesList = await Series.find({ _id: { $in: seriesIds } })
-    .select("_id title tmdbId")
-    .lean();
-
-  const seriesMap = new Map(seriesList.map((s) => [s._id.toString(), s]));
-  const episodeMap = new Map(episodes.map((e) => [e._id.toString(), e]));
-
-  return progressList
-    .map((p) => {
-      const ep = episodeMap.get(p.episodeId.toString());
-      if (!ep) return null;
-      const series = seriesMap.get(ep.seriesId.toString());
-      if (!series) return null;
-      return {
-        _id: ep._id.toString(),
-        seriesId: ep.seriesId.toString(),
-        tmdbId: series.tmdbId,
-        seriesTitle: series.title,
-        seasonNumber: ep.seasonNumber,
-        episodeNumber: ep.episodeNumber,
-        title: ep.title ?? null,
-        stillPath: ep.stillPath ?? null,
-        airDate: ep.airDate ? ep.airDate.toISOString() : null,
-        watchedAt: p.watchedAt, // Date pour le tri
-        watched: true,
-      };
-    })
-    .filter(Boolean)
-    .sort((a, b) => {
-      const timeA = Math.floor(new Date(a.watchedAt) / 1000);
-      const timeB = Math.floor(new Date(b.watchedAt) / 1000);
-      const timeDiff = timeB - timeA;
-      if (timeDiff !== 0) return timeDiff;
-      if (a.seasonNumber !== b.seasonNumber) return b.seasonNumber - a.seasonNumber;
-      return b.episodeNumber - a.episodeNumber;
-    });
-};
-
-// Pour le dashboard — 10 épisodes plats
 export const getRecentlyWatchedFlat = async (userId) => {
   await dbConnect();
   const items = await _fetchWatchedEpisodes(userId);
@@ -262,7 +208,6 @@ export const getRecentlyWatchedFlat = async (userId) => {
   }));
 };
 
-// Pour /history — groupé par jour sur 30 jours
 export const getRecentlyWatched = async (userId) => {
   await dbConnect();
 
@@ -341,4 +286,81 @@ export const getCalendar = async (UserModel, userId) => {
   }
 
   return Object.entries(grouped).map(([date, episodes]) => ({ date, episodes }));
+};
+
+export const rateEpisode = async (userId, episodeId, rating) => {
+  await dbConnect();
+
+  const episode = await Episode.findById(episodeId).lean();
+  if (!episode) throw new Error("Episode not found");
+
+  const progress = await EpisodeProgress.findOne({ userId, episodeId, watched: true }).lean();
+  if (!progress) throw new Error("Episode must be watched before rating");
+
+  if (rating !== null && (typeof rating !== "number" || rating < 1 || rating > 10)) {
+    throw new Error("Rating must be null or a number between 1 and 10");
+  }
+
+  const updated = await EpisodeProgress.findOneAndUpdate(
+    { userId, episodeId },
+    rating === null ? { $unset: { rating: "" } } : { $set: { rating } },
+    { new: true, runValidators: true },
+  ).lean();
+
+  return { rating: updated.rating ?? null };
+};
+
+// Fonction privée partagée — fetch + join + tri
+const _fetchWatchedEpisodes = async (userId, since = null) => {
+  const query = { userId, watched: true };
+  if (since) query.watchedAt = { $gte: since };
+
+  const progressList = await EpisodeProgress.find(query).sort({ watchedAt: -1 }).limit(500).lean();
+
+  if (progressList.length === 0) return [];
+
+  const episodeIds = progressList.map((p) => p.episodeId);
+  const episodes = await Episode.find({ _id: { $in: episodeIds } })
+    .select("_id seriesId seasonNumber episodeNumber title stillPath airDate ratings")
+    .lean();
+
+  const seriesIds = [...new Set(episodes.map((e) => e.seriesId.toString()))];
+  const seriesList = await Series.find({ _id: { $in: seriesIds } })
+    .select("_id title tmdbId")
+    .lean();
+
+  const seriesMap = new Map(seriesList.map((s) => [s._id.toString(), s]));
+  const episodeMap = new Map(episodes.map((e) => [e._id.toString(), e]));
+
+  return progressList
+    .map((p) => {
+      const ep = episodeMap.get(p.episodeId.toString());
+      if (!ep) return null;
+      const series = seriesMap.get(ep.seriesId.toString());
+      if (!series) return null;
+      return {
+        _id: ep._id.toString(),
+        seriesId: ep.seriesId.toString(),
+        tmdbId: series.tmdbId,
+        seriesTitle: series.title,
+        seasonNumber: ep.seasonNumber,
+        episodeNumber: ep.episodeNumber,
+        title: ep.title ?? null,
+        stillPath: ep.stillPath ?? null,
+        airDate: ep.airDate ? ep.airDate.toISOString() : null,
+        ratings: ep.ratings ?? null,
+        rating: p.rating ?? null,
+        watchedAt: p.watchedAt, // Date pour le tri
+        watched: true,
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => {
+      const timeA = Math.floor(new Date(a.watchedAt) / 1000);
+      const timeB = Math.floor(new Date(b.watchedAt) / 1000);
+      const timeDiff = timeB - timeA;
+      if (timeDiff !== 0) return timeDiff;
+      if (a.seasonNumber !== b.seasonNumber) return b.seasonNumber - a.seasonNumber;
+      return b.episodeNumber - a.episodeNumber;
+    });
 };
