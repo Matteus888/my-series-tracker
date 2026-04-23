@@ -2,8 +2,61 @@
   max-width: 100%;
 }
 
+/* ── Layout deux colonnes : main (liste) + sidebar (grille) ── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "sidebar"
+    "main";
+  gap: 1.5rem;
+}
+
+.main {
+  grid-area: main;
+}
+.sidebar {
+  grid-area: sidebar;
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    grid-template-areas: "main sidebar";
+  }
+}
+
+@media (min-width: 1280px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 280px;
+  }
+}
+
+.main {
+  min-width: 0;
+}
+
+/* ── Sidebar (grille du mois) ── */
+.sidebar {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    order: 0;
+  }
+}
+
+.sidebarSticky {
+  position: sticky;
+  top: calc(var(--header-height) + var(--pagetitle-height));
+}
+
+/* ── Sections jour (inchangé) ── */
 .daySection {
   margin-bottom: 1rem;
+  /* Offset pour que scrollIntoView ne se colle pas au header */
+  scroll-margin-top: calc(45px + 1rem);
 }
 
 .dateLabel {
@@ -36,22 +89,22 @@
 
 @media (min-width: 1024px) {
   .gridItem {
-    flex: 0 0 25%;
-    max-width: 25%;
+    flex: 0 0 50%;
+    max-width: 50%;
   }
 }
 
 @media (min-width: 1280px) {
   .gridItem {
-    flex: 0 0 20%;
-    max-width: 20%;
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
   }
 }
 
 @media (min-width: 1536px) {
   .gridItem {
-    flex: 0 0 16.666%;
-    max-width: 16.666%;
+    flex: 0 0 25%;
+    max-width: 25%;
   }
 }
 

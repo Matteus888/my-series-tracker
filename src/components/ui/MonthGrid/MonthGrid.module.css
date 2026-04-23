@@ -1,0 +1,173 @@
+.grid {
+  background: var(--background-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  width: 100%;
+  user-select: none;
+}
+
+/* ── Header (month label + nav) ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  gap: 0.4rem;
+}
+
+.monthLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--foreground);
+  text-align: center;
+  flex: 1;
+  text-transform: capitalize;
+  letter-spacing: 0.01em;
+}
+
+.year {
+  opacity: 0.55;
+  font-weight: 500;
+  margin-left: 0.15rem;
+}
+
+.navBtn {
+  background: transparent;
+  border: none;
+  color: var(--foreground);
+  opacity: 0.65;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  transition:
+    opacity 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.navBtn:hover {
+  opacity: 1;
+  background-color: var(--hover-bg);
+}
+
+/* ── Weekday header ── */
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 0.3rem;
+}
+
+.weekday {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--foreground);
+  opacity: 0.45;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0;
+}
+
+/* ── Days grid ── */
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.blank {
+  aspect-ratio: 1 / 1;
+}
+
+.day {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--foreground);
+  opacity: 0.35;
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: default;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    opacity 0.12s ease,
+    color 0.12s ease;
+}
+
+.dayNumber {
+  line-height: 1;
+}
+
+/* Jours qui ont des épisodes : cliquables, plus visibles */
+.dayHasEpisodes {
+  opacity: 1;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.dayHasEpisodes:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--border);
+}
+
+/* Pastille sous le nombre pour les jours avec épisodes */
+.dots {
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: var(--blue);
+}
+
+/* Aujourd'hui : encadré subtil */
+.dayToday {
+  border-color: var(--foreground);
+  opacity: 1;
+}
+
+/* Jour actif (= jour visible lors du scroll) : fond plein */
+.dayActive {
+  background-color: var(--blue);
+  color: var(--background-primary);
+  opacity: 1;
+  border-color: var(--blue);
+}
+
+.dayActive .dot {
+  background-color: var(--background-primary);
+}
+
+/* Évite que "today + active" double-borde visuellement */
+.dayActive .dot,
+.dayActive .plus {
+  background-color: var(--background-primary);
+  color: var(--background-primary);
+}
+
+/* Signe "+" quand il y a plus de 2 épisodes */
+.plus {
+  font-size: 0.55rem;
+  line-height: 1;
+  color: var(--blue);
+  font-weight: 700;
+  margin-left: 1px;
+}
