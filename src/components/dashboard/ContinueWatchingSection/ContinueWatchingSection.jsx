@@ -4,16 +4,24 @@ import styles from "./ContinueWatchingSection.module.css";
 import { useContinueWatching } from "@/hooks/useContinueWatching";
 import ContinueWatchingCard from "@/components/dashboard/ContinueWatchingCard/ContinueWatchingCard";
 import SectionHeader from "../SectionHeader/SectionHeader";
+import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
+import { mdiTelevisionPlay } from "@mdi/js";
 
 export default function ContinueWatchingSection() {
   const { items, loading, error, checkEpisode } = useContinueWatching();
 
   if (error) return <p className={styles.error}>Failed to load.</p>;
-  if (!loading && items.length === 0) return null;
+
+  const isEmpty = !loading && items.length === 0;
 
   return (
     <section className={styles.section}>
-      <SectionHeader title="Continue watching" href="/watching" storageKey="section-continue-watching">
+      <SectionHeader
+        title="Continue watching"
+        href={isEmpty ? undefined : "/watching"}
+        storageKey="section-continue-watching"
+        defaultOpen={true}
+      >
         {loading ? (
           <div className={styles.carousel}>
             {Array.from({ length: 6 }).map((_, i) => (
@@ -33,6 +41,13 @@ export default function ContinueWatchingSection() {
               </div>
             ))}
           </div>
+        ) : isEmpty ? (
+          <SectionEmptyState
+            icon={mdiTelevisionPlay}
+            message="Start a series and the episodes you haven't finished yet will show up here, ready to be picked up."
+            ctaLabel="Browse series"
+            ctaHref="/series"
+          />
         ) : (
           <div className={styles.carousel}>
             {items.map((item) => (

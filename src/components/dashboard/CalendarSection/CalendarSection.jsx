@@ -7,6 +7,8 @@ import { formatDateLabel } from "@/lib/utils/date.utils";
 import Image from "next/image";
 import Link from "next/link";
 import SectionHeader from "../SectionHeader/SectionHeader";
+import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
+import { mdiCalendarClockOutline } from "@mdi/js";
 
 export default function CalendarSection() {
   const { items, loading, error } = useCalendar();
@@ -14,11 +16,18 @@ export default function CalendarSection() {
   const today = new Date().toISOString().slice(0, 10);
 
   if (error) return <p className={styles.error}>Failed to load.</p>;
-  if (!loading && !items?.length) return null;
+
+  const visibleItems = items?.filter((day) => day.date !== today) ?? [];
+  const isEmpty = !loading && visibleItems.length === 0;
 
   return (
     <section className={styles.section}>
-      <SectionHeader title="Upcoming" href="/calendar" storageKey="section-calendar">
+      <SectionHeader
+        title="Upcoming"
+        href={isEmpty ? undefined : "/calendar"}
+        storageKey="section-calendar"
+        defaultOpen={true}
+      >
         {loading ? (
           <div className={styles.carousel}>
             {Array.from({ length: 5 }).map((_, i) => (
@@ -35,13 +44,18 @@ export default function CalendarSection() {
               </div>
             ))}
           </div>
+        ) : isEmpty ? (
+          <SectionEmptyState
+            icon={mdiCalendarClockOutline}
+            message="Track currently airing shows to see upcoming episodes and never miss a premiere or finale."
+            ctaLabel="Find airing shows"
+            ctaHref="/series"
+          />
         ) : (
           <div className={styles.carousel}>
-            {items
-              .filter((day) => day.date !== today)
-              .map((day) => (
-                <CalendarDayCard key={day.date} day={day} />
-              ))}
+            {visibleItems.map((day) => (
+              <CalendarDayCard key={day.date} day={day} />
+            ))}
           </div>
         )}
       </SectionHeader>

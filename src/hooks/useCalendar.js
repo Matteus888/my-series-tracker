@@ -1,11 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 
 export function useCalendar() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const { trackedSeries } = useTrackedSeries();
 
   const fetchData = useCallback(async () => {
     try {
@@ -22,7 +25,7 @@ export function useCalendar() {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, trackedSeries]);
 
   return { items, loading, error };
 }
