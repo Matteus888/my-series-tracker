@@ -34,6 +34,15 @@ export default function CalendarPage() {
   const [days, setDays] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const navBounds = useMemo(() => {
+    if (days.length === 0) return null;
+    const months = days.map((d) => d.date.slice(0, 7)); // "YYYY-MM"
+    return {
+      min: months.reduce((a, b) => (a < b ? a : b)),
+      max: months.reduce((a, b) => (a > b ? a : b)),
+    };
+  }, [days]);
+
   useEffect(() => {
     fetch("/api/calendar")
       .then((r) => r.json())
@@ -113,6 +122,7 @@ export default function CalendarPage() {
               episodeCountByDate={episodeCountByDate}
               activeDate={activeDate ?? today}
               onDayClick={handleDayClick}
+              navBounds={navBounds}
             />
           </div>
         </aside>

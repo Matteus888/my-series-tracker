@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import styles from "./page.module.css";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import EpisodeCard from "@/components/series/EpisodeCard/EpisodeCard";
 import SectionHeader from "@/components/dashboard/SectionHeader/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
+import MonthGrid from "@/components/ui/MonthGrid/MonthGrid";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import { formatDateLabel } from "@/lib/utils/date.utils";
+import { useActiveDay } from "@/hooks/useActiveDay";
 
 export default function HistoryPage() {
   const [days, setDays] = useState([]);
@@ -34,12 +36,12 @@ export default function HistoryPage() {
           .filter((day) => day.episodes.length > 0),
       );
       try {
-        const res = await fetch(`/api/episodes/${episodeId}/watched`, {
+        const response = await fetch(`/api/episodes/${episodeId}/watched`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ watched: false }),
         });
-        if (!res.ok) throw new Error("Failed");
+        if (!response.ok) throw new Error("Failed");
         incrementWatched();
       } catch {
         fetch("/api/history")
@@ -49,6 +51,30 @@ export default function HistoryPage() {
     },
     [incrementWatched],
   );
+
+  // Dates observées pour le scroll-spy
+  const allDates = useMemo(() => days.map((d) => d.date), [days]);
+
+  // Map date -> nb d'épisodes regardés
+  const episodeCountByDate = useMemo(() => new Map(days.map((d) => [d.date, d.episodes.length])), [days]);
+
+  // Bornes de navigation : uniquement les mois avec historique
+  const navBounds = useMemo(() => {
+    if (days.length === 0) return null;
+    const months = days.map((d) => d.date.slice(0, 7));
+    return {
+      min: months.reduce((a, b) => (a < b ? a : b)),
+      max: months.reduce((a, b) => (a > b ? a : b)),
+    };
+  }, [days]);
+
+  const activeDate = useActiveDay(allDates);
+
+  const handleDayClick = useCallback((date) => {
+    const el = document.querySelector(`[data-date="${date}"]`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
 
   if (loading)
     return (
@@ -69,19 +95,35 @@ export default function HistoryPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="History" />
-      {days.map((day) => (
-        <div key={day.date} className={styles.daySection}>
-          <SectionHeader title={formatDateLabel(day.date)}>
-            <div className={styles.episodeGrid}>
-              {day.episodes.map((ep) => (
-                <div key={ep._id} className={styles.cardWrapper}>
-                  <EpisodeCard ep={ep} onToggle={uncheckEpisode} seriesTitle={ep.seriesTitle} showSeason />
+
+      <div className={styles.layout}>
+        <div className={styles.main}>
+          {days.map((day) => (
+            <div key={day.date} className={styles.daySection} data-date={day.date}>
+              <SectionHeader title={formatDateLabel(day.date)}>
+                <div className={styles.episodeGrid}>
+                  {day.episodes.map((ep) => (
+                    <div key={ep._id} className={styles.cardWrapper}>
+                      <EpisodeCard ep={ep} onToggle={uncheckEpisode} seriesTitle={ep.seriesTitle} showSeason />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </SectionHeader>
             </div>
-          </SectionHeader>
+          ))}
         </div>
-      ))}
+
+        <aside className={styles.sidebar}>
+          <div className={styles.sidebarSticky}>
+            <MonthGrid
+              episodeCountByDate={episodeCountByDate}
+              activeDate={activeDate ?? days[0]?.date}
+              onDayClick={handleDayClick}
+              navBounds={navBounds}
+            />
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }

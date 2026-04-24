@@ -52,6 +52,12 @@
   background-color: var(--hover-bg);
 }
 
+.navBtn:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
 /* ── Weekday header ── */
 .weekdays {
   display: grid;
@@ -146,21 +152,15 @@
 
 /* Jour actif (= jour visible lors du scroll) : fond plein */
 .dayActive {
-  background-color: var(--blue);
+  background-color: var(--foreground);
   color: var(--background-primary);
   opacity: 1;
-  border-color: var(--blue);
-}
-
-.dayActive .dot {
-  background-color: var(--background-primary);
 }
 
 /* Évite que "today + active" double-borde visuellement */
 .dayActive .dot,
 .dayActive .plus {
-  background-color: var(--background-primary);
-  color: var(--background-primary);
+  color: var(--blue);
 }
 
 /* Signe "+" quand il y a plus de 2 épisodes */
@@ -169,5 +169,4 @@
   line-height: 1;
   color: var(--blue);
   font-weight: 700;
-  margin-left: 1px;
 }

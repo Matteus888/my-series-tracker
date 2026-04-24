@@ -37,7 +37,7 @@ const toDateKey = (year, month, day) => `${year}-${String(month + 1).padStart(2,
  * - activeDate : date YYYY-MM-DD actuellement mise en évidence
  * - onDayClick(date) : appelé au clic sur un jour qui a des épisodes
  */
-export default function MonthGrid({ episodeCountByDate, activeDate, onDayClick }) {
+export default function MonthGrid({ episodeCountByDate, activeDate, onDayClick, navBounds }) {
   const today = useMemo(() => new Date(), []);
   const [cursor, setCursor] = useState({
     year: today.getFullYear(),
@@ -59,6 +59,11 @@ export default function MonthGrid({ episodeCountByDate, activeDate, onDayClick }
   const leadingBlanks = firstWeekdayIndex(year, month);
   const todayKey = toDateKey(today.getFullYear(), today.getMonth(), today.getDate());
 
+  // ── Bornes de navigation ──
+  const currentMonthKey = `${year}-${String(month + 1).padStart(2, "0")}`;
+  const canGoPrev = !navBounds?.min || currentMonthKey > navBounds.min;
+  const canGoNext = !navBounds?.max || currentMonthKey < navBounds.max;
+
   const cells = [];
   for (let i = 0; i < leadingBlanks; i++) cells.push({ blank: true, key: `b${i}` });
   for (let d = 1; d <= totalDays; d++) {
@@ -77,22 +82,30 @@ export default function MonthGrid({ episodeCountByDate, activeDate, onDayClick }
   }
 
   const goPrev = () => {
+    if (!canGoPrev) return;
     setCursor(({ year, month }) => (month === 0 ? { year: year - 1, month: 11 } : { year, month: month - 1 }));
   };
   const goNext = () => {
+    if (!canGoNext) return;
     setCursor(({ year, month }) => (month === 11 ? { year: year + 1, month: 0 } : { year, month: month + 1 }));
   };
 
   return (
     <div className={styles.grid} aria-label="Calendar month navigator">
       <div className={styles.header}>
-        <button type="button" className={styles.navBtn} onClick={goPrev} aria-label="Previous month">
+        <button
+          type="button"
+          className={styles.navBtn}
+          onClick={goPrev}
+          disabled={!canGoPrev}
+          aria-label="Previous month"
+        >
           ‹
         </button>
         <div className={styles.monthLabel}>
           {MONTHS[month]} <span className={styles.year}>{year}</span>
         </div>
-        <button type="button" className={styles.navBtn} onClick={goNext} aria-label="Next month">
+        <button type="button" className={styles.navBtn} onClick={goNext} disabled={!canGoNext} aria-label="Next month">
           ›
         </button>
       </div>
