@@ -7,7 +7,7 @@ import Icon from "@mdi/react";
 import { mdiCheck } from "@mdi/js";
 
 export default function ContinueWatchingCard({ item, onCheck }) {
-  const { seriesId, tmdbId, title, posterPath, watchedCount, totalCount, nextEpisode } = item;
+  const { seriesId, tmdbId, title, posterPath, watchedCount, totalCount, remainingCount, nextEpisode } = item;
 
   const progressPercent = Math.round((watchedCount / totalCount) * 100);
 
@@ -27,7 +27,10 @@ export default function ContinueWatchingCard({ item, onCheck }) {
 
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
-      <div className="tooltip">{title}</div>
+      <div className="tooltip">
+        {title}
+        {remainingCount > 0 && <span className={styles.tooltipRemaining}>{remainingCount} left</span>}
+      </div>
       <div className={`card ${styles.card}`}>
         {/* Poster */}
         <div className={styles.imageContainer}>
