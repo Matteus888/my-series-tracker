@@ -1,4 +1,5 @@
 import { Episode } from "@/models/episode.model";
+import { computeAirDateTime } from "../utils/airDateTime.utils";
 
 /**
  * Crée ou met à jour tous les épisodes d'une série en base.
@@ -7,9 +8,10 @@ import { Episode } from "@/models/episode.model";
  * @param {ObjectId} seriesId   - _id MongoDB de la Series
  * @param {number}   tmdbSeriesId
  * @param {Array}    seasons    - tableau retourné par getAllSeasonsWithEpisodes
+ * @param {Array}    networks   - networks de la série (pour ajuster l'airDate)
  * @returns {Promise<Map<number, ObjectId>>}  tmdbEpisodeId → episode._id
  */
-export const upsertEpisodes = async (seriesId, tmdbSeriesId, seasons) => {
+export const upsertEpisodes = async (seriesId, tmdbSeriesId, seasons, networks = []) => {
   const operations = [];
 
   for (const season of seasons) {
@@ -28,7 +30,7 @@ export const upsertEpisodes = async (seriesId, tmdbSeriesId, seasons) => {
           title: ep.name ?? null,
           overview: ep.overview ?? null,
           stillPath: ep.still_path ?? null,
-          airDate: ep.air_date ? new Date(ep.air_date) : null,
+          airDate: computeAirDateTime(ep.air_date, networks),
           duration: ep.runtime ?? null,
           "ratings.tmdb.score": ep.vote_average ?? null,
           "ratings.tmdb.voteCount": ep.vote_count ?? 0,
