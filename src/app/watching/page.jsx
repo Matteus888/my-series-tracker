@@ -71,7 +71,7 @@ export default function WatchingPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="Continue watching" />
-      <p className={styles.subtitle}>Pick up where you left off</p>
+      {/* <p className={styles.subtitle}>Pick up where you left off</p> */}
       <p className={styles.count}>
         {items.length} serie{items.length > 1 ? "s" : ""} in progress
       </p>

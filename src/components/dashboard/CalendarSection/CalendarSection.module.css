@@ -20,7 +20,7 @@
 }
 
 .carousel::-webkit-scrollbar {
-  height: 3px;
+  height: 4px;
 }
 .carousel::-webkit-scrollbar-track {
   background: transparent;
@@ -36,11 +36,11 @@
 /* ── Day card ── */
 .dayCard {
   flex: 0 0 auto;
-  width: 300px;
+  min-height: 14.583rem;
+  height: 14.583rem;
+  width: 22rem;
   display: flex;
   flex-direction: row;
-  min-height: 175px;
-  height: 175px;
   overflow: hidden;
 }
 
@@ -51,7 +51,7 @@
 /* Poster gauche */
 .posterSection {
   position: relative;
-  width: 117px;
+  width: 9.75rem;
   flex-shrink: 0;
   background: var(--background-third);
   overflow: hidden;
@@ -61,6 +61,8 @@
 .poster {
   object-fit: cover;
   transition: opacity 0.2s ease;
+  width: 100%;
+  height: 100%;
 }
 
 .posterPlaceholder {
@@ -81,11 +83,12 @@
 }
 
 .dateLabel {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--foreground);
   margin: 0;
   text-transform: capitalize;
+  text-align: center;
 }
 
 .divider {
@@ -167,15 +170,15 @@
 /* ── Skeleton ── */
 .skeletonCard {
   flex: 0 0 auto;
-  width: 280px;
+  width: 23.333rem;
+  min-height: 12.5rem;
   display: flex;
   flex-direction: row;
-  min-height: 150px;
   overflow: hidden;
 }
 
 .skeletonPoster {
-  width: 100px;
+  width: 8.33rem;
   flex-shrink: 0;
   overflow: hidden;
 }

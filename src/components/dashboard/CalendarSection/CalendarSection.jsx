@@ -74,9 +74,9 @@ function CalendarDayCard({ day }) {
           <Image
             src={`https://image.tmdb.org/t/p/w185${hoveredPoster}`}
             alt="Season poster"
-            width={117}
-            height={175}
-            sizes="100px"
+            width={156}
+            height={233}
+            sizes="156px"
             loading="eager"
             className={styles.poster}
           />
