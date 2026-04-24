@@ -3,32 +3,12 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import styles from "./page.module.css";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
-import ProgressCard from "@/components/series/ProgressCard/ProgressCard";
+import UpcomingSerieCard from "@/components/calendar/UpcomingSerieCard/UpcomingSerieCard";
 import SectionHeader from "@/components/dashboard/SectionHeader/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import MonthGrid from "@/components/ui/MonthGrid/MonthGrid";
 import { formatDateLabel } from "@/lib/utils/date.utils";
 import { useActiveDay } from "@/hooks/useActiveDay";
-
-const buildItem = (ep) => ({
-  seriesId: ep.seriesId,
-  tmdbId: ep.tmdbId,
-  title: ep.seriesTitle,
-  posterPath: ep.posterPath,
-  networks: ep.networks ?? [],
-  watchedCount: 0,
-  totalCount: 1,
-  remainingCount: 0,
-  totalRemainingDuration: 0,
-  seasonEpisodeCount: ep.seasonEpisodeCount ?? null,
-  nextEpisode: {
-    _id: ep.episodeId,
-    seasonNumber: ep.seasonNumber,
-    episodeNumber: ep.episodeNumber,
-    title: ep.title,
-    airDate: ep.airDate,
-  },
-});
 
 export default function CalendarPage() {
   const [days, setDays] = useState([]);
@@ -90,7 +70,7 @@ export default function CalendarPage() {
                 <div className={styles.grid}>
                   {todayDay.episodes.map((ep) => (
                     <div key={ep.episodeId} className={styles.gridItem}>
-                      <ProgressCard item={buildItem(ep)} compact />
+                      <UpcomingSerieCard episode={ep} />
                     </div>
                   ))}
                 </div>
@@ -107,7 +87,7 @@ export default function CalendarPage() {
                 <div className={styles.grid}>
                   {day.episodes.map((ep) => (
                     <div key={ep.episodeId} className={styles.gridItem}>
-                      <ProgressCard item={buildItem(ep)} compact />
+                      <UpcomingSerieCard episode={ep} />
                     </div>
                   ))}
                 </div>

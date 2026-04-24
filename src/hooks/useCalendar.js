@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
+import { useList } from "@/context/ListContext";
 
 export function useCalendar() {
   const [items, setItems] = useState([]);
@@ -9,6 +10,7 @@ export function useCalendar() {
   const [error, setError] = useState(null);
 
   const { trackedSeries } = useTrackedSeries();
+  const { lists } = useList();
 
   const fetchData = useCallback(async () => {
     try {
@@ -25,7 +27,7 @@ export function useCalendar() {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData, trackedSeries]);
+  }, [fetchData, trackedSeries, lists]);
 
   return { items, loading, error };
 }

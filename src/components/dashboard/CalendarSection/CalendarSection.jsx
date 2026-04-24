@@ -86,7 +86,6 @@ function CalendarDayCard({ day }) {
       </div>
       <div className={styles.contentSection}>
         <p className={styles.dateLabel}>{dateLabel}</p>
-        <div className={styles.divider} />
         <ul className={styles.episodeList}>
           {day.episodes.map((ep) => {
             const epCode = `S${String(ep.seasonNumber).padStart(2, "0")} • E${String(ep.episodeNumber).padStart(2, "0")}`;

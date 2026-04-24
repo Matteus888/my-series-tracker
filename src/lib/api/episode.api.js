@@ -238,11 +238,26 @@ export const getCalendar = async (UserModel, userId) => {
   if (!user) throw new Error("User not found");
 
   const watchingSeries = user.trackedSeries.filter((t) => t.seriesId && t.status !== "dropped");
-  if (watchingSeries.length === 0) return [];
+  const watchlist = await UserList.findOne({ userId, isDefault: true })
+    .populate({ path: "series", model: "Series" })
+    .lean();
+  const watchlistSeries = watchlist?.series ?? [];
+
+  if (watchingSeries.length === 0 && watchlistSeries.length === 0) return [];
 
   const starOfToday = new Date();
   starOfToday.setHours(0, 0, 0, 0); // Minuit aujourd'hui
-  const seriesIds = watchingSeries.map((t) => t.seriesId._id);
+
+  // Map seriesId: données série pour lookup rapide (dédoublonnage automatique)
+  const seriesMap = new Map();
+  for (const t of watchingSeries) {
+    seriesMap.set(t.seriesId._id.toString(), t.seriesId);
+  }
+  for (const s of watchlistSeries) {
+    seriesMap.set(s._id.toString(), s);
+  }
+
+  const seriesIds = Array.from(seriesMap.values()).map((s) => s._id);
 
   // Récupère tous les épisodes futurs des séries en cours
   const upcomingEpisodes = await Episode.find({
@@ -250,12 +265,9 @@ export const getCalendar = async (UserModel, userId) => {
     airDate: { $gte: starOfToday },
   })
     .sort({ airDate: 1 })
-    .select("_id seriesId seasonNumber episodeNumber title airDate")
+    .select("_id seriesId seasonNumber episodeNumber title airDate overview duration ratings")
     .lean();
   if (upcomingEpisodes.length === 0) return [];
-
-  // Map seriesId: données série pour lookup rapide
-  const seriesMap = new Map(watchingSeries.map((t) => [t.seriesId._id.toString(), t.seriesId]));
 
   // Groupe par date (YYYY-MM-DD)
   const grouped = {};
@@ -278,6 +290,9 @@ export const getCalendar = async (UserModel, userId) => {
       seasonNumber: ep.seasonNumber,
       episodeNumber: ep.episodeNumber,
       title: ep.title ?? null,
+      overview: ep.overview ?? null,
+      duration: ep.duration ?? null,
+      ratings: ep.ratings ?? null,
       posterPath,
       airDate: ep.airDate.toISOString(),
       networks: series.networks ?? [],

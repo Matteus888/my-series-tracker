@@ -14,9 +14,9 @@
   border-top: 1px solid var(--border);
 }
 
-.container:last-child .card {
+/* .container:last-child .card {
   border-right: none;
-}
+} */
 
 .imageContainer {
   position: relative;
@@ -70,7 +70,7 @@
 }
 
 .badgeFinal {
-  background-color: var(--red);
+  background-color: var(--violet);
 }
 
 .progressBar {
