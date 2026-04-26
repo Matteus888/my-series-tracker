@@ -17,49 +17,9 @@
 }
 
 .grid {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.gridItem {
-  flex: 0 0 33.33%;
-  max-width: 33.33%;
-  box-sizing: border-box;
-}
-
-@media (min-width: 768px) {
-  .gridItem {
-    flex: 0 0 20%;
-    max-width: 20%;
-  }
-}
-
-@media (min-width: 1024px) {
-  .gridItem {
-    flex: 0 0 16.666%;
-    max-width: 16.666%;
-  }
-}
-
-@media (min-width: 1280px) {
-  .gridItem {
-    flex: 0 0 14.28%;
-    max-width: 14.28%;
-  }
-}
-
-@media (min-width: 1536px) {
-  .gridItem {
-    flex: 0 0 12.5%;
-    max-width: 12.5%;
-  }
-}
-
-@media (min-width: 1840px) {
-  .gridItem {
-    flex: 0 0 11.11%;
-    max-width: 11.11%;
-  }
+  --card-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
 }
 
 .empty {

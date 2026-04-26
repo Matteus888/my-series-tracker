@@ -30,7 +30,7 @@ export default function RecentlyWatchedSection() {
                   <div className={styles.skeletonImage}>
                     <div className={styles.skeletonPulse} />
                   </div>
-                  <div className={`card-footer ${styles.skeletonFooter}`}>
+                  <div className={styles.skeletonFooter}>
                     <div className={styles.skeletonLabel} />
                     <div className={styles.skeletonButton} />
                   </div>

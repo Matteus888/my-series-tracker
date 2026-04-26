@@ -11,7 +11,7 @@ export default function SerieCardSkeleton() {
           <div className={styles.imagePlaceholder}></div>
           <span className={styles.yearBadgePlaceholder}></span>
         </div>
-        <div className={`card-footer ${styles.footer}`}>
+        <div className={styles.footer}>
           <div className={styles.buttonsContainer}>
             <div className={styles.button}></div>
             <div className={styles.button}></div>

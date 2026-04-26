@@ -1,6 +1,7 @@
 .container {
   flex: 0 0 auto;
   width: var(--card-width, 100%);
+  min-width: var(--card-width);
   height: 100%;
   display: flex;
 }

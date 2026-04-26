@@ -102,11 +102,6 @@ a {
   transition: background-color 0.2s ease;
 }
 
-.card-footer {
-  background-color: var(--background-secondary);
-  border-color: var(--border);
-}
-
 /* ===== INPUTS ===== */
 .form-control {
   display: block;

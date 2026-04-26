@@ -69,7 +69,7 @@ function CalendarDayCard({ day }) {
   const dateLabel = formatDateLabel(day.date, { showTomorrow: false });
 
   return (
-    <div className={styles.dayCard}>
+    <div className={`card ${styles.dayCard}`}>
       <div className={styles.posterSection}>
         {hoveredPoster ? (
           <Image
