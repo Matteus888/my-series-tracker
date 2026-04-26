@@ -87,10 +87,11 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--foreground);
-  border: 1px solid rgba(237, 237, 237, 0.5);
-  padding: 0.3rem 0;
+  /* border: 1px solid rgba(237, 237, 237, 0.5); */
+  padding: 0.3rem 0 0 0;
   margin: 0;
-  text-transform: capitalize;
+  /* text-transform: uppercase; */
+  letter-spacing: 0.05rem;
   text-align: center;
 }
 

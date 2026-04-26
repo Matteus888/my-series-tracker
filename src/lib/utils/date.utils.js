@@ -30,8 +30,9 @@ export const formatDateLabel = (dateStr, { showTomorrow = true } = {}) => {
   if (showTomorrow && isSameDay(date, tomorrow)) return "Tomorrow";
 
   return date.toLocaleDateString("en-GB", {
-    weekday: "long",
+    // weekday: "long",
     day: "numeric",
     month: "long",
+    year: "numeric",
   });
 };
