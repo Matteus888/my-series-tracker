@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 
 export function useContinueWatching() {
@@ -10,13 +10,46 @@ export function useContinueWatching() {
 
   const { trackedSeries, incrementWatched, watchedCount } = useTrackedSeries();
 
+  // Préserve l'ordre visuel courant lors d'un refresh (ex: après un check)
+  // Clé = seriesId, valeur = index. Mis à jour seulement quand l'ensemble des séries change.
+  const orderRef = useRef(null);
+
+  const applyPreservedOrder = useCallback((freshItems) => {
+    const previousOrder = orderRef.current;
+
+    // Premier chargement : on adopte l'ordre serveur.
+    if (!previousOrder) {
+      orderRef.current = new Map(freshItems.map((it, i) => [it.seriesId, i]));
+      return freshItems;
+    }
+
+    // Trie les items en gardant l'ordre précédent ; les nouveaux vont en fin.
+    const sorted = [...freshItems].sort((a, b) => {
+      const ai = previousOrder.has(a.seriesId) ? previousOrder.get(a.seriesId) : Infinity;
+      const bi = previousOrder.has(b.seriesId) ? previousOrder.get(b.seriesId) : Infinity;
+      if (ai !== bi) return ai - bi;
+      // Tie-break stable pour les nouvelles séries : ordre serveur (lastWatchedAt desc).
+      return freshItems.indexOf(a) - freshItems.indexOf(b);
+    });
+
+    // Met à jour la map d'ordre pour refléter la composition courante (même clés, mêmes index).
+    orderRef.current = new Map(sorted.map((it, i) => [it.seriesId, i]));
+    return sorted;
+  }, []);
+
+  // Si l'ensemble des séries trackées change (ajout/suppression hors check),
+  // on laisse le serveur dicter le nouvel ordre.
+  useEffect(() => {
+    orderRef.current = null;
+  }, [trackedSeries]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("/api/dashboard/continue-watching");
         if (!response.ok) throw new Error("Failed to fetch");
         const data = await response.json();
-        setItems(data.continueWatching);
+        setItems(applyPreservedOrder(data.continueWatching));
       } catch (err) {
         setError(err.message);
       } finally {
@@ -24,7 +57,7 @@ export function useContinueWatching() {
       }
     };
     fetchData();
-  }, [trackedSeries, watchedCount]);
+  }, [trackedSeries, watchedCount, applyPreservedOrder]);
 
   const checkEpisode = useCallback(
     async (seriesId, episodeId) => {
@@ -62,13 +95,13 @@ export function useContinueWatching() {
         incrementWatched();
 
         const data = await refreshed.json();
-        setItems(data.continueWatching);
+        setItems(applyPreservedOrder(data.continueWatching));
       } catch (err) {
         setItems(previous);
         setError(err.message);
       }
     },
-    [items],
+    [items, incrementWatched, applyPreservedOrder],
   );
 
   return { items, loading, error, checkEpisode };
