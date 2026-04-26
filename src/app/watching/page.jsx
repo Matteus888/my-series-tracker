@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import styles from "./page.module.css";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import ContinueWatchingCard from "@/components/dashboard/ContinueWatchingCard/ContinueWatchingCard";
@@ -10,16 +10,43 @@ import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 export default function WatchingPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { incrementWatched } = useTrackedSeries();
+  const { trackedSeries, incrementWatched } = useTrackedSeries();
+
+  // Préserve l'ordre visuel courant lors d'un refresh (ex: après un check)
+  const orderRef = useRef(null);
+
+  const applyPreservedOrder = useCallback((freshItems) => {
+    const previousOrder = orderRef.current;
+
+    if (!previousOrder) {
+      orderRef.current = new Map(freshItems.map((it, i) => [it.seriesId, i]));
+      return freshItems;
+    }
+
+    const sorted = [...freshItems].sort((a, b) => {
+      const ai = previousOrder.has(a.seriesId) ? previousOrder.get(a.seriesId) : Infinity;
+      const bi = previousOrder.has(b.seriesId) ? previousOrder.get(b.seriesId) : Infinity;
+      if (ai !== bi) return ai - bi;
+      return freshItems.indexOf(a) - freshItems.indexOf(b);
+    });
+
+    orderRef.current = new Map(sorted.map((it, i) => [it.seriesId, i]));
+    return sorted;
+  }, []);
+
+  // Reset l'ordre si l'ensemble des séries trackées change
+  useEffect(() => {
+    orderRef.current = null;
+  }, [trackedSeries]);
 
   useEffect(() => {
     fetch("/api/watching")
       .then((r) => r.json())
       .then((d) => {
-        setItems(d.items ?? []);
+        setItems(applyPreservedOrder(d.items ?? []));
         setLoading(false);
       });
-  }, []);
+  }, [applyPreservedOrder]);
 
   const checkEpisode = useCallback(
     async (seriesId, episodeId) => {
@@ -44,12 +71,12 @@ export default function WatchingPage() {
         incrementWatched();
         const refreshed = await fetch("/api/watching");
         const data = await refreshed.json();
-        setItems(data.items ?? []);
+        setItems(applyPreservedOrder(data.items ?? []));
       } catch {
         setItems(previous);
       }
     },
-    [items, incrementWatched],
+    [items, incrementWatched, applyPreservedOrder],
   );
 
   if (loading)
@@ -71,7 +98,6 @@ export default function WatchingPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="Continue watching" />
-      {/* <p className={styles.subtitle}>Pick up where you left off</p> */}
       <p className={styles.count}>
         {items.length} serie{items.length > 1 ? "s" : ""} in progress
       </p>
