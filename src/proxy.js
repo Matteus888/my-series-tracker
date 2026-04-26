@@ -14,7 +14,7 @@ const protectedRoutes = [
 const adminRoutes = ["/admin"];
 const publicRoutes = ["/login", "/signup", "/verify-email", "/series"];
 
-export async function middleware(request) {
+export async function proxy(request) {
   const { pathname } = request.nextUrl;
 
   if (publicRoutes.includes(pathname)) {
