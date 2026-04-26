@@ -1,17 +1,22 @@
 import "../styles/globals.css";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit, Roboto, Rubik } from "next/font/google";
 import Providers from "@/components/layout/Providers";
 import Header from "@/components/layout/Header/Header";
 import Footer from "@/components/layout/Footer/Footer";
 import { APP_NAME } from "@/lib/constants/app.constants";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin"],
+});
+
+const rubik = Rubik({
+  variable: "--font-rubik",
   subsets: ["latin"],
 });
 
@@ -29,7 +34,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${outfit.variable} ${roboto.variable} ${rubik.variable}`}>
         <Providers>
           <Header />
           <main>{children}</main>
