@@ -118,8 +118,6 @@ export default function UpcomingSerieCard({ episode }) {
         {overview && <p className={styles.overview}>{overview}</p>}
 
         <div className={styles.meta}>
-          <span className={styles.metaDuration}>{duration > 0 && formatDuration(duration)}</span>
-
           <span className={styles.metaNetwork}>
             {network?.logoPath && (
               <Image
@@ -132,6 +130,8 @@ export default function UpcomingSerieCard({ episode }) {
               />
             )}
           </span>
+
+          <span className={styles.metaDuration}>{duration > 0 && formatDuration(duration)}</span>
 
           <span className={styles.metaRating}>
             {ratingPercent !== null && (
