@@ -89,9 +89,17 @@ function CalendarDayCard({ day }) {
         <p className={styles.dateLabel}>{dateLabel}</p>
         <ul className={styles.episodeList}>
           {day.episodes.map((ep) => {
-            const epCode = `S${String(ep.seasonNumber).padStart(2, "0")} • E${String(ep.episodeNumber).padStart(2, "0")}`;
-            const isPremiere = ep.episodeNumber === 1;
-            const isFinale = ep.seasonEpisodeCount != null && ep.episodeNumber === ep.seasonEpisodeCount;
+            const isBatch = ep.type === "season-batch";
+            const key = isBatch ? ep.batchKey : ep.episodeId;
+
+            const epCode = isBatch
+              ? `Season ${ep.seasonNumber}`
+              : `S${String(ep.seasonNumber).padStart(2, "0")} • E${String(ep.episodeNumber).padStart(2, "0")}`;
+
+            // const epTitle = isBatch ? `${ep.episodeCount} new episodes` : ep.seriesTitle;
+
+            const isPremiere = !isBatch && ep.episodeNumber === 1;
+            const isFinale = !isBatch && ep.seasonEpisodeCount != null && ep.episodeNumber === ep.seasonEpisodeCount;
             const badge = isPremiere
               ? { label: "Premiere", className: styles.badgePremiere }
               : isFinale
@@ -99,7 +107,7 @@ function CalendarDayCard({ day }) {
                 : null;
             return (
               <li
-                key={ep.episodeId}
+                key={key}
                 className={styles.episodeItem}
                 onMouseEnter={() => setHoveredPoster(ep.posterPath)}
                 onMouseLeave={() => setHoveredPoster(day.episodes[0]?.posterPath ?? null)}
@@ -110,6 +118,7 @@ function CalendarDayCard({ day }) {
                     <span className={styles.epCode}>{epCode}</span>
                     {badge && <span className={`${styles.badge} ${badge.className}`}>{badge.label}</span>}
                   </span>
+                  {/* {isBatch && <span className={styles.epBatchInfo}>{epTitle}</span>} */}
                 </Link>
               </li>
             );

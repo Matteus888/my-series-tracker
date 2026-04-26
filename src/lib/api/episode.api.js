@@ -299,7 +299,54 @@ export const getCalendar = async (UserModel, userId) => {
     });
   }
 
-  return Object.entries(grouped).map(([date, episodes]) => ({ date, episodes }));
+  // Agrège les "drops" : >3 épisodes d'une même saison le même jour → 1 entrée season-batch
+  const SEASON_BATCH_THRESHOLD = 3;
+  const result = Object.entries(grouped)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, episodes]) => {
+      // Compte les épisodes par (seriesId + seasonNumber)
+      const bySeason = new Map();
+      for (const ep of episodes) {
+        const key = `${ep.seriesId}__${ep.seasonNumber}`;
+        if (!bySeason.has(key)) bySeason.set(key, []);
+        bySeason.get(key).push(ep);
+      }
+
+      const finalItems = [];
+      for (const [, eps] of bySeason) {
+        if (eps.length > SEASON_BATCH_THRESHOLD) {
+          // On agrège — on prend le premier épisode comme "représentant"
+          const first = eps[0];
+          finalItems.push({
+            type: "season-batch",
+            batchKey: `${first.seriesId}-s${first.seasonNumber}-${date}`,
+            seriesId: first.seriesId,
+            tmdbId: first.tmdbId,
+            seriesTitle: first.seriesTitle,
+            seasonNumber: first.seasonNumber,
+            episodeCount: eps.length,
+            posterPath: first.posterPath,
+            airDate: first.airDate,
+            networks: first.networks,
+          });
+        } else {
+          for (const ep of eps) {
+            finalItems.push({ type: "episode", ...ep });
+          }
+        }
+      }
+
+      // Trie : épisodes par seasonNumber/episodeNumber, batch en premier dans le jour
+      finalItems.sort((a, b) => {
+        if (a.type !== b.type) return a.type === "season-batch" ? -1 : 1;
+        if (a.seasonNumber !== b.seasonNumber) return a.seasonNumber - b.seasonNumber;
+        return (a.episodeNumber ?? 0) - (b.episodeNumber ?? 0);
+      });
+
+      return { date, episodes: finalItems };
+    });
+
+  return result;
 };
 
 export const rateEpisode = async (userId, episodeId, rating) => {
