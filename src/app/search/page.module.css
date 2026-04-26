@@ -11,9 +11,9 @@
   padding: 0.25rem;
   position: sticky;
   top: 45px;
-  height: calc(100vh - 45px);
   overflow-y: auto;
   align-self: flex-start;
+  max-height: calc(100vh - 45px);
 }
 @media (min-width: 768px) {
   .filterSidebar {
