@@ -245,8 +245,7 @@ export const getCalendar = async (UserModel, userId) => {
 
   if (watchingSeries.length === 0 && watchlistSeries.length === 0) return [];
 
-  const starOfToday = new Date();
-  starOfToday.setHours(0, 0, 0, 0); // Minuit aujourd'hui
+  const now = new Date();
 
   // Map seriesId: données série pour lookup rapide (dédoublonnage automatique)
   const seriesMap = new Map();
@@ -262,7 +261,7 @@ export const getCalendar = async (UserModel, userId) => {
   // Récupère tous les épisodes futurs des séries en cours
   const upcomingEpisodes = await Episode.find({
     seriesId: { $in: seriesIds },
-    airDate: { $gte: starOfToday },
+    airDate: { $gte: now },
   })
     .sort({ airDate: 1 })
     .select("_id seriesId seasonNumber episodeNumber title airDate overview duration ratings")

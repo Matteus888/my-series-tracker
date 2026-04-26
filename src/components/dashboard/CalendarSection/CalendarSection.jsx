@@ -13,11 +13,12 @@ import { mdiCalendarClockOutline } from "@mdi/js";
 export default function CalendarSection() {
   const { items, loading, error } = useCalendar();
 
-  const today = new Date().toISOString().slice(0, 10);
+  // const today = new Date().toISOString().slice(0, 10);
 
   if (error) return <p className={styles.error}>Failed to load.</p>;
 
-  const visibleItems = items?.filter((day) => day.date !== today) ?? [];
+  // const visibleItems = items?.filter((day) => day.date !== today) ?? [];
+  const visibleItems = items ?? [];
   const isEmpty = !loading && visibleItems.length === 0;
 
   return (
