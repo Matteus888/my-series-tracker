@@ -30,7 +30,7 @@ export default function StartWatchingSection() {
         <div className={styles.carouselWrapper}>
           {loading ? (
             <div className={styles.carousel} ref={scrollerRef}>
-              {Array.from({ length: 6 }).map((_, i) => (
+              {Array.from({ length: 2 }).map((_, i) => (
                 <div key={i} className={styles.skeletonContainer}>
                   <div className={`card ${styles.skeletonCard}`}>
                     <div className={styles.skeletonImage}>

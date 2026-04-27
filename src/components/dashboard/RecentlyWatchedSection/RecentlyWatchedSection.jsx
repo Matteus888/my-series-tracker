@@ -37,8 +37,9 @@ export default function RecentlyWatchedSection() {
                       <div className={styles.skeletonPulse} />
                     </div>
                     <div className={styles.skeletonFooter}>
-                      <div className={styles.skeletonLabel} />
                       <div className={styles.skeletonButton} />
+                      <div className={styles.skeletonLabel} />
+                      <div className={styles.skeletonHeart} />
                     </div>
                   </div>
                 </div>
