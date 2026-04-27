@@ -19,8 +19,10 @@ export default function RecentlyWatchedSection() {
       <SectionHeader
         title="Recently watched"
         href={isEmpty ? undefined : "/history"}
+        icon={mdiHistory}
         storageKey="section-recently-watched"
         defaultOpen={true}
+        hasContent={items.length > 0}
       >
         {loading ? (
           <div className={styles.carousel}>

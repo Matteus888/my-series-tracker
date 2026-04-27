@@ -19,8 +19,10 @@ export default function StartWatchingSection() {
       <SectionHeader
         title="Start watching"
         href={isEmpty ? undefined : "/lists"}
+        icon={mdiPlaylistPlus}
         storageKey="section-start-watching"
         defaultOpen={true}
+        hasContent={items.length > 0}
       >
         {loading ? (
           <div className={styles.carousel}>

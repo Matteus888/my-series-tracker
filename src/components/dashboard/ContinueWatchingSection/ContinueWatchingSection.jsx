@@ -19,8 +19,10 @@ export default function ContinueWatchingSection() {
       <SectionHeader
         title="Continue watching"
         href={isEmpty ? undefined : "/watching"}
+        icon={mdiTelevisionPlay}
         storageKey="section-continue-watching"
         defaultOpen={true}
+        hasContent={items.length > 0}
       >
         {loading ? (
           <div className={styles.carousel}>

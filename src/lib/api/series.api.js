@@ -6,8 +6,7 @@ import { EpisodeProgress } from "@/models/episodeProgress.model";
 import { getAllSeasonsWithEpisodes } from "./tmdb.api";
 import { getOmdbRatings } from "./omdb.api";
 import { upsertEpisodes } from "@/lib/db/upsertEpisodes";
-
-const dbConnect = require("@/lib/db/db.connect").default;
+import dbConnect from "@/lib/db/db.connect";
 
 export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, serieData, options = {}) => {
   await dbConnect();

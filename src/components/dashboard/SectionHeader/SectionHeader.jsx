@@ -7,7 +7,16 @@ import { mdiChevronRight, mdiArrowDownDropCircleOutline, mdiArrowUpDropCircleOut
 import { usePersistedOpen } from "@/hooks/usePersistedOpen";
 import { useState } from "react";
 
-export default function SectionHeader({ title, subtitle, href, defaultOpen = true, children, storageKey }) {
+export default function SectionHeader({
+  title,
+  subtitle,
+  href,
+  icon,
+  hasContent = true,
+  defaultOpen = true,
+  children,
+  storageKey,
+}) {
   const persistedState = usePersistedOpen(storageKey ?? null, defaultOpen);
   const localState = useState(defaultOpen);
 
@@ -23,17 +32,21 @@ export default function SectionHeader({ title, subtitle, href, defaultOpen = tru
         <button className={styles.toggleBtn} onClick={handleToggle}>
           <Icon
             path={isOpen ? mdiArrowUpDropCircleOutline : mdiArrowDownDropCircleOutline}
-            size={0.8}
+            size={0.9}
             className={styles.chevron}
           />
         </button>
         {href ? (
           <Link href={href} className={styles.link}>
             <h2 className={styles.title}>{title}</h2>
-            <Icon path={mdiChevronRight} size={1} className={styles.arrow} />
+            {icon && hasContent && <Icon path={icon} size={1} className={styles.icon} />}
+            {isOpen && <Icon path={mdiChevronRight} size={1.1} className={styles.arrow} />}
           </Link>
         ) : (
-          <h2 className={styles.title}>{title}</h2>
+          <>
+            <h2 className={styles.title}>{title}</h2>
+            {icon && hasContent && <Icon path={icon} size={1} className={styles.icon} />}
+          </>
         )}
         {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
       </div>

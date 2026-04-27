@@ -26,8 +26,10 @@ export default function CalendarSection() {
       <SectionHeader
         title="Upcoming"
         href={isEmpty ? undefined : "/calendar"}
+        icon={mdiCalendarClockOutline}
         storageKey="section-calendar"
         defaultOpen={true}
+        hasContent={items.length > 0}
       >
         {loading ? (
           <div className={styles.carousel}>
