@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useCalendar } from "@/hooks/useCalendar";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
 import { formatDateLabel } from "@/lib/utils/date.utils";
+import { formatDuration } from "@/lib/utils/duration.utils";
 import Image from "next/image";
 import Link from "next/link";
 import SectionHeader from "../SectionHeader/SectionHeader";
@@ -74,15 +75,18 @@ export default function CalendarSection() {
 }
 
 function CalendarDayCard({ day }) {
-  const [hoveredPoster, setHoveredPoster] = useState(day.episodes[0]?.posterPath ?? null);
+  const [hoveredEp, setHoveredEp] = useState(day.episodes[0] ?? null);
   const dateLabel = formatDateLabel(day.date, { showTomorrow: false });
+
+  const network = hoveredEp?.networks?.[0];
+  const formattedDuration = hoveredEp?.duration ? formatDuration(hoveredEp.duration) : null;
 
   return (
     <div className={`card ${styles.dayCard}`}>
       <div className={styles.posterSection}>
-        {hoveredPoster ? (
+        {hoveredEp?.posterPath ? (
           <Image
-            src={`https://image.tmdb.org/t/p/w185${hoveredPoster}`}
+            src={`https://image.tmdb.org/t/p/w185${hoveredEp.posterPath}`}
             alt="Season poster"
             width={156}
             height={233}
@@ -105,8 +109,6 @@ function CalendarDayCard({ day }) {
               ? `Season ${ep.seasonNumber}`
               : `S${String(ep.seasonNumber).padStart(2, "0")} • E${String(ep.episodeNumber).padStart(2, "0")}`;
 
-            // const epTitle = isBatch ? `${ep.episodeCount} new episodes` : ep.seriesTitle;
-
             const isPremiere = !isBatch && ep.episodeNumber === 1;
             const isFinale = !isBatch && ep.seasonEpisodeCount != null && ep.episodeNumber === ep.seasonEpisodeCount;
             const badge = isPremiere
@@ -118,8 +120,8 @@ function CalendarDayCard({ day }) {
               <li
                 key={key}
                 className={styles.episodeItem}
-                onMouseEnter={() => setHoveredPoster(ep.posterPath)}
-                onMouseLeave={() => setHoveredPoster(day.episodes[0]?.posterPath ?? null)}
+                onMouseEnter={() => setHoveredEp(ep)}
+                onMouseLeave={() => setHoveredEp(day.episodes[0] ?? null)}
               >
                 <Link href={`/series/${ep.tmdbId}`} className={styles.episodeLink}>
                   <span className={styles.epTitle}>{ep.seriesTitle}</span>
@@ -127,12 +129,24 @@ function CalendarDayCard({ day }) {
                     <span className={styles.epCode}>{epCode}</span>
                     {badge && <span className={`${styles.badge} ${badge.className}`}>{badge.label}</span>}
                   </span>
-                  {/* {isBatch && <span className={styles.epBatchInfo}>{epTitle}</span>} */}
                 </Link>
               </li>
             );
           })}
         </ul>
+        <div className={styles.cardFooter}>
+          {formattedDuration && <span className={styles.footerMeta}>{formattedDuration}</span>}
+          {network?.logoPath && (
+            <Image
+              src={`https://image.tmdb.org/t/p/w92${network.logoPath}`}
+              alt={network.name}
+              width={32}
+              height={32}
+              loading="eager"
+              className={styles.footerNetworkLogo}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
