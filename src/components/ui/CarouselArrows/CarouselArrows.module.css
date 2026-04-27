@@ -2,30 +2,23 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  /* on ne couvre pas toute la hauteur visuellement, juste une zone cliquable centrée */
-  width: 40px;
+  width: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  color: var(--foreground);
+  background: transparent;
   border: none;
   cursor: pointer;
   z-index: 5;
   opacity: 0;
   pointer-events: none;
-  transition:
-    opacity 0.2s ease,
-    background-color 0.2s ease;
+  transition: opacity 0.2s ease;
+  padding: 0;
 }
 
 .arrow.visible {
   opacity: 1;
   pointer-events: auto;
-}
-
-.arrow:hover {
-  background: rgba(0, 0, 0, 0.75);
 }
 
 .left {
@@ -37,8 +30,21 @@
 }
 
 .chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--foreground);
   font-size: 2rem;
   line-height: 1;
   font-weight: 300;
   user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.arrow:hover .chevron {
+  background: rgba(0, 0, 0, 0.65);
 }

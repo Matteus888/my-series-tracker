@@ -1,6 +1,8 @@
 "use client";
 
 import styles from "./CarouselArrows.module.css";
+import Icon from "@mdi/react";
+import { mdiChevronLeft, mdiChevronRight } from "@mdi/js";
 
 export default function CarouselArrows({ canScrollLeft, canScrollRight, onScroll }) {
   return (
@@ -12,8 +14,8 @@ export default function CarouselArrows({ canScrollLeft, canScrollRight, onScroll
         aria-label="Scroll left"
         tabIndex={canScrollLeft ? 0 : -1}
       >
-        <span className={styles.chevron} aria-hidden="true">
-          ‹
+        <span className={styles.chevron}>
+          <Icon path={mdiChevronLeft} size={1.2} />
         </span>
       </button>
       <button
@@ -23,8 +25,8 @@ export default function CarouselArrows({ canScrollLeft, canScrollRight, onScroll
         aria-label="Scroll right"
         tabIndex={canScrollRight ? 0 : -1}
       >
-        <span className={styles.chevron} aria-hidden="true">
-          ›
+        <span className={styles.chevron}>
+          <Icon path={mdiChevronRight} size={1.2} />
         </span>
       </button>
     </>
