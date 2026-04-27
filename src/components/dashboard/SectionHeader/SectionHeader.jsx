@@ -32,7 +32,7 @@ export default function SectionHeader({
         <button className={styles.toggleBtn} onClick={handleToggle}>
           <Icon
             path={isOpen ? mdiArrowUpDropCircleOutline : mdiArrowDownDropCircleOutline}
-            size={0.9}
+            size={1.2}
             className={styles.chevron}
           />
         </button>
@@ -40,7 +40,7 @@ export default function SectionHeader({
           <Link href={href} className={styles.link}>
             <h2 className={styles.title}>{title}</h2>
             {icon && hasContent && <Icon path={icon} size={1} className={styles.icon} />}
-            {isOpen && <Icon path={mdiChevronRight} size={1.1} className={styles.arrow} />}
+            {isOpen && <Icon path={mdiChevronRight} size={1.2} className={styles.arrow} />}
           </Link>
         ) : (
           <>
