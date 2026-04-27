@@ -17,6 +17,14 @@
   scrollbar-color: var(--border) transparent;
   scrollbar-gutter: stable;
   align-items: flex-start;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.carousel > * {
+  scroll-snap-align: start;
 }
 
 .carousel::-webkit-scrollbar {

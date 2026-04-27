@@ -5,12 +5,20 @@
 .carousel {
   display: flex;
   gap: 0;
+  margin-bottom: 1rem;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
   scrollbar-gutter: stable;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.carousel > * {
+  scroll-snap-align: start;
 }
 
 .carousel::-webkit-scrollbar {
