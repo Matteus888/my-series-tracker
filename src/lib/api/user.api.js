@@ -1,6 +1,8 @@
 import dbConnect from "@/lib/db/db.connect";
 import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 import { v2 as cloudinary } from "cloudinary";
+import { EpisodeProgress } from "@/models/episodeProgress.model";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -106,4 +108,47 @@ export const deleteUser = async (UserModel, UserListModel, EpisodeProgressModel,
   await EpisodeProgressModel.deleteMany({ userId });
   await UserListModel.deleteMany({ userId });
   await UserModel.findByIdAndDelete(userId);
+};
+
+export const getUserStats = async (UserModel, userId) => {
+  await dbConnect();
+
+  const user = await UserModel.findById(userId).select("trackedSeries").lean();
+  if (!user) throw new Error("User not found.");
+
+  const seriesTracked = user.trackedSeries.length;
+  const favorites = user.trackedSeries.filter((s) => s.isFavorite).length;
+  const completed = user.trackedSeries.filter((s) => s.status === "completed").length;
+  const planToWatch = user.trackedSeries.filter((s) => s.status === "plan_to_watch").length;
+
+  const agg = await EpisodeProgress.aggregate([
+    { $match: { userId: new mongoose.Types.ObjectId(userId), watched: true } },
+    {
+      $lookup: {
+        from: "episodes",
+        localField: "episodeId",
+        foreignField: "_id",
+        as: "episode",
+      },
+    },
+    { $unwind: "$episode" },
+    {
+      $group: {
+        _id: null,
+        episodesWatched: { $sum: 1 },
+        totalMinutes: { $sum: { $ifNull: ["$episode.duration", 0] } },
+      },
+    },
+  ]);
+
+  const { episodesWatched = 0, totalMinutes = 0 } = agg[0] ?? {};
+
+  return {
+    seriesTracked,
+    favorites,
+    completed,
+    planToWatch,
+    episodesWatched,
+    totalMinutes,
+  };
 };
