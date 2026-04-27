@@ -50,7 +50,9 @@ export default function SectionHeader({
         )}
         {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
       </div>
-      {isOpen && children}
+      <div className={`${styles.collapsible} ${isOpen ? styles.open : styles.closed}`} aria-hidden={!isOpen}>
+        <div className={styles.collapsibleInner}>{children}</div>
+      </div>
     </div>
   );
 }
