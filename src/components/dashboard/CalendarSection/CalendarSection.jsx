@@ -3,15 +3,18 @@
 import styles from "./CalendarSection.module.css";
 import { useState } from "react";
 import { useCalendar } from "@/hooks/useCalendar";
+import { useCarouselArrows } from "@/hooks/useCarouselArrows";
 import { formatDateLabel } from "@/lib/utils/date.utils";
 import Image from "next/image";
 import Link from "next/link";
 import SectionHeader from "../SectionHeader/SectionHeader";
 import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
+import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import { mdiCalendarClockOutline } from "@mdi/js";
 
 export default function CalendarSection() {
   const { items, loading, error } = useCalendar();
+  const { scrollerRef, canScrollLeft, canScrollRight, scrollBy } = useCarouselArrows();
 
   // const today = new Date().toISOString().slice(0, 10);
 
@@ -31,36 +34,39 @@ export default function CalendarSection() {
         defaultOpen={true}
         hasContent={items.length > 0}
       >
-        {loading ? (
-          <div className={styles.carousel}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className={`card ${styles.skeletonCard}`}>
-                <div className={styles.skeletonPoster}>
-                  <div className={styles.skeletonPulse} />
+        <div className={styles.carouselWrapper}>
+          {loading ? (
+            <div className={styles.carousel} ref={scrollerRef}>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className={`card ${styles.skeletonCard}`}>
+                  <div className={styles.skeletonPoster}>
+                    <div className={styles.skeletonPulse} />
+                  </div>
+                  <div className={styles.skeletonContent}>
+                    <div className={styles.skeletonDate} />
+                    <div className={styles.skeletonLine} />
+                    <div className={styles.skeletonLine} />
+                    <div className={styles.skeletonLineShort} />
+                  </div>
                 </div>
-                <div className={styles.skeletonContent}>
-                  <div className={styles.skeletonDate} />
-                  <div className={styles.skeletonLine} />
-                  <div className={styles.skeletonLine} />
-                  <div className={styles.skeletonLineShort} />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : isEmpty ? (
-          <SectionEmptyState
-            icon={mdiCalendarClockOutline}
-            message="Track currently airing shows to see upcoming episodes and never miss a premiere or finale."
-            ctaLabel="Find airing shows"
-            ctaHref="/series"
-          />
-        ) : (
-          <div className={styles.carousel}>
-            {visibleItems.map((day) => (
-              <CalendarDayCard key={day.date} day={day} />
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          ) : isEmpty ? (
+            <SectionEmptyState
+              icon={mdiCalendarClockOutline}
+              message="Track currently airing shows to see upcoming episodes and never miss a premiere or finale."
+              ctaLabel="Find airing shows"
+              ctaHref="/series"
+            />
+          ) : (
+            <div className={styles.carousel} ref={scrollerRef}>
+              {visibleItems.map((day) => (
+                <CalendarDayCard key={day.date} day={day} />
+              ))}
+            </div>
+          )}
+          <CarouselArrows canScrollLeft={canScrollLeft} canScrollRight={canScrollRight} onScroll={scrollBy} />
+        </div>
       </SectionHeader>
     </section>
   );

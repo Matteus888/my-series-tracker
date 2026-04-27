@@ -1,0 +1,44 @@
+.arrow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* on ne couvre pas toute la hauteur visuellement, juste une zone cliquable centrée */
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--foreground);
+  border: none;
+  cursor: pointer;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.arrow.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.arrow:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.left {
+  left: 0;
+}
+
+.right {
+  right: 0;
+}
+
+.chevron {
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 300;
+  user-select: none;
+}
