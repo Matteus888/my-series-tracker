@@ -45,6 +45,7 @@ export default function CalendarSection() {
                   <div className={styles.skeletonContent}>
                     <div className={styles.skeletonDate} />
                     <div className={styles.skeletonLine} />
+                    <div className={styles.skeletonLineShort} />
                     <div className={styles.skeletonLine} />
                     <div className={styles.skeletonLineShort} />
                   </div>
