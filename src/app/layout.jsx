@@ -26,9 +26,6 @@ export const metadata = {
     template: `%s - ${APP_NAME}`,
   },
   description: "Follow your favorites shows",
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 export default function RootLayout({ children }) {

@@ -1,0 +1,35 @@
+@keyframes drawCheck {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animated {
+  transition: transform 0.2s ease;
+}
+
+.animated:hover {
+  transform: scale(1.08);
+}
+
+.animated .check {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: drawCheck 0.8s ease-out 0.1s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated {
+    transition: none;
+  }
+  .animated:hover {
+    transform: none;
+  }
+  .animated .check {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}
