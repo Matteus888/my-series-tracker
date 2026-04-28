@@ -25,7 +25,7 @@
 }
 
 .email {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--foreground);
   opacity: 0.5;
 }
@@ -41,9 +41,9 @@
   padding: 0.6rem 0.75rem;
   background: none;
   border: none;
-  opacity: 0.8;
+  opacity: 0.85;
   color: var(--foreground);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   cursor: pointer;
   width: 100%;
   text-align: left;
@@ -54,6 +54,21 @@
   opacity: 1;
 }
 
+.menuItemText {
+  display: inline-block;
+  transition: transform 0.15s ease;
+  transform-origin: center left;
+  will-change: transform;
+}
+
+.menuItem:hover .menuItemText {
+  transform: scale(1.08);
+}
+
+.menuItem:active .menuItemText {
+  transform: scale(0.95);
+}
+
 .confirmSignOut {
   padding: 0.6rem 0.75rem;
   display: flex;
@@ -62,7 +77,7 @@
 }
 
 .confirmText {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--foreground);
   margin: 0;
   text-align: center;
@@ -106,4 +121,14 @@
 .confirmNo:hover {
   background-color: var(--red);
   color: var(--foreground);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menuItemText {
+    transition: none;
+  }
+  .menuItem:hover .menuItemText,
+  .menuItem:active .menuItemText {
+    transform: none;
+  }
 }

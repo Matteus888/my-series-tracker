@@ -40,13 +40,13 @@ export default function ProfileMenuDropdown({ session, popoverRef, onClose, onLo
           <div className={styles.divider} />
           <button className={styles.menuItem} onClick={handleSettings}>
             <Icon path={mdiCog} size={0.7} />
-            <span>Settings</span>
+            <span className={styles.menuItemText}>Settings</span>
           </button>
           <div className={styles.divider} />
           {!showConfirmSignOut ? (
             <button className={styles.menuItem} onClick={() => setShowConfirmSignOut(true)}>
               <Icon path={mdiLogout} size={0.7} />
-              <span>Sign out</span>
+              <span className={styles.menuItemText}>Sign out</span>
             </button>
           ) : (
             <div className={styles.confirmSignOut}>
@@ -66,12 +66,12 @@ export default function ProfileMenuDropdown({ session, popoverRef, onClose, onLo
         <>
           <button className={styles.menuItem} onClick={onLoginClick}>
             <Icon path={mdiLogin} size={0.7} />
-            <span>Log in</span>
+            <span className={styles.menuItemText}>Log in</span>
           </button>
           <div className={styles.divider} />
           <button className={styles.menuItem} onClick={handleSignUp}>
             <Icon path={mdiAccountPlus} size={0.7} />
-            <span>Sign up</span>
+            <span className={styles.menuItemText}>Sign up</span>
           </button>
         </>
       )}

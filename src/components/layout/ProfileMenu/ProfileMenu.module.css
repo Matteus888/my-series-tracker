@@ -9,17 +9,26 @@
   height: 34px;
   border-radius: 50%;
   background-color: var(--background-secondary);
-  outline: 3px solid rgba(var(--foreground-rgb), 0.7);
+  outline: 2px solid rgba(var(--foreground-rgb), 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: var(--foreground);
   transition: all 0.15s ease;
+  transform-origin: center;
+  will-change: transform;
   overflow: hidden;
 }
 
-.avatar:hover,
+.avatar:hover {
+  transform: scale(1.08);
+}
+
+.avatar:active {
+  transform: scale(0.95);
+}
+
 .avatarActive {
   outline-color: var(--foreground);
 }
@@ -28,4 +37,14 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar {
+    transition: none;
+  }
+  .avatar:hover,
+  .avatar:active {
+    transform: none;
+  }
 }

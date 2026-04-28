@@ -65,6 +65,15 @@ a {
   text-decoration: none;
 }
 
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
 /* ===== ALERTES ===== */
 .alert {
   padding: 0.75rem 1.25rem;

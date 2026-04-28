@@ -4,7 +4,6 @@ import styles from "./ProfileMenu.module.css";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { useRef } from "react";
 import Icon from "@mdi/react";
 import { mdiAccount } from "@mdi/js";
 import { usePopover } from "@/hooks/usePopover";
@@ -16,9 +15,6 @@ export default function ProfileMenu() {
   const menuPopover = usePopover();
   const loginPopover = usePopover();
 
-  const hoverTimeout = useRef(null);
-  const closeTimeout = useRef(null);
-
   const pathname = usePathname();
   const isSettingsPage = pathname.startsWith("/settings");
 
@@ -27,22 +23,8 @@ export default function ProfileMenu() {
     loginPopover.open();
   };
 
-  const handleMouseEnter = () => {
-    clearTimeout(closeTimeout.current);
-    hoverTimeout.current = setTimeout(() => {
-      menuPopover.open();
-    }, 500);
-  };
-
-  const handleMouseLeave = () => {
-    clearTimeout(hoverTimeout.current);
-    closeTimeout.current = setTimeout(() => {
-      menuPopover.close();
-    }, 2000);
-  };
-
   return (
-    <div className={styles.wrapper} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div className={styles.wrapper}>
       {/* Icône profil */}
       <div
         className={`${styles.avatar} ${menuPopover.isOpen || loginPopover.isOpen || isSettingsPage ? styles.avatarActive : ""}`}
