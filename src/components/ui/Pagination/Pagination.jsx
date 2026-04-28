@@ -61,7 +61,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
         aria-disabled={currentPage === 1}
       >
         <span className={styles.arrowIcon}>←</span>
-        <span>Previous page</span>
+        <span className={styles.linkText}>Previous page</span>
       </Link>
       <div className={styles.pagesContainer}>
         {pageNumbers.map((pageNumber, index) =>
@@ -79,7 +79,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
                 onPageChange(pageNumber);
               }}
             >
-              {pageNumber}
+              <span className={styles.linkText}>{pageNumber}</span>
             </Link>
           ),
         )}
@@ -90,7 +90,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
         onClick={handleNext}
         aria-disabled={currentPage === totalPages}
       >
-        <span>Next page</span>
+        <span className={styles.linkText}>Next page</span>
         <span className={styles.arrowIcon}>→</span>
       </Link>
     </div>

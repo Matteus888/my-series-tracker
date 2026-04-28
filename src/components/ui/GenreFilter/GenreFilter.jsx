@@ -16,7 +16,7 @@ export default function GenreFilter({ selectedGenre, onGenreChange, showAll = tr
       <ul className={styles.list}>
         {showAll && (
           <li className={`${styles.item} ${!selectedGenre ? styles.active : ""}`} onClick={() => onGenreChange(null)}>
-            All
+            <span className={styles.itemText}>All</span>
           </li>
         )}
         {genres.map((genre) => (
@@ -25,7 +25,7 @@ export default function GenreFilter({ selectedGenre, onGenreChange, showAll = tr
             className={`${styles.item} ${selectedGenre === genre.id ? styles.active : ""}`}
             onClick={() => onGenreChange(genre.id)}
           >
-            {genre.name}
+            <span className={styles.itemText}>{genre.name}</span>
           </li>
         ))}
       </ul>

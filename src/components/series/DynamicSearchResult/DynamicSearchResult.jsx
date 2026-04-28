@@ -14,8 +14,8 @@ export default function DynamicSearchResult({ serie, onSelect, isSelected }) {
           <Image
             src={serie.poster_path ? `https://image.tmdb.org/t/p/w92${serie.poster_path}` : "/placeholder.webp"}
             alt={serie.name}
-            width={40}
-            height={60}
+            fill
+            sizes="40px"
             className={styles.image}
           />
         </div>

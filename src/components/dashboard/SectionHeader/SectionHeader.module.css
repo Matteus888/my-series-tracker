@@ -36,7 +36,6 @@
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  transition: color 0.3s ease;
 }
 
 .chevron {
@@ -45,19 +44,26 @@
 
 .arrow {
   padding: 0;
+  color: var(--foreground);
+  opacity: 0.6;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
 }
 
-.arrow:hover,
-.chevron:hover {
-  color: white;
+.link:hover .arrow {
+  opacity: 1;
+  transform: translateX(3px);
 }
 
-.arrow,
+.link:active .arrow {
+  transform: translateX(0);
+}
+
 .icon {
   color: var(--foreground);
 }
 
-.arrow:active,
 .toggleBtn:active {
   transform: scale(0.9);
 }
@@ -68,7 +74,6 @@
   margin-left: 0.5rem;
 }
 
-/* --- Animation ouverture/fermeture --- */
 .collapsible {
   display: grid;
   transition:
@@ -95,5 +100,12 @@
 @media (prefers-reduced-motion: reduce) {
   .collapsible {
     transition: none;
+  }
+  .arrow {
+    transition: none;
+  }
+  .link:hover .arrow,
+  .link:active .arrow {
+    transform: none;
   }
 }

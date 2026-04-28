@@ -16,7 +16,6 @@
 .item {
   font-size: 1.1rem;
   letter-spacing: 0.02em;
-  font-weight: 600;
   padding: 0 0.75rem;
   color: var(--foreground);
   cursor: pointer;
@@ -27,4 +26,29 @@
 .item:hover,
 .item.active {
   opacity: 1;
+}
+
+.itemText {
+  display: inline-block;
+  transition: transform 0.15s ease;
+  transform-origin: center left;
+  will-change: transform;
+}
+
+.item:hover .itemText {
+  transform: scale(1.08);
+}
+
+.item:active .itemText {
+  transform: scale(0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .itemText {
+    transition: none;
+  }
+  .item:hover .itemText,
+  .item:active .itemText {
+    transform: none;
+  }
 }

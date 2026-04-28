@@ -24,7 +24,7 @@ export default function SortSidebar({ sortBy, selectedGenre, onSortChange, onGen
               onGenreChange(null);
             }}
           >
-            {option.label}
+            <span className={styles.itemText}>{option.label}</span>
           </li>
         ))}
       </ul>

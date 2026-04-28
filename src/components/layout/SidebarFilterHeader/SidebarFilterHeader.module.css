@@ -23,7 +23,16 @@
   cursor: pointer;
   user-select: none;
   color: var(--blue);
-  transition: transform 0.15s ease;
+  display: inline-block;
+  transform-origin: center;
+  will-change: transform;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.navArrow:hover {
+  transform: scale(1.2);
 }
 
 .navArrow:active {
@@ -54,4 +63,14 @@
 
 .bold {
   font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navArrow {
+    transition: none;
+  }
+  .navArrow:hover,
+  .navArrow:active {
+    transform: none;
+  }
 }

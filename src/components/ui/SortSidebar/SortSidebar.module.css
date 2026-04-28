@@ -17,7 +17,6 @@
 .item {
   font-size: 1.1rem;
   letter-spacing: 0.02em;
-  font-weight: 600;
   padding: 0 0.75rem;
   color: var(--foreground);
   cursor: pointer;
@@ -30,6 +29,21 @@
   opacity: 1;
 }
 
+.itemText {
+  display: inline-block;
+  transition: transform 0.15s ease;
+  transform-origin: center left;
+  will-change: transform;
+}
+
+.item:hover .itemText {
+  transform: scale(1.08);
+}
+
+.item:active .itemText {
+  transform: scale(0.95);
+}
+
 .genreToggle {
   display: flex;
   justify-content: space-between;
@@ -40,7 +54,6 @@
   border-top: 1px solid var(--border);
   color: var(--foreground);
   font-size: 0.7rem;
-  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   opacity: 0.5;
@@ -52,4 +65,14 @@
 
 .genreToggle:hover {
   opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .itemText {
+    transition: none;
+  }
+  .item:hover .itemText,
+  .item:active .itemText {
+    transform: none;
+  }
 }
