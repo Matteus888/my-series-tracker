@@ -10,53 +10,63 @@
   height: 30px;
   padding: 0 0.75rem 0 3.3rem;
   font-size: 0.8rem;
-  background-color: var(--foreground);
+  background-color: var(--background-secondary);
   border: 1px solid var(--border);
   border-radius: 0.25rem;
-  transition: all 0.3s ease;
-  color: var(--background-primary);
+  color: var(--foreground);
   line-height: 30px;
   display: block;
   appearance: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .searchInput::placeholder {
-  color: var(--background-secondary);
+  color: var(--foreground);
+  opacity: 0.4;
   line-height: 30px;
   vertical-align: middle;
 }
 
 .searchInput:hover {
-  background-color: white;
-  cursor: pointer;
+  background-color: var(--background-third);
+  cursor: text;
 }
 
 .searchInput:focus {
-  background-color: white;
-  color: var(--background-primary);
-  box-shadow: none;
+  background-color: var(--background-third);
+  border-color: var(--foreground);
   outline: none;
 }
 
 .searchInput:not(:focus):not(:placeholder-shown) {
-  color: var(--background-secondary);
-  background-color: white;
+  background-color: var(--background-third);
 }
 
 .searchInputOpen {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  border-bottom-color: var(--border);
 }
 
 .icon {
   position: absolute;
   cursor: pointer;
   user-select: none;
-  color: var(--background-primary);
+  color: var(--foreground);
+  opacity: 0.6;
+  transition:
+    opacity 0.15s ease,
+    transform 0.1s ease;
+}
+
+.icon:hover {
+  opacity: 1;
 }
 
 .icon:active {
-  transform: scale(0.95);
+  transform: scale(0.85);
 }
 
 .glass {
@@ -78,23 +88,28 @@
   width: 1px;
   background-color: var(--border);
   pointer-events: none;
+  transition: background-color 0.2s ease;
+}
+
+.searchInput:focus ~ .separator {
+  background-color: var(--foreground);
 }
 
 .resultsContainer {
   position: absolute;
   padding: 0;
   z-index: var(--z-searchresults);
-  width: calc(100% - 2px);
+  width: 100%;
   max-height: 660px;
   top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   overflow: hidden;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-left-radius: 0.375rem;
-  border-bottom-right-radius: 0.375rem;
-  background-color: white;
+  border: 1px solid var(--foreground);
+  border-top: none;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+  background-color: var(--background-secondary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .resultsList {
@@ -102,26 +117,32 @@
   padding: 0;
   border: none;
   width: 100%;
-  border-bottom-left-radius: 0.375rem;
-  border-bottom-right-radius: 0.375rem;
 }
 
 .resultsFooter {
   font-size: 0.7rem;
   text-align: center;
-  padding: 0.25rem;
-  border-bottom-left-radius: 0.375rem;
-  border-bottom-right-radius: 0.375rem;
-  color: var(--background-primary);
+  padding: 0.4rem;
+  color: var(--foreground);
+  opacity: 0.5;
+  border-top: 1px solid var(--foreground);
+  background-color: var(--background-secondary);
 }
 
 .noResults {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-align: center;
-  padding: 0.5rem;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-left-radius: 0.375rem;
-  border-bottom-right-radius: 0.375rem;
-  color: var(--background-primary);
+  padding: 1rem;
+  color: var(--foreground);
+  opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .searchInput,
+  .icon {
+    transition: none;
+  }
+  .icon:active {
+    transform: none;
+  }
 }
