@@ -7,24 +7,18 @@ import { mdiCheck, mdiCheckAll, mdiCancel } from "@mdi/js";
 export default function ConfirmPopover({ serieName, isTracked, onConfirm, popoverRef }) {
   return (
     <div className={styles.confirmPopover} ref={popoverRef}>
-      <p>{isTracked ? `Remove all episodes of "${serieName}" from watched?` : `Add "${serieName}" to watched?`}</p>
+      <p>
+        {isTracked ? `Remove all episodes of "${serieName}" from watched?` : `Add "${serieName}" to watched series?`}
+      </p>
       {!isTracked ? (
         <div className={styles.confirmButtons}>
-          <span
-            className={`${styles.validate} ${styles.validateCheck}`}
-            onClick={() => onConfirm("first")}
-            title="Mark first episode only"
-          >
+          <span className={styles.validate} onClick={() => onConfirm("first")} title="Mark first episode only">
             <Icon path={mdiCheck} size={0.8} />
           </span>
-          <span
-            className={`${styles.validate} ${styles.validateCheck}`}
-            onClick={() => onConfirm("all")}
-            title="Mark all episodes"
-          >
+          <span className={styles.validate} onClick={() => onConfirm("all")} title="Mark all episodes">
             <Icon path={mdiCheckAll} size={0.8} />
           </span>
-          <span className={`${styles.cancel} ${styles.cancelCheck}`} onClick={() => onConfirm(false)}>
+          <span className={styles.cancel} onClick={() => onConfirm(false)}>
             <Icon path={mdiCancel} size={0.8} />
           </span>
         </div>

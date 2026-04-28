@@ -58,7 +58,7 @@ export default function RatingsPopover({ serie, episode, currentRating, onRate, 
           );
         })}
       </div>
-      {userRating && <p className={styles.userRatingValue}>{userRating}/10</p>}
+      <div className={styles.note}>{userRating && <p className={styles.userRatingValue}>{userRating}/10</p>}</div>
     </div>
   );
 }

@@ -17,7 +17,7 @@
 }
 
 .title {
-  font-size: 0.8rem;
+  font-size: 1rem;
   margin: 0;
   padding-bottom: 0.2rem;
 }
@@ -35,20 +35,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 28px;
   padding: 0 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   cursor: pointer;
   color: var(--foreground);
-  /* background-color: var(--background-primary); */
-  /* border: 1px solid var(--border); */
   opacity: 0.7;
-  transition: all 0.15s ease;
-  min-height: 28px;
+  transition: opacity 0.15s ease;
 }
 
-.listItem:hover {
-  /* background-color: var(--foreground); */
-  /* color: var(--background-primary); */
+.listItem:hover,
+.listItem.active {
   opacity: 1;
 }
 
@@ -56,15 +53,40 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  transition: transform 0.15s ease;
+  transform-origin: center left;
+  will-change: transform;
+}
+
+.listItem:hover .listName {
+  transform: scale(1.08);
+}
+
+.listItem:active .listName {
+  transform: scale(0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .listName {
+    transition: none;
+  }
+  .listItem:hover .listName,
+  .listItem:active .listName {
+    transform: none;
+  }
 }
 
 .defaultBadge {
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   opacity: 0.5;
   font-style: italic;
 }
 
-.listActions {
+.listCheck {
+  transform: translateX(3px);
+}
+
+/* .listActions {
   display: flex;
   align-items: center;
 }
@@ -81,7 +103,7 @@
 .deleteList:hover {
   background-color: var(--red);
   color: var(--foreground);
-}
+} */
 
 .createForm {
   display: flex;
@@ -92,8 +114,8 @@
 .input {
   width: 100%;
   flex: 1;
-  font-size: 0.75rem;
-  padding: 0 0.5rem;
+  font-size: 0.85rem;
+  padding: 0 0.5rem 0.1rem;
   background-color: var(--background-primary);
   border: 1px solid var(--border);
   color: var(--foreground);
@@ -125,4 +147,8 @@
   color: var(--border);
   border-color: var(--border);
   cursor: not-allowed;
+}
+
+.createButton:active svg {
+  transform: scale(0.7);
 }

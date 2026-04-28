@@ -31,10 +31,10 @@ export default function WatchlistPopover({ serie, onClose, popoverRef }) {
     }
   };
 
-  const handleDeleteList = async (e, listId) => {
-    e.stopPropagation();
-    await deleteList(listId);
-  };
+  // const handleDeleteList = async (e, listId) => {
+  //   e.stopPropagation();
+  //   await deleteList(listId);
+  // };
 
   const isSerieInList = (list) => list.series.some((s) => s.tmdbId === serie.id);
 
@@ -46,11 +46,11 @@ export default function WatchlistPopover({ serie, onClose, popoverRef }) {
       <ul className={styles.lists}>
         {sortedLists.map((list) => {
           const inList = isSerieInList(list);
-          const isDeletable = !list.isDefault && list.series.length === 0;
+          // const isDeletable = !list.isDefault && list.series.length === 0;
           return (
             <li
               key={list._id}
-              className={`${styles.listItem} ${inList ? "active" : ""}`}
+              className={`${styles.listItem} ${inList ? "active" : ""} ${inList ? styles.active : ""}`}
               onClick={() => handleToggleList(list)}
               title={inList ? "Remove from list" : "Add to list"}
             >
@@ -58,14 +58,16 @@ export default function WatchlistPopover({ serie, onClose, popoverRef }) {
                 {list.name}
                 {list.isDefault && <span className={styles.defaultBadge}>default</span>}
               </span>
-              <div className={styles.listActions} title="Delete list">
-                <Icon path={mdiCheck} size={0.7} style={{ opacity: inList ? 1 : 0 }} />
+              <span className={styles.listCheck}>
+                <Icon path={mdiCheck} size={0.8} style={{ opacity: inList ? 1 : 0 }} />
+              </span>
+              {/* <div className={styles.listActions}>
                 {isDeletable && (
                   <span className={styles.deleteList} onClick={(e) => handleDeleteList(e, list._id)}>
                     <Icon path={mdiClose} size={0.6} />
                   </span>
                 )}
-              </div>
+              </div> */}
             </li>
           );
         })}
