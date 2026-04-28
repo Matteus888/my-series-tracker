@@ -1,4 +1,5 @@
 import styles from "./Footer.module.css";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -8,16 +9,16 @@ export default function Footer() {
         <span>© {new Date().getFullYear()} MySeriesTracker</span>
 
         {/* Liens droite */}
-        <div>
-          <a href="/about" className={styles.link}>
-            About
-          </a>
-          <a href="/contact" className={styles.link}>
-            Contact
-          </a>
-          <a href="/privacy" className={styles.link}>
-            Privacy
-          </a>
+        <div className={styles.links}>
+          <Link href="/about" className={styles.link}>
+            <span className={styles.linkText}>About</span>
+          </Link>
+          <Link href="/contact" className={styles.link}>
+            <span className={styles.linkText}>Contact</span>
+          </Link>
+          <Link href="/privacy" className={styles.link}>
+            <span className={styles.linkText}>Privacy</span>
+          </Link>
         </div>
       </div>
     </footer>

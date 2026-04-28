@@ -61,7 +61,9 @@ export default function RecentlyWatchedSection() {
               ))}
             </div>
           )}
-          <CarouselArrows canScrollLeft={canScrollLeft} canScrollRight={canScrollRight} onScroll={scrollBy} />
+          {!isEmpty && (
+            <CarouselArrows canScrollLeft={canScrollLeft} canScrollRight={canScrollRight} onScroll={scrollBy} />
+          )}
         </div>
       </SectionHeader>
     </section>

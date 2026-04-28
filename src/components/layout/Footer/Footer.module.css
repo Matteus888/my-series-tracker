@@ -1,6 +1,5 @@
 .footer {
   background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), rgba(var(--card-bg-rgb), 0.6);
-  /* background-color: var(--background-secondary); */
   padding: 0.5rem 0.85rem;
   height: 40px;
   font-size: 0.9rem;
@@ -12,7 +11,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem; /* Espacement vertical sur mobile */
+  gap: 0.5rem;
 }
 
 @media (min-width: 768px) {
@@ -22,11 +21,49 @@
   }
 }
 
+.links {
+  display: flex;
+  align-items: center;
+}
+
 .link {
   text-decoration: none;
-  margin: 0 0.75rem; /* Espacement horizontal */
+  color: var(--foreground);
+  margin: 0 0.75rem;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
 }
 
 .link:last-child {
   margin-right: 0;
+}
+
+.link:hover {
+  opacity: 1;
+}
+
+.linkText {
+  display: inline-block;
+  transition: transform 0.15s ease;
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+.link:hover .linkText {
+  transform: scale(1.08);
+}
+
+.link:active .linkText {
+  transform: scale(0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link,
+  .linkText {
+    transition: none;
+  }
+  .link:hover .linkText,
+  .link:active .linkText {
+    transform: none;
+  }
 }

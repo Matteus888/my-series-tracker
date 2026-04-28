@@ -14,8 +14,8 @@ export default function SectionEmptyState({ icon, message, ctaLabel, ctaHref }) 
       <p className={styles.message}>{message}</p>
       {ctaLabel && ctaHref && (
         <Link href={ctaHref} className={styles.cta}>
-          <span>{ctaLabel}</span>
-          <Icon path={mdiChevronRight} size={0.9} />
+          <span className={styles.ctaText}>{ctaLabel}</span>
+          <Icon path={mdiChevronRight} size={1.2} className={styles.ctaChevron} />
         </Link>
       )}
     </div>

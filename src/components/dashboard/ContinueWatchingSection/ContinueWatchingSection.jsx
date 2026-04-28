@@ -61,7 +61,9 @@ export default function ContinueWatchingSection() {
               ))}
             </div>
           )}
-          <CarouselArrows canScrollLeft={canScrollLeft} canScrollRight={canScrollRight} onScroll={scrollBy} />
+          {!isEmpty && (
+            <CarouselArrows canScrollLeft={canScrollLeft} canScrollRight={canScrollRight} onScroll={scrollBy} />
+          )}
         </div>
       </SectionHeader>
     </section>
