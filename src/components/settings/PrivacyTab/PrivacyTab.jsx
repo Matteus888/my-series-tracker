@@ -1,17 +1,21 @@
 "use client";
 
-import styles from "../shared/settings.module.css";
-import privacyStyles from "./PrivacyTab.module.css";
+import styles from "./PrivacyTab.module.css";
+import sharedStyles from "../shared/settings.module.css";
 import Icon from "@mdi/react";
 import { mdiContentSaveMoveOutline } from "@mdi/js";
 import { useState, useEffect } from "react";
 import { useToast } from "@/context/ToastContext";
 
+const TOGGLES = [
+  { key: "isPublic", label: "Public profile", description: "Allow other users to see your profile" },
+  { key: "publicLists", label: "Public lists", description: "Allow other users to see your lists" },
+  { key: "publicActivity", label: "Public activity", description: "Allow other users to see your recent activity" },
+];
+
 export default function PrivacyTab({ session }) {
   const { showToast } = useToast();
-  const [isPublic, setIsPublic] = useState(true);
-  const [publicLists, setPublicLists] = useState(true);
-  const [publicActivity, setPublicActivity] = useState(true);
+  const [values, setValues] = useState({ isPublic: true, publicLists: true, publicActivity: true });
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -19,13 +23,19 @@ export default function PrivacyTab({ session }) {
       const response = await fetch("/api/user");
       const data = await response.json();
       if (data.user) {
-        setIsPublic(data.user.isPublic ?? true);
-        setPublicLists(data.user.publicLists ?? true);
-        setPublicActivity(data.user.publicActivity ?? true);
+        setValues({
+          isPublic: data.user.isPublic ?? true,
+          publicLists: data.user.publicLists ?? true,
+          publicActivity: data.user.publicActivity ?? true,
+        });
       }
     };
     fetchUser();
   }, []);
+
+  const handleToggle = (key) => (e) => {
+    setValues((prev) => ({ ...prev, [key]: e.target.checked }));
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -34,7 +44,7 @@ export default function PrivacyTab({ session }) {
       const response = await fetch("/api/user/privacy", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isPublic, publicLists, publicActivity }),
+        body: JSON.stringify(values),
       });
       if (!response.ok) {
         const data = await response.json();
@@ -49,44 +59,25 @@ export default function PrivacyTab({ session }) {
   };
 
   return (
-    <div className={styles.section}>
-      <p className={styles.sectionTitle}>Privacy settings</p>
-      <form onSubmit={handleSave} className={styles.section}>
-        <div className={privacyStyles.toggleField}>
-          <div className={privacyStyles.toggleInfo}>
-            <span className={styles.label}>Public profile</span>
-            <p className={styles.hint}>Allow other users to see your profile</p>
-          </div>
-          <label className={privacyStyles.toggle}>
-            <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} />
-            <span className={privacyStyles.slider} />
-          </label>
-        </div>
-        <div className={styles.divider} />
-        <div className={privacyStyles.toggleField}>
-          <div className={privacyStyles.toggleInfo}>
-            <span className={styles.label}>Public lists</span>
-            <p className={styles.hint}>Allow other users to see your lists</p>
-          </div>
-          <label className={privacyStyles.toggle}>
-            <input type="checkbox" checked={publicLists} onChange={(e) => setPublicLists(e.target.checked)} />
-            <span className={privacyStyles.slider} />
-          </label>
-        </div>
-        <div className={styles.divider} />
-
-        <div className={privacyStyles.toggleField}>
-          <div className={privacyStyles.toggleInfo}>
-            <span className={styles.label}>Public activity</span>
-            <p className={styles.hint}>Allow other users to see your recent activity</p>
-          </div>
-          <label className={privacyStyles.toggle}>
-            <input type="checkbox" checked={publicActivity} onChange={(e) => setPublicActivity(e.target.checked)} />
-            <span className={privacyStyles.slider} />
-          </label>
+    <div className={styles.card}>
+      <p className={sharedStyles.sectionTitle}>Privacy settings</p>
+      <form onSubmit={handleSave} className={styles.form}>
+        <div className={styles.grid}>
+          {TOGGLES.map(({ key, label, description }) => (
+            <div key={key} className={`${styles.miniCard} ${values[key] ? styles.miniCardActive : ""}`}>
+              <div className={styles.miniCardText}>
+                <span className={styles.miniCardTitle}>{label}</span>
+                <p className={styles.miniCardDescription}>{description}</p>
+              </div>
+              <label className={styles.toggle}>
+                <input type="checkbox" checked={values[key]} onChange={handleToggle(key)} />
+                <span className={styles.slider} />
+              </label>
+            </div>
+          ))}
         </div>
 
-        <button type="submit" className={styles.saveButton} title="Save changes" disabled={isLoading}>
+        <button type="submit" className={sharedStyles.saveButton} title="Save changes" disabled={isLoading}>
           <Icon path={mdiContentSaveMoveOutline} size={1} />
         </button>
       </form>

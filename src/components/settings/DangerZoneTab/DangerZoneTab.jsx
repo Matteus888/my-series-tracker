@@ -1,7 +1,7 @@
 "use client";
 
-import styles from "../shared/settings.module.css";
-import dangerStyles from "./DangerZoneTab.module.css";
+import styles from "./DangerZoneTab.module.css";
+import sharedStyles from "../shared/settings.module.css";
 import Icon from "@mdi/react";
 import { mdiDeleteForeverOutline, mdiUpload } from "@mdi/js";
 import { useState } from "react";
@@ -46,53 +46,50 @@ export default function DangerZoneTab({ session }) {
   };
 
   return (
-    <div className={styles.section}>
-      <p className={styles.sectionTitle}>Danger zone</p>
-      <div className={dangerStyles.dangerBox}>
-        <p className={dangerStyles.dangerTitle}>Delete account</p>
-        <p className={dangerStyles.dangerText}>
+    <div className={styles.card}>
+      <div className={styles.header}>
+        <p className={styles.title}>Delete account</p>
+        <p className={styles.description}>
           This action is irreversible. All your data will be permanently deleted — tracked series, lists, episode
           progress, and ratings.
         </p>
-        <form onSubmit={handleDelete} className={styles.section}>
-          <div className={styles.field}>
-            <label className={styles.label}>
-              Type your username <strong>{session?.user?.name}</strong> to confirm
-            </label>
-            <input
-              type="text"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              className={`${styles.input} ${dangerStyles.input}`}
-              placeholder={session?.user?.name}
-              required
-            />
-          </div>
-          {!showConfirm ? (
-            <button
-              type="submit"
-              className={dangerStyles.deleteButton}
-              disabled={isLoading || confirm !== session?.user?.name}
-            >
-              <Icon path={mdiDeleteForeverOutline} size={0.7} />
-              {isLoading ? "Deleting..." : "Delete my account"}
-            </button>
-          ) : (
-            <div className={dangerStyles.confirmBox}>
-              <p className={dangerStyles.confirmText}>Are you absolutely sure? This cannot be undone.</p>
-              <div className={dangerStyles.confirmActions}>
-                <button type="button" className={dangerStyles.confirmYes}>
-                  <Icon path={mdiDeleteForeverOutline} size={0.7} />
-                  {isLoading ? "Deleting..." : "Yes, delete my account"}
-                </button>
-                <button className={dangerStyles.confirmNo} onClick={() => setShowConfirm(false)}>
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-        </form>
       </div>
+
+      <form onSubmit={handleDelete} className={styles.form}>
+        <div className={sharedStyles.field}>
+          <label className={sharedStyles.label}>
+            Type your username <strong>{session?.user?.name}</strong> to confirm
+          </label>
+          <input
+            type="text"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            className={`${sharedStyles.input} ${styles.input}`}
+            placeholder={session?.user?.name}
+            required
+          />
+        </div>
+
+        {!showConfirm ? (
+          <button type="submit" className={styles.deleteButton} disabled={isLoading || confirm !== session?.user?.name}>
+            <Icon path={mdiDeleteForeverOutline} size={0.7} />
+            {isLoading ? "Deleting..." : "Delete my account"}
+          </button>
+        ) : (
+          <div className={styles.confirmBox}>
+            <p className={styles.confirmText}>Are you absolutely sure? This cannot be undone.</p>
+            <div className={styles.confirmActions}>
+              <button type="submit" className={styles.confirmYes} disabled={isLoading}>
+                <Icon path={mdiDeleteForeverOutline} size={0.7} />
+                {isLoading ? "Deleting..." : "Yes, delete my account"}
+              </button>
+              <button type="button" className={styles.confirmNo} onClick={() => setShowConfirm(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </form>
     </div>
   );
 }

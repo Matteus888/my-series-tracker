@@ -1,6 +1,7 @@
 "use client";
 
-import styles from "../shared/settings.module.css";
+import styles from "./ProfileTab.module.css";
+import sharedStyles from "../shared/settings.module.css";
 import Icon from "@mdi/react";
 import { mdiContentSaveMoveOutline } from "@mdi/js";
 import { useState, useEffect } from "react";
@@ -53,62 +54,66 @@ export default function ProfileTab({ session }) {
   };
 
   return (
-    <div className={styles.section}>
-      <p className={styles.sectionTitle}>Profile information</p>
-      <form onSubmit={handleSave} className={styles.section}>
-        <div className={styles.field}>
-          <label className={styles.label}>Firstname</label>
-          <input
-            type="text"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
-            className={styles.input}
-            maxLength={50}
-            placeholder="Your firstname"
-          />
+    <div className={styles.card}>
+      <p className={sharedStyles.sectionTitle}>Profile information</p>
+      <form onSubmit={handleSave} className={styles.form}>
+        <div className={styles.grid}>
+          <div className={sharedStyles.field}>
+            <label className={sharedStyles.label}>Firstname</label>
+            <input
+              type="text"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
+              className={sharedStyles.input}
+              maxLength={50}
+              placeholder="Your firstname"
+            />
+          </div>
+          <div className={sharedStyles.field}>
+            <label className={sharedStyles.label}>Lastname</label>
+            <input
+              type="text"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+              className={sharedStyles.input}
+              maxLength={50}
+              placeholder="Your lastname"
+            />
+          </div>
+          <div className={sharedStyles.field}>
+            <label className={sharedStyles.label}>Birth date</label>
+            <input
+              type="date"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+              className={sharedStyles.input}
+            />
+          </div>
+          <div className={sharedStyles.field}>
+            <label className={sharedStyles.label}>Gender</label>
+            <select value={gender} onChange={(e) => setGender(e.target.value)} className={sharedStyles.input}>
+              <option value="prefer-not-to-say">Prefer not to say</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
         </div>
-        <div className={styles.field}>
-          <label className={styles.label}>Lastname</label>
-          <input
-            type="text"
-            value={lastname}
-            onChange={(e) => setLastname(e.target.value)}
-            className={styles.input}
-            maxLength={50}
-            placeholder="Your lastname"
-          />
-        </div>
-        <div className={styles.field}>
-          <label className={styles.label}>Birth date</label>
-          <input
-            type="date"
-            value={birthDate}
-            onChange={(e) => setBirthDate(e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.field}>
-          <label className={styles.label}>Gender</label>
-          <select value={gender} onChange={(e) => setGender(e.target.value)} className={styles.input}>
-            <option value="prefer-not-to-say">Prefer not to say</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-        <div className={styles.field}>
-          <label className={styles.label}>Bio</label>
+
+        <div className={sharedStyles.field}>
+          <label className={sharedStyles.label}>Bio</label>
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
-            className={styles.input}
+            className={sharedStyles.input}
             maxLength={200}
             rows={3}
             placeholder="Tell us about yourself..."
           />
-          <p className={styles.hint}>{bio.length}/200 characters</p>
+          <p className={sharedStyles.hint}>{bio.length}/200 characters</p>
         </div>
-        <button type="submit" className={styles.saveButton} title="Save changes" disabled={isLoading}>
+
+        <button type="submit" className={sharedStyles.saveButton} title="Save changes" disabled={isLoading}>
           <Icon path={mdiContentSaveMoveOutline} size={1} />
         </button>
       </form>
