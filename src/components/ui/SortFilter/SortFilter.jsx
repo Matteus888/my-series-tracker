@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./SortSidebar.module.css";
+import styles from "./SortFilter.module.css";
 import GenreFilter from "../GenreFilter/GenreFilter";
 
 const SORT_OPTIONS = [
@@ -11,7 +11,7 @@ const SORT_OPTIONS = [
   { label: "Upcoming", value: "upcoming" },
 ];
 
-export default function SortSidebar({ sortBy, selectedGenre, onSortChange, onGenreChange }) {
+export default function SortFilter({ sortBy, selectedGenre, onSortChange, onGenreChange }) {
   return (
     <div className={styles.sidebar}>
       <ul className={styles.list}>

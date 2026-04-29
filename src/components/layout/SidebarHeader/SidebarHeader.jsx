@@ -1,7 +1,7 @@
-import styles from "./SidebarFilterHeader.module.css";
+import styles from "./SidebarHeader.module.css";
 import { RESULTS_VARIANTS } from "./variants";
 
-export default function SidebarFilterHeader({
+export default function SidebarHeader({
   query,
   pageName,
   totalResults,

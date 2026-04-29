@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getAllSeries, getTrending } from "@/lib/api/tmdb.api";
 import { getTmdbPagesForUiPage, sliceResultsForUiPage, calcTotalUiPages } from "@/lib/utils/pagination.utils";
-import SidebarFilterHeader from "@/components/layout/SidebarFilterHeader/SidebarFilterHeader";
-import SortSidebar from "@/components/ui/SortSidebar/SortSidebar";
+import SidebarHeader from "@/components/layout/SidebarHeader/SidebarHeader";
+import SortFilter from "@/components/ui/SortFilter/SortFilter";
 import SerieCard from "@/components/series/SerieCard/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton/SerieCardSkeleton";
 import Pagination from "@/components/ui/Pagination/Pagination";
@@ -107,7 +107,7 @@ export default function AllSeriesPage() {
     <div className={styles.allSeriesLayout}>
       <div className={styles.filterSidebar}>
         <div className={styles.stickyFilter}>
-          <SidebarFilterHeader
+          <SidebarHeader
             pageName="Series"
             totalResults={totalResults}
             currentPage={currentPage}
@@ -116,7 +116,7 @@ export default function AllSeriesPage() {
             onNextPage={() => handleChangePage(currentPage + 1)}
             variant="allSeries"
           />
-          <SortSidebar
+          <SortFilter
             sortBy={sortBy}
             selectedGenre={selectedGenre}
             onSortChange={handleSortChange}
