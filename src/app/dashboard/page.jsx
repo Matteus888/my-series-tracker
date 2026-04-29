@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { getUserProfile, getUserStats } from "@/lib/api/user.api";
 import { User } from "@/models/user.model";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
-import ProfileHeader from "@/components/dashboard/ProfileHeader/ProfileHeader";
+import DashboardHeader from "@/components/dashboard/DashboardHeader/DashboardHeader";
 import ContinueWatchingSection from "@/components/dashboard/ContinueWatchingSection/ContinueWatchingSection";
 import CalendarSection from "@/components/dashboard/CalendarSection/CalendarSection";
 import StartWatchingSection from "@/components/dashboard/StartWatchingSection/StartWatchingSection";
@@ -24,7 +24,7 @@ export default async function DashboardPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="Dashboard" />
-      <ProfileHeader
+      <DashboardHeader
         username={user.username}
         firstname={user.firstname}
         lastname={user.lastname}

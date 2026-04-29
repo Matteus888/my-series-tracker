@@ -1,8 +1,8 @@
-import styles from "./ProfileHeader.module.css";
+import styles from "./DashboardHeader.module.css";
 import Image from "next/image";
 import { formatLongDuration } from "@/lib/utils/duration.utils";
 
-export default function ProfileHeader({ username, firstname, lastname, bio, profilePicture, stats }) {
+export default function DashboardHeader({ username, firstname, lastname, bio, profilePicture, stats }) {
   const fullName = [firstname, lastname].filter(Boolean).join(" ");
   const { seriesTracked = 0, episodesWatched = 0, totalMinutes = 0, favorites = 0, planToWatch = 0 } = stats ?? {};
 
