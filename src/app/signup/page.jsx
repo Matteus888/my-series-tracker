@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Icon from "@mdi/react";
-import { mdiAccountPlus, mdiCheck, mdiUpload } from "@mdi/js";
+import { mdiAccountPlus, mdiCheck, mdiLoading } from "@mdi/js";
+import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import PasswordInput from "@/components/ui/PasswordInput/PasswordInput";
 
 export default function SignupPage() {
@@ -54,83 +55,97 @@ export default function SignupPage() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>
-          <Icon path={mdiAccountPlus} size={1.2} />
-          Registration
-        </h1>
+    <main className={styles.page}>
+      <PageTitle title="Sign Up" />
 
-        {error && (
-          <div className="alert alert-danger" role="alert">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.field}>
-            <label htmlFor="username" className={styles.label}>
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              className={styles.input}
-              required
-              placeholder="Username"
-              autoFocus
-              minLength={3}
-              maxLength={30}
-            />
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <div className={styles.header}>
+            <Icon path={mdiAccountPlus} size={1} />
+            <span>Create your account</span>
           </div>
 
-          <div className={styles.field}>
-            <label htmlFor="email" className={styles.label}>
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className={styles.input}
-              required
-              placeholder="your@email.com"
-            />
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.field}>
+              <label htmlFor="username" className={styles.label}>
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className={styles.input}
+                required
+                placeholder="Username"
+                autoFocus
+                minLength={3}
+                maxLength={30}
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="email" className={styles.label}>
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={styles.input}
+                required
+                placeholder="your@email.com"
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="password" className={styles.label}>
+                Password
+              </label>
+              <PasswordInput
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                placeholder="••••••••"
+                className={styles.input}
+                minLength={8}
+              />
+              <p className={styles.hint}>Minimum 8 characters</p>
+            </div>
+
+            <button type="submit" disabled={isLoading} className={styles.submitButton}>
+              {isLoading ? (
+                <>
+                  <Icon path={mdiLoading} size={0.8} spin />
+                  <span>Creating account...</span>
+                </>
+              ) : (
+                <span>
+                  <Icon path={mdiCheck} size={0.9} />
+                </span>
+              )}
+            </button>
+          </form>
+
+          <div className={styles.footer}>
+            <span className={styles.footerText}>Already have an account?</span>
+            <Link href="/login" className={styles.link}>
+              Log in
+            </Link>
           </div>
-
-          <div className={styles.field}>
-            <label htmlFor="password" className={styles.label}>
-              Password
-            </label>
-            <PasswordInput
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              placeholder="•••••••• (8 characters min)"
-              className={styles.input}
-              minLength={8}
-            />
-            <p className={styles.hint}>Minimum 8 characters</p>
-          </div>
-
-          <button type="submit" disabled={isLoading} className={styles.submitButton}>
-            {isLoading ? <Icon path={mdiUpload} size={1} /> : <Icon path={mdiCheck} size={1} />}
-          </button>
-        </form>
-
-        <div className={styles.footer}>
-          <Link href="/login" className={styles.link}>
-            Already have an account? Log In
-          </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -1,29 +1,40 @@
-.container {
-  max-width: 700px;
-  height: calc(100vh - 95px);
-  margin: 0 auto;
+.page {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  flex: 1;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
   justify-content: center;
+  padding: 2rem 1.25rem;
 }
 
 .card {
-  width: 60%;
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border);
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.title {
+.header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 0.875rem;
+  font-weight: 600;
   color: var(--foreground);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--border);
-  margin: 0;
 }
 
 .form {
@@ -39,7 +50,7 @@
 }
 
 .label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--foreground);
   opacity: 0.7;
   font-weight: 600;
@@ -48,7 +59,7 @@
 }
 
 .input {
-  padding: 0.4rem 0.6rem;
+  padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   background: var(--background-primary);
   border: 1px solid var(--border);
@@ -62,22 +73,20 @@
   border-color: var(--blue);
 }
 
-.hint {
-  font-size: 0.75rem;
-  color: var(--foreground);
-  opacity: 0.4;
-  margin: 0;
-}
-
 .submitButton {
-  padding: 0.1rem 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.2rem 1rem;
   font-size: 0.875rem;
+  font-weight: 600;
   background: var(--background-primary);
   border: 1px solid var(--blue);
   color: var(--blue);
   cursor: pointer;
   transition: all 0.15s ease;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .submitButton:hover:not(:disabled) {
@@ -91,20 +100,28 @@
 }
 
 .footer {
-  text-align: center;
-  padding-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding-top: 1rem;
   border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+}
+
+.footerText {
+  color: var(--foreground);
+  opacity: 0.5;
 }
 
 .link {
-  font-size: 0.8rem;
-  color: var(--foreground);
-  opacity: 0.5;
-  text-decoration: none;
-  transition: all 0.15 ease;
+  opacity: 0.9;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
 
 .link:hover {
   opacity: 1;
-  color: var(--blue);
+  transform: scale(1.08);
 }

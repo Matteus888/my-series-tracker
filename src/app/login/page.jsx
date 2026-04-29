@@ -6,7 +6,8 @@ import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Icon from "@mdi/react";
-import { mdiLogin, mdiCheck, mdiUpload } from "@mdi/js";
+import { mdiLogin, mdiCheck, mdiLoading } from "@mdi/js";
+import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import PasswordInput from "@/components/ui/PasswordInput/PasswordInput";
 
 export default function LoginPage() {
@@ -39,59 +40,75 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>
-          <Icon path={mdiLogin} size={1.2} />
-          Log In
-        </h1>
+    <main className={styles.page}>
+      <PageTitle title="Log In" />
 
-        {error && (
-          <div className="alert alert-danger" role="alert">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.field}>
-            <label htmlFor="email" className={styles.label}>
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={styles.input}
-              required
-              placeholder="your@email.com"
-              autoFocus
-            />
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <div className={styles.header}>
+            <Icon path={mdiLogin} size={1} />
+            <span>Welcome back</span>
           </div>
 
-          <div className={styles.field}>
-            <label htmlFor="password" className={styles.label}>
-              Password
-            </label>
-            <PasswordInput
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className={styles.input}
-            />
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.field}>
+              <label htmlFor="email" className={styles.label}>
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={styles.input}
+                required
+                placeholder="your@email.com"
+                autoFocus
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="password" className={styles.label}>
+                Password
+              </label>
+              <PasswordInput
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className={styles.input}
+                required
+              />
+            </div>
+
+            <button type="submit" disabled={isLoading} className={styles.submitButton}>
+              {isLoading ? (
+                <>
+                  <Icon path={mdiLoading} size={0.8} spin />
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                <span>
+                  <Icon path={mdiCheck} size={0.9} />
+                </span>
+              )}
+            </button>
+          </form>
+
+          <div className={styles.footer}>
+            <span className={styles.footerText}>Don&apos;t have an account?</span>
+            <Link href="/signup" className={styles.link}>
+              Sign up
+            </Link>
           </div>
-
-          <button type="submit" disabled={isLoading} className={styles.submitButton}>
-            {isLoading ? <Icon path={mdiUpload} size={1} /> : <Icon path={mdiCheck} size={1} />}
-          </button>
-        </form>
-
-        <div className={styles.footer}>
-          <Link href="/signup" className={styles.link}>
-            Don&apos;t have an account yet? Register
-          </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
