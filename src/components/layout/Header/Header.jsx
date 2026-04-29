@@ -4,7 +4,7 @@ import styles from "./Header.module.css";
 import Logo from "@/components/ui/Logo/Logo";
 import SearchBar from "@/components/ui/SearchBar/SearchBar";
 import NavBar from "@/components/layout/NavBar/NavBar";
-import ProfileMenu from "../ProfileMenu/ProfileMenu";
+import ProfileMenuAvatar from "../ProfileMenuAvatar/ProfileMenuAvatar";
 import Link from "next/link";
 
 export default function Header() {
@@ -18,7 +18,7 @@ export default function Header() {
       </div>
       <div className={styles.rightContainer}>
         <NavBar />
-        <ProfileMenu />
+        <ProfileMenuAvatar />
       </div>
     </header>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./ProfileMenu.module.css";
+import styles from "./ProfileMenuAvatar.module.css";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
@@ -10,7 +10,7 @@ import { usePopover } from "@/hooks/usePopover";
 import ProfileMenuDropdown from "../ProfileMenuDropdown/ProfileMenuDropdown";
 import LoginPopover from "@/components/ui/LoginPopover/LoginPopover";
 
-export default function ProfileMenu() {
+export default function ProfileMenuAvatar() {
   const { data: session } = useSession();
   const menuPopover = usePopover();
   const loginPopover = usePopover();
