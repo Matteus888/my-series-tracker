@@ -1,28 +1,15 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-
-const protectedRoutes = [
-  "/profile",
-  "/watching",
-  "/dashboard",
-  "/favorites",
-  "/settings",
-  "/calendar",
-  "/lists",
-  "/history",
-];
-const adminRoutes = ["/admin"];
-const publicRoutes = ["/login", "/signup", "/verify-email", "/series"];
+import { isProtectedRoute, isPublicRoute, isAdminRoute } from "./lib/constants/routes.constants";
 
 export async function proxy(request) {
   const { pathname } = request.nextUrl;
 
-  if (publicRoutes.includes(pathname)) {
+  if (isPublicRoute(pathname)) {
     return NextResponse.next();
   }
 
-  const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
-  if (!isProtected) {
+  if (!isProtectedRoute(pathname)) {
     return NextResponse.next();
   }
 
@@ -33,8 +20,7 @@ export async function proxy(request) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
-  if (isAdminRoute && token.role !== "admin") {
+  if (isAdminRoute(pathname) && token.role !== "admin") {
     return NextResponse.redirect(new URL("/unauthorized", request.url));
   }
 

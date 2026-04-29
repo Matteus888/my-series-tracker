@@ -4,19 +4,38 @@ import styles from "./ProfileMenuDropdown.module.css";
 import Icon from "@mdi/react";
 import { mdiLogin, mdiLogout, mdiAccountPlus, mdiCog, mdiCheck, mdiCancel } from "@mdi/js";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 import { useToast } from "@/context/ToastContext";
+import { isProtectedRoute } from "@/lib/constants/routes.constants";
+
+const protectedRoutes = [
+  "/profile",
+  "/watching",
+  "/dashboard",
+  "/favorites",
+  "/settings",
+  "/lists",
+  "/history",
+  "/calendar",
+];
 
 export default function ProfileMenuDropdown({ session, popoverRef, onClose, onLoginClick }) {
   const [showConfirmSignOut, setShowConfirmSignOut] = useState(false);
   const { showToast } = useToast();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSignOut = async () => {
     setShowConfirmSignOut(false);
-    await signOut({ redirect: false });
-    showToast("You have been signed out.");
+
+    if (isProtectedRoute(pathname)) {
+      showToast("You have been signed out.");
+      await signOut({ redirect: true, callbackUrl: "/series" });
+    } else {
+      await signOut({ redirect: false });
+      showToast("You have been signed out.");
+    }
   };
 
   const handleSignUp = () => {
