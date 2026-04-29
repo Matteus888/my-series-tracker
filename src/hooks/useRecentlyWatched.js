@@ -2,12 +2,14 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
+import { useToast } from "@/context/ToastContext";
 
 export function useRecentlyWatched() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { trackedSeries, watchedCount, incrementWatched, refresh } = useTrackedSeries();
+  const { showToast } = useToast();
 
   const fetchData = useCallback(async () => {
     try {
@@ -28,20 +30,21 @@ export function useRecentlyWatched() {
       setItems((prev) => prev.filter((item) => item._id !== episodeId));
 
       try {
-        const res = await fetch(`/api/episodes/${episodeId}/watched`, {
+        const response = await fetch(`/api/episodes/${episodeId}/watched`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ watched: false }),
         });
-        if (!res.ok) throw new Error("Failed");
+        if (!response.ok) throw new Error("Failed");
         incrementWatched();
         await refresh();
       } catch {
         // Rollback
         fetchData();
+        showToast("Could not unmark episode", "error");
       }
     },
-    [fetchData, incrementWatched, refresh],
+    [fetchData, incrementWatched, refresh, showToast],
   );
 
   useEffect(() => {

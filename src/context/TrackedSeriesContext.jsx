@@ -106,7 +106,19 @@ export const TrackedSeriesProvider = ({ children }) => {
           throw new Error(data.error || "An error occurred");
         }
         await fetchTrackedSeries();
-        showToast(updates.isFavorite ? "Added to favorites ✓" : "Removed from favorites");
+
+        if ("isFavorite" in updates) {
+          showToast(updates.isFavorite ? "Added to favorites ✓" : "Removed from favorites");
+        } else if ("status" in updates) {
+          const statusLabels = {
+            watching: "Marked as watching ✓",
+            completed: "Marked as completed ✓",
+            on_hold: "Marked as on hold",
+            dropped: "Marked as dropped",
+            plan_to_watch: "Moved to watchlist ✓",
+          };
+          showToast(statusLabels[updates.status] ?? "Series updated ✓");
+        }
       } catch (err) {
         setError(err.message);
         showToast(err.message, "error");

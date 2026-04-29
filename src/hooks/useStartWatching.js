@@ -69,7 +69,9 @@ export function useStartWatching() {
           await refreshLists();
         }
 
-        showToast(`${item.title} added to watched shows ✓`);
+        showToast(
+          mode === "all" ? `Marked ${item.title} as fully watched ✓` : `${item.title} added to watched shows ✓`,
+        );
         await refresh();
       } catch (err) {
         console.error(err);

@@ -76,6 +76,7 @@ export function useEpisodeList(initialProgress, tmdbId, serieData) {
         } catch (err) {
           console.error(err);
           setEpisodes(initialProgress.map((ep) => ({ ...ep, watched: false, watchedAt: null })));
+          showToast("Could not start tracking this series", "error");
         } finally {
           setIsTracking(false);
         }
@@ -92,12 +93,12 @@ export function useEpisodeList(initialProgress, tmdbId, serieData) {
       setEpisodes(updatedEpisodes);
 
       try {
-        const res = await fetch(`/api/episodes/${episodeId}/watched`, {
+        const response = await fetch(`/api/episodes/${episodeId}/watched`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ watched: newWatched }),
         });
-        if (!res.ok) throw new Error("Failed");
+        if (!response.ok) throw new Error("Failed");
 
         const noneWatched = updatedEpisodes.every((ep) => !ep.watched);
         if (noneWatched) {
@@ -113,6 +114,7 @@ export function useEpisodeList(initialProgress, tmdbId, serieData) {
             ep._id && ep._id.toString() === episodeId.toString() ? { ...ep, watched: currentWatched } : ep,
           ),
         );
+        showToast(currentWatched ? "Could not unmark episode" : "Could not mark episode as watched", "error");
       }
     },
     [
@@ -126,6 +128,7 @@ export function useEpisodeList(initialProgress, tmdbId, serieData) {
       addSeriesOptimistic,
       isTracked,
       showToast,
+      requireAuth,
     ],
   );
 
