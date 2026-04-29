@@ -77,7 +77,7 @@
 }
 
 .defaultBadge {
-  font-size: 0.65rem;
+  font-size: 0.5rem;
   opacity: 0.5;
   font-style: italic;
 }
@@ -149,6 +149,6 @@
   cursor: not-allowed;
 }
 
-.createButton:active svg {
-  transform: scale(0.7);
+.createButton:active {
+  transform: scale(0.9);
 }

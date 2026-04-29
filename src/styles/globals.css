@@ -1,6 +1,6 @@
-/* ===== VARIABLES CSS ===== */
 :root {
   --background-primary: #0a0a0a;
+  --background-primary-rgb: 10, 10, 10;
   --background-secondary: #1a1a1a;
   --background-third: #2a2a2a;
   --foreground: #ededed;
@@ -27,7 +27,6 @@
   --card-width: 175px;
 }
 
-/* ===== BASE & RESET ===== */
 html {
   width: 100%;
   max-width: 100vw;
@@ -74,7 +73,6 @@ textarea {
   color: inherit;
 }
 
-/* ===== ALERTES ===== */
 .alert {
   padding: 0.75rem 1.25rem;
   margin-bottom: 1rem;
@@ -88,7 +86,6 @@ textarea {
   border-color: rgba(255, 107, 107, 0.2);
 }
 
-/* ===== BOUTONS ===== */
 .btn {
   border: none;
   display: inline-block;
@@ -102,7 +99,6 @@ textarea {
   cursor: pointer;
 }
 
-/* ===== CARTES ===== */
 .card {
   background-color: var(--background-secondary);
   border-bottom: 1px solid var(--border);
@@ -111,7 +107,6 @@ textarea {
   transition: background-color 0.2s ease;
 }
 
-/* ===== INPUTS ===== */
 .form-control {
   display: block;
   width: 100%;
@@ -134,7 +129,6 @@ textarea {
   box-shadow: 0 0 0 0.25rem rgba(0, 130, 206, 0.25);
 }
 
-/* ===== TOOLTIPS ===== */
 .tooltip-wrapper {
   position: relative;
 }
@@ -166,7 +160,6 @@ textarea {
   background-color: var(--background-third);
 }
 
-/* Liens (réutilisables) */
 .link {
   color: var(--blue);
   text-decoration: none;
@@ -176,7 +169,6 @@ textarea {
   text-decoration: underline;
 }
 
-/* ===== BADGES & ICÔNES ===== */
 .check {
   background-color: transparent;
   color: var(--blue);
@@ -238,7 +230,6 @@ textarea {
   cursor: not-allowed;
 }
 
-/* ===== SEARCH FILTER ===== */
 .search-nav-arrow {
   color: var(--blue);
   transition: color 0.15s ease;
@@ -248,7 +239,6 @@ textarea {
   color: color-mix(in srgb, var(--blue) 85%, black);
 }
 
-/* Animation pour les skeletons (si vous utilisez des loaders) */
 @keyframes pulse {
   0%,
   100% {

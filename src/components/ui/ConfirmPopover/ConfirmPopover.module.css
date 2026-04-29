@@ -51,9 +51,9 @@
   background-color: var(--blue);
 }
 
-.validate:active svg,
-.cancel:active svg {
-  transform: scale(0.7);
+.validate:active,
+.cancel:active {
+  transform: scale(0.9);
 }
 
 .cancel {

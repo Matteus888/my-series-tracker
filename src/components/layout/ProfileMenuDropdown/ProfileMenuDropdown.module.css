@@ -123,9 +123,9 @@
   color: var(--foreground);
 }
 
-.confirmYes:active svg,
-.confirmNo:active svg {
-  transform: scale(0.8);
+.confirmYes:active,
+.confirmNo:active {
+  transform: scale(0.9);
 }
 
 @media (prefers-reduced-motion: reduce) {
