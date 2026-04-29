@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import styles from "./page.module.css";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import UpcomingSerieCard from "@/components/calendar/UpcomingSerieCard/UpcomingSerieCard";
-import SectionHeader from "@/components/dashboard/SectionHeader/SectionHeader";
+import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import MonthGrid from "@/components/ui/MonthGrid/MonthGrid";
 import { formatDateLabel } from "@/lib/utils/date.utils";

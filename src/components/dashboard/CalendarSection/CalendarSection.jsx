@@ -3,7 +3,7 @@
 import styles from "./CalendarSection.module.css";
 import { useCalendar } from "@/hooks/useCalendar";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
-import SectionHeader from "../SectionHeader/SectionHeader";
+import SectionHeader from "../../ui/SectionHeader/SectionHeader";
 import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import CalendarDayCard from "../CalendarDayCard/CalendarDayCard";

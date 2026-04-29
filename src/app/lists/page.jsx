@@ -5,7 +5,7 @@ import { useList } from "@/context/ListContext";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import StartWatchingCard from "@/components/dashboard/StartWatchingCard/StartWatchingCard";
-import SectionHeader from "@/components/dashboard/SectionHeader/SectionHeader";
+import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 

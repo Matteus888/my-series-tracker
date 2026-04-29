@@ -4,7 +4,7 @@ import styles from "./ContinueWatchingSection.module.css";
 import { useContinueWatching } from "@/hooks/useContinueWatching";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
 import ContinueWatchingCard from "@/components/dashboard/ContinueWatchingCard/ContinueWatchingCard";
-import SectionHeader from "../SectionHeader/SectionHeader";
+import SectionHeader from "../../ui/SectionHeader/SectionHeader";
 import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import { mdiTelevisionPlay } from "@mdi/js";

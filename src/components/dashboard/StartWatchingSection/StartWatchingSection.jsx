@@ -4,7 +4,7 @@ import styles from "./StartWatchingSection.module.css";
 import { useStartWatching } from "@/hooks/useStartWatching";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
 import StartWatchingCard from "@/components/dashboard/StartWatchingCard/StartWatchingCard";
-import SectionHeader from "../SectionHeader/SectionHeader";
+import SectionHeader from "../../ui/SectionHeader/SectionHeader";
 import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import { mdiPlaylistPlus } from "@mdi/js";

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import styles from "./page.module.css";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import EpisodeCard from "@/components/series/EpisodeCard/EpisodeCard";
-import SectionHeader from "@/components/dashboard/SectionHeader/SectionHeader";
+import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import MonthGrid from "@/components/ui/MonthGrid/MonthGrid";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";

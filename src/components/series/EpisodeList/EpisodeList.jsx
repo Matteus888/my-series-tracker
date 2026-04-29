@@ -6,7 +6,7 @@ import { useEpisodeList } from "@/hooks/useEpisodeList";
 import Icon from "@mdi/react";
 import { mdiChevronDown, mdiChevronUp } from "@mdi/js";
 import EpisodeCard from "../EpisodeCard/EpisodeCard";
-import SectionHeader from "@/components/dashboard/SectionHeader/SectionHeader";
+import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 
 export default function EpisodeList({ initialProgress, tmdbId, serieData }) {
   const { seasons, toggleEpisode } = useEpisodeList(initialProgress, tmdbId, serieData);

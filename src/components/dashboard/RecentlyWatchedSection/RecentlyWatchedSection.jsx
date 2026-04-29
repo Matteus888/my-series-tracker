@@ -4,7 +4,7 @@ import styles from "./RecentlyWatchedSection.module.css";
 import { useRecentlyWatched } from "@/hooks/useRecentlyWatched";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
 import EpisodeCard from "@/components/series/EpisodeCard/EpisodeCard";
-import SectionHeader from "../SectionHeader/SectionHeader";
+import SectionHeader from "../../ui/SectionHeader/SectionHeader";
 import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import { mdiHistory } from "@mdi/js";
