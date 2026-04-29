@@ -148,8 +148,10 @@
 
 .footerNetworkLogo {
   object-fit: contain;
+  height: 0.85rem;
+  width: auto;
   margin-left: auto;
-  padding: 0.1rem 0.2rem;
-  border-radius: 2px;
-  background-color: white;
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
+  /* margin-left: auto; */
 }
