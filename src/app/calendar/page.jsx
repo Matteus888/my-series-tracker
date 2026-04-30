@@ -3,10 +3,12 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import styles from "./page.module.css";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
+import CalendarHeader from "@/components/calendar/CalendarHeader/CalendarHeader";
 import UpcomingSerieCard from "@/components/calendar/UpcomingSerieCard/UpcomingSerieCard";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import MonthGrid from "@/components/ui/MonthGrid/MonthGrid";
+import NoEpisodeTodayCard from "@/components/calendar/NoEpisodeTodayCard/NoEpisodeTodayCard";
 import { formatDateLabel } from "@/lib/utils/date.utils";
 import { useActiveDay } from "@/hooks/useActiveDay";
 
@@ -60,7 +62,7 @@ export default function CalendarPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="Calendar" />
-
+      <CalendarHeader days={days} />
       <div className={styles.layout}>
         <div className={styles.main}>
           {/* Section Today — toujours affichée */}
@@ -75,7 +77,11 @@ export default function CalendarPage() {
                   ))}
                 </div>
               ) : (
-                <p className={styles.muted}>No episodes today.</p>
+                <div className={styles.grid}>
+                  <div className={styles.gridItem}>
+                    <NoEpisodeTodayCard days={days} />
+                  </div>
+                </div>
               )}
             </SectionHeader>
           </div>

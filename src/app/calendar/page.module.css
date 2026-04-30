@@ -20,6 +20,7 @@
 .sidebar {
   grid-area: sidebar;
   width: 100%;
+  margin-top: 1.5rem;
 }
 
 @media (min-width: 1024px) {
@@ -43,7 +44,7 @@
 
 .sidebarSticky {
   position: sticky;
-  top: calc(var(--header-height) + var(--pagetitle-height));
+  top: var(--header-height);
 }
 
 /* ── Sections jour (inchangé) ── */
@@ -100,10 +101,4 @@
     flex: 0 0 25%;
     max-width: 25%;
   }
-}
-
-.muted {
-  color: #6c757d;
-  font-size: 0.9rem;
-  padding: 0 0 1rem 1.25rem;
 }
