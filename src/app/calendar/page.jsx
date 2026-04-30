@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import styles from "./page.module.css";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import CalendarHeader from "@/components/calendar/CalendarHeader/CalendarHeader";
-import UpcomingSerieCard from "@/components/calendar/UpcomingSerieCard/UpcomingSerieCard";
+import CalendarSerieCard from "@/components/calendar/CalendarSerieCard/CalendarSerieCard";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import MonthGrid from "@/components/ui/MonthGrid/MonthGrid";
@@ -73,7 +73,7 @@ export default function CalendarPage() {
                 <div className={styles.grid}>
                   {todayDay.episodes.map((ep) => (
                     <div key={ep.type === "season-batch" ? ep.batchKey : ep.episodeId} className={styles.gridItem}>
-                      <UpcomingSerieCard episode={ep} />
+                      <CalendarSerieCard episode={ep} />
                     </div>
                   ))}
                 </div>
@@ -94,7 +94,7 @@ export default function CalendarPage() {
                 <div className={styles.grid}>
                   {day.episodes.map((ep) => (
                     <div key={ep.type === "season-batch" ? ep.batchKey : ep.episodeId} className={styles.gridItem}>
-                      <UpcomingSerieCard episode={ep} />
+                      <CalendarSerieCard episode={ep} />
                     </div>
                   ))}
                 </div>

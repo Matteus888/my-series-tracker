@@ -96,7 +96,7 @@
   border-radius: 4px;
   color: var(--foreground);
   opacity: 0.35;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: default;
   padding: 0;
@@ -169,18 +169,18 @@
   align-items: center;
   gap: 1px;
   color: var(--foreground);
-  font-size: 0.6rem;
+  font-size: 0.5rem;
   line-height: 4px;
 }
 
 .plus {
-  font-size: 0.6rem;
+  font-size: 0.5rem;
   line-height: 1;
   color: var(--foreground);
 }
 
 .extraCount {
-  font-size: 0.6rem;
+  font-size: 0.5rem;
   line-height: 1;
 }
 

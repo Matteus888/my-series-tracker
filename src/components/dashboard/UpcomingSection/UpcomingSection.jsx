@@ -1,15 +1,15 @@
 "use client";
 
-import styles from "./CalendarSection.module.css";
+import styles from "./UpcomingSection.module.css";
 import { useCalendar } from "@/hooks/useCalendar";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
 import SectionHeader from "../../ui/SectionHeader/SectionHeader";
 import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
-import CalendarDayCard from "../CalendarDayCard/CalendarDayCard";
+import UpcomingDayCard from "../UpcomingDayCard/UpcomingDayCard";
 import { mdiCalendarClockOutline } from "@mdi/js";
 
-export default function CalendarSection() {
+export default function UpcomingSection() {
   const { items, loading, error } = useCalendar();
   const { scrollerRef, canScrollLeft, canScrollRight, scrollBy } = useCarouselArrows();
 
@@ -56,7 +56,7 @@ export default function CalendarSection() {
           ) : (
             <div className={styles.carousel} ref={scrollerRef}>
               {visibleItems.map((day) => (
-                <CalendarDayCard key={day.date} day={day} />
+                <UpcomingDayCard key={day.date} day={day} />
               ))}
             </div>
           )}

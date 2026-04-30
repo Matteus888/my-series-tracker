@@ -1,12 +1,12 @@
 "use client";
 
-import styles from "./UpcomingSerieCard.module.css";
+import styles from "./CalendarSerieCard.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import HeartRating from "@/components/ui/HeartRating/HeartRating";
 import { formatDuration } from "@/lib/utils/duration.utils";
 
-export default function UpcomingSerieCard({ episode }) {
+export default function CalendarSerieCard({ episode }) {
   const isBatch = episode.type === "season-batch";
 
   const { tmdbId, seriesTitle, posterPath, networks, seasonNumber } = episode;

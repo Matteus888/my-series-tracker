@@ -5,9 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDateLabel } from "@/lib/utils/date.utils";
 import { formatDuration } from "@/lib/utils/duration.utils";
-import styles from "./CalendarDayCard.module.css";
+import styles from "./UpcomingDayCard.module.css";
 
-export default function CalendarDayCard({ day }) {
+export default function UpcomingDayCard({ day }) {
   const [hoveredEp, setHoveredEp] = useState(day.episodes[0] ?? null);
   const dateLabel = formatDateLabel(day.date, { showTomorrow: false });
 

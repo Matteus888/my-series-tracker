@@ -7,7 +7,7 @@ import { User } from "@/models/user.model";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import DashboardHeader from "@/components/dashboard/DashboardHeader/DashboardHeader";
 import ContinueWatchingSection from "@/components/dashboard/ContinueWatchingSection/ContinueWatchingSection";
-import CalendarSection from "@/components/dashboard/CalendarSection/CalendarSection";
+import UpcomingSection from "@/components/dashboard/UpcomingSection/UpcomingSection";
 import StartWatchingSection from "@/components/dashboard/StartWatchingSection/StartWatchingSection";
 import RecentlyWatchedSection from "@/components/dashboard/RecentlyWatchedSection/RecentlyWatchedSection";
 import { mdiViewDashboardEditOutline } from "@mdi/js";
@@ -34,7 +34,7 @@ export default async function DashboardPage() {
         stats={stats}
       />
       <ContinueWatchingSection />
-      <CalendarSection />
+      <UpcomingSection />
       <RecentlyWatchedSection />
       <StartWatchingSection />
     </div>
