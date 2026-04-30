@@ -70,12 +70,12 @@
 }
 
 .gridItem {
-  flex: 0 0 50%;
-  max-width: 50%;
+  flex: 0 0 100%;
+  max-width: 100%;
   box-sizing: border-box;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 640px) {
   .gridItem {
     flex: 0 0 50%;
     max-width: 50%;
@@ -84,21 +84,21 @@
 
 @media (min-width: 1024px) {
   .gridItem {
-    flex: 0 0 50%;
-    max-width: 50%;
-  }
-}
-
-@media (min-width: 1280px) {
-  .gridItem {
     flex: 0 0 33.333%;
     max-width: 33.333%;
   }
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1440px) {
   .gridItem {
     flex: 0 0 25%;
     max-width: 25%;
+  }
+}
+
+@media (min-width: 1920px) {
+  .gridItem {
+    flex: 0 0 20%;
+    max-width: 20%;
   }
 }
