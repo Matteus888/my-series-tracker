@@ -56,7 +56,7 @@ export default function SignupPage() {
 
   return (
     <main className={styles.page}>
-      <PageTitle title="Sign Up" />
+      <PageTitle title="Sign Up" icon={mdiAccountPlus} />
 
       <div className={styles.container}>
         <div className={styles.card}>

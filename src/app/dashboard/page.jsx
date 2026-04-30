@@ -10,6 +10,7 @@ import ContinueWatchingSection from "@/components/dashboard/ContinueWatchingSect
 import CalendarSection from "@/components/dashboard/CalendarSection/CalendarSection";
 import StartWatchingSection from "@/components/dashboard/StartWatchingSection/StartWatchingSection";
 import RecentlyWatchedSection from "@/components/dashboard/RecentlyWatchedSection/RecentlyWatchedSection";
+import { mdiViewDashboardEditOutline } from "@mdi/js";
 
 export const metadata = {
   title: "Dashboard",
@@ -23,7 +24,7 @@ export default async function DashboardPage() {
 
   return (
     <div className={styles.page}>
-      <PageTitle title="Dashboard" />
+      <PageTitle title="Dashboard" icon={mdiViewDashboardEditOutline} />
       <DashboardHeader
         username={user.username}
         firstname={user.firstname}

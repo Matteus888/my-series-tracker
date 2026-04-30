@@ -41,7 +41,7 @@ export default function LoginPage() {
 
   return (
     <main className={styles.page}>
-      <PageTitle title="Log In" />
+      <PageTitle title="Log In" icon={mdiLogin} />
 
       <div className={styles.container}>
         <div className={styles.card}>

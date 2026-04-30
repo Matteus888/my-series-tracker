@@ -83,7 +83,7 @@ export default function WatchingPage() {
   if (loading)
     return (
       <div className={styles.page}>
-        <PageTitle title="Continue watching" />
+        <PageTitle title="Continue watching" icon={mdiTelevisionPlay} />
         <PageLoader />
       </div>
     );
@@ -91,7 +91,7 @@ export default function WatchingPage() {
   if (items.length === 0)
     return (
       <div className={styles.page}>
-        <PageTitle title="Continue watching" />
+        <PageTitle title="Continue watching" icon={mdiTelevisionPlay} />
         <p className={styles.empty}>No series in progress.</p>
       </div>
     );
