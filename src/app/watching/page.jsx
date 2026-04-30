@@ -7,6 +7,7 @@ import ContinueWatchingCard from "@/components/dashboard/ContinueWatchingCard/Co
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import WatchingHeader from "@/components/watching/WatchingHeader/WatchingHeader";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
+import { mdiTelevisionPlay } from "@mdi/js";
 
 export default function WatchingPage() {
   const [items, setItems] = useState([]);
@@ -97,7 +98,7 @@ export default function WatchingPage() {
 
   return (
     <div className={styles.page}>
-      <PageTitle title="Continue watching" />
+      <PageTitle title="Continue watching" icon={mdiTelevisionPlay} />
       <WatchingHeader items={items} />
       <div className={styles.grid}>
         {items.map((item) => (

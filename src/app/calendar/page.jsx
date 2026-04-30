@@ -11,6 +11,7 @@ import MonthGrid from "@/components/ui/MonthGrid/MonthGrid";
 import NoEpisodeTodayCard from "@/components/calendar/NoEpisodeTodayCard/NoEpisodeTodayCard";
 import { formatDateLabel } from "@/lib/utils/date.utils";
 import { useActiveDay } from "@/hooks/useActiveDay";
+import { mdiCalendarClockOutline } from "@mdi/js";
 
 export default function CalendarPage() {
   const [days, setDays] = useState([]);
@@ -54,14 +55,14 @@ export default function CalendarPage() {
   if (loading)
     return (
       <div className={styles.page}>
-        <PageTitle title="Calendar" />
+        <PageTitle title="Calendar" icon={mdiCalendarClockOutline} />
         <PageLoader />
       </div>
     );
 
   return (
     <div className={styles.page}>
-      <PageTitle title="Calendar" />
+      <PageTitle title="Calendar" icon={mdiCalendarClockOutline} />
       <CalendarHeader days={days} />
       <div className={styles.layout}>
         <div className={styles.main}>

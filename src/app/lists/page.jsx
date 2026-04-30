@@ -9,6 +9,7 @@ import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import ListsHeader from "@/components/lists/ListsHeader/ListsHeader";
+import { mdiPlaylistPlus } from "@mdi/js";
 
 export default function ListsPage() {
   const { lists, watchlist, isLoading: listsLoading } = useList();
@@ -20,14 +21,14 @@ export default function ListsPage() {
   if (listsLoading)
     return (
       <div className={styles.page}>
-        <PageTitle title="Lists" />
+        <PageTitle title="Lists" icon={mdiPlaylistPlus} />
         <PageLoader />
       </div>
     );
 
   return (
     <div className={styles.page}>
-      <PageTitle title="Lists" />
+      <PageTitle title="Lists" icon={mdiPlaylistPlus} />
       <ListsHeader lists={lists} />
       {/* Plan to Watch */}
       <SectionHeader title="Plan to watch" storageKey="section-list-plan-to-watch">

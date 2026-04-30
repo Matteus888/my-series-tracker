@@ -1,7 +1,15 @@
 .title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--foreground);
   margin: 0.25rem 0 1rem 1.25rem;
+}
+
+.icon {
+  flex-shrink: 0;
+  /* opacity: 0.85; */
 }

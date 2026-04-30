@@ -11,6 +11,7 @@ import MonthGrid from "@/components/ui/MonthGrid/MonthGrid";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import { formatDateLabel } from "@/lib/utils/date.utils";
 import { useActiveDay } from "@/hooks/useActiveDay";
+import { mdiHistory } from "@mdi/js";
 
 export default function HistoryPage() {
   const [days, setDays] = useState([]);
@@ -80,7 +81,7 @@ export default function HistoryPage() {
   if (loading)
     return (
       <div className={styles.page}>
-        <PageTitle title="History" />
+        <PageTitle title="History" icon={mdiHistory} />
         <PageLoader />
       </div>
     );
@@ -88,14 +89,14 @@ export default function HistoryPage() {
   if (days.length === 0)
     return (
       <div className={styles.page}>
-        <PageTitle title="History" />
+        <PageTitle title="History" icon={mdiHistory} />
         <p className={styles.muted}>No episodes watched in the last 30 days.</p>
       </div>
     );
 
   return (
     <div className={styles.page}>
-      <PageTitle title="History" />
+      <PageTitle title="History" icon={mdiHistory} />
       <HistoryHeader days={days} />
       <div className={styles.layout}>
         <div className={styles.main}>
