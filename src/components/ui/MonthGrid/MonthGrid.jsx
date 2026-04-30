@@ -147,9 +147,9 @@ function DayCell({ cell, onClick }) {
     if (hasEpisodes && onClick) onClick(dateKey);
   };
 
-  // Rendu des pastilles : 1 ou 2 points, puis "+" si plus
+  // Rendu des pastilles : 1 ou 2 points, puis "+N" si plus de 2 épisodes
   const dotsToRender = Math.min(episodeCount, 2);
-  const showPlus = episodeCount > 2;
+  const extraCount = episodeCount > 2 ? episodeCount - 2 : 0;
 
   return (
     <button
@@ -166,7 +166,12 @@ function DayCell({ cell, onClick }) {
           {Array.from({ length: dotsToRender }).map((_, i) => (
             <span key={i} className={styles.dot} />
           ))}
-          {showPlus && <span className={styles.plus}>+</span>}
+          {extraCount > 0 && (
+            <span className={styles.extra}>
+              <span className={styles.plus}>+</span>
+              <span className={styles.extraCount}>{extraCount}</span>
+            </span>
+          )}
         </span>
       )}
     </button>

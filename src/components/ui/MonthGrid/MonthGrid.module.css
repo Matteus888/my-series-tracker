@@ -96,7 +96,7 @@
   border-radius: 4px;
   color: var(--foreground);
   opacity: 0.35;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: default;
   padding: 0;
@@ -112,6 +112,7 @@
 
 .dayNumber {
   line-height: 1;
+  transform: translateY(-5px);
 }
 
 /* Jours qui ont des épisodes : cliquables, plus visibles */
@@ -129,17 +130,18 @@
 /* Pastille sous le nombre pour les jours avec épisodes */
 .dots {
   position: absolute;
-  bottom: 3px;
+  bottom: 6px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 1.5px;
+  height: 4px;
 }
 
 .dot {
-  width: 3px;
-  height: 3px;
+  width: 3.5px;
+  height: 3.5px;
   border-radius: 50%;
   background-color: var(--blue);
 }
@@ -158,15 +160,33 @@
 }
 
 /* Évite que "today + active" double-borde visuellement */
-.dayActive .dot,
-.dayActive .plus {
+.dayActive .dot {
   color: var(--blue);
 }
 
-/* Signe "+" quand il y a plus de 2 épisodes */
+.extra {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  color: var(--foreground);
+  font-size: 0.6rem;
+  line-height: 4px;
+}
+
 .plus {
-  font-size: 0.55rem;
+  font-size: 0.6rem;
   line-height: 1;
-  color: var(--blue);
-  font-weight: 700;
+  color: var(--foreground);
+}
+
+.extraCount {
+  font-size: 0.6rem;
+  line-height: 1;
+}
+
+/* Quand le jour est actif, on inverse pour rester lisible sur fond clair */
+.dayActive .extra,
+.dayActive .plus,
+.dayActive .extraCount {
+  color: var(--background-primary);
 }
