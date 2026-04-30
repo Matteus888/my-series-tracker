@@ -5,6 +5,7 @@ import styles from "./page.module.css";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import ContinueWatchingCard from "@/components/dashboard/ContinueWatchingCard/ContinueWatchingCard";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
+import WatchingHeader from "@/components/watching/WatchingHeader/WatchingHeader";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 
 export default function WatchingPage() {
@@ -12,7 +13,6 @@ export default function WatchingPage() {
   const [loading, setLoading] = useState(true);
   const { trackedSeries, incrementWatched } = useTrackedSeries();
 
-  // Préserve l'ordre visuel courant lors d'un refresh (ex: après un check)
   const orderRef = useRef(null);
 
   const applyPreservedOrder = useCallback((freshItems) => {
@@ -98,9 +98,7 @@ export default function WatchingPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="Continue watching" />
-      <p className={styles.count}>
-        {items.length} serie{items.length > 1 ? "s" : ""} in progress
-      </p>
+      <WatchingHeader items={items} />
       <div className={styles.grid}>
         {items.map((item) => (
           <div key={item.seriesId} className={styles.gridItem}>
