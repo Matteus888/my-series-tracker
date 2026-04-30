@@ -382,7 +382,7 @@ const _fetchWatchedEpisodes = async (userId, since = null) => {
 
   const episodeIds = progressList.map((p) => p.episodeId);
   const episodes = await Episode.find({ _id: { $in: episodeIds } })
-    .select("_id seriesId seasonNumber episodeNumber title stillPath airDate ratings")
+    .select("_id seriesId seasonNumber episodeNumber title stillPath airDate duration ratings")
     .lean();
 
   const seriesIds = [...new Set(episodes.map((e) => e.seriesId.toString()))];
@@ -409,6 +409,7 @@ const _fetchWatchedEpisodes = async (userId, since = null) => {
         title: ep.title ?? null,
         stillPath: ep.stillPath ?? null,
         airDate: ep.airDate ? ep.airDate.toISOString() : null,
+        duration: ep.duration ?? null,
         ratings: ep.ratings ?? null,
         rating: p.rating ?? null,
         watchedAt: p.watchedAt, // Date pour le tri

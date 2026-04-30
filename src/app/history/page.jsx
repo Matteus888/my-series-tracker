@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import styles from "./page.module.css";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
+import HistoryHeader from "@/components/history/HistoryHeader/HistoryHeader";
 import EpisodeCard from "@/components/series/EpisodeCard/EpisodeCard";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
@@ -95,7 +96,7 @@ export default function HistoryPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="History" />
-
+      <HistoryHeader days={days} />
       <div className={styles.layout}>
         <div className={styles.main}>
           {days.map((day) => (
