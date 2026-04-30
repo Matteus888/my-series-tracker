@@ -32,6 +32,34 @@ html {
   max-width: 100vw;
   overflow-x: clip;
   scrollbar-gutter: stable;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+html:hover {
+  scrollbar-width: 1px;
+  scrollbar-color: var(--background-third) transparent;
+}
+
+html:hover::-webkit-scrollbar {
+  width: 1px;
+}
+
+html:hover::-webkit-scrollbar-thumb {
+  background: var(--background-third);
+  border-radius: 4px;
+}
+
+html:hover::-webkit-scrollbar-thumb:hover {
+  background: var(--border);
+}
+
+html:hover::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 body {

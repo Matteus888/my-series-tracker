@@ -89,10 +89,7 @@ export default function LoginPage() {
 
             <button type="submit" disabled={isLoading} className={styles.submitButton}>
               {isLoading ? (
-                <>
-                  <Icon path={mdiLoading} size={0.8} spin />
-                  <span>Signing in...</span>
-                </>
+                <Icon path={mdiLoading} size={0.9} spin />
               ) : (
                 <span>
                   <Icon path={mdiCheck} size={0.9} />
