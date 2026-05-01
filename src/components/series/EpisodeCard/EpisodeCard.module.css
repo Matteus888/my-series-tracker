@@ -139,7 +139,7 @@
   border: 1px solid var(--border);
   position: relative;
   overflow: hidden;
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), rgba(var(--card-bg-rgb), 0.6);
+  background-color: var(--background-secondary);
 }
 
 .rowImage {

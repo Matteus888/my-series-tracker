@@ -1,7 +1,6 @@
 import styles from "@/app/series/[id]/page.module.css";
 import Image from "next/image";
 import { getSeriesDetails, getAllSeasonsWithEpisodes } from "@/lib/api/tmdb.api";
-import { formatDate } from "@/lib/utils/date.utils";
 import EpisodeList from "@/components/series/EpisodeList/EpisodeList";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
@@ -101,6 +100,10 @@ export default async function SeriesPage({ params }) {
           />
         )}
         <div className={styles.heroOverlay} />
+      </div>
+
+      {/* Spacer pour réserver la place du hero dans le flux */}
+      <div className={styles.heroSpacer} aria-hidden="true">
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>{serie.name}</h1>
           {serie.tagline && <p className={styles.heroTagline}>{serie.tagline}</p>}
