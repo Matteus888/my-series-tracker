@@ -5,6 +5,9 @@ import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import { normalizeSerieData } from "@/lib/utils/serie.utils";
 import SerieCard from "@/components/series/SerieCard/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton/SerieCardSkeleton";
+import PageTitle from "@/components/ui/PageTitle/PageTitle";
+import FavoritesHeader from "@/components/favorites/FavoritesHeader/FavoritesHeader";
+import { mdiBookmarkPlusOutline } from "@mdi/js";
 
 export default function FavoritesPage() {
   const { trackedSeries, isLoading } = useTrackedSeries();
@@ -12,8 +15,9 @@ export default function FavoritesPage() {
   const favorites = trackedSeries.filter((s) => s.isFavorite);
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>My Favorites</h1>
+    <div className={styles.page}>
+      <PageTitle title="Favorites" icon={mdiBookmarkPlusOutline} />
+      {!isLoading && favorites.length > 0 && <FavoritesHeader favorites={favorites} />}
       {isLoading ? (
         <div className={styles.grid}>
           {Array.from({ length: favorites.length }).map((_, i) => (

@@ -1,0 +1,51 @@
+import styles from "./FavoritesHeader.module.css";
+import { computeAverageScore } from "@/lib/utils/ratings.utils";
+
+export default function FavoritesHeader({ favorites }) {
+  const favoritesCount = favorites.length;
+
+  // Score moyen
+  const scores = favorites.map((tracked) => computeAverageScore(tracked.seriesId?.ratings)).filter((s) => s !== null);
+  const avgScore = scores.length > 0 ? Math.round(scores.reduce((sum, s) => sum + s, 0) / scores.length) : null;
+
+  // Top genre
+  const genreCount = new Map();
+  for (const tracked of favorites) {
+    const genres = tracked.seriesId?.genres ?? [];
+    for (const genre of genres) {
+      genreCount.set(genre, (genreCount.get(genre) ?? 0) + 1);
+    }
+  }
+  let topGenre = null;
+  let topGenreCount = 0;
+  for (const [genre, count] of genreCount) {
+    if (count > topGenreCount) {
+      topGenre = genre;
+      topGenreCount = count;
+    }
+  }
+
+  return (
+    <section className={styles.wrapper}>
+      <div className={styles.title}>
+        <h2 className={styles.heading}>Your favorites</h2>
+        <p className={styles.subtitle}>The series you love the most</p>
+      </div>
+
+      <div className={styles.stats}>
+        <Stat label="Favorites" value={favoritesCount} />
+        <Stat label="Avg score" value={avgScore !== null ? avgScore : "—"} />
+        <Stat label="Top genre" value={topGenre ?? "—"} />
+      </div>
+    </section>
+  );
+}
+
+function Stat({ label, value }) {
+  return (
+    <div className={styles.stat}>
+      <span className={styles.statValue}>{value}</span>
+      <span className={styles.statLabel}>{label}</span>
+    </div>
+  );
+}
