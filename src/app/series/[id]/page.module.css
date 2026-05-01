@@ -1,72 +1,85 @@
 .container {
-  padding: 2rem 0;
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - var(--header-height));
 }
 
-.serieCard {
-  display: flex;
-  flex-wrap: wrap;
-  background-color: var(--card-bg);
-  border-radius: 0.25rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  overflow: hidden;
-  margin-bottom: 2rem;
-}
-
-/* ── Poster réduit ── */
-.posterSection {
-  flex: 0 0 100%;
-  max-width: 100%;
-  padding: 0;
-}
-@media (min-width: 768px) {
-  .posterSection {
-    flex: 0 0 200px;
-    max-width: 200px;
-  }
-}
-
-.posterImage {
+/* ─── Hero Backdrop ─── */
+.hero {
+  position: relative;
   width: 100%;
-  height: auto;
-  border-radius: 0.25rem 0 0 0.25rem;
+  height: 50vh;
+  min-height: 320px;
+  max-height: 480px;
+  overflow: hidden;
+}
+
+.heroImage {
   object-fit: cover;
-  display: block;
+  object-position: center 20%;
 }
 
-/* ── Détails ── */
-.detailsSection {
-  flex: 1;
-  min-width: 0;
-  padding: 1.5rem;
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--background-primary-rgb), 0.3) 0%,
+    rgba(var(--background-primary-rgb), 0.5) 50%,
+    rgba(var(--background-primary-rgb), 0.95) 100%
+  );
 }
 
-.serieTitle {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+.heroContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem 2rem 6rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.heroTitle {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
   color: var(--foreground);
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-.serieTagline {
+.heroTagline {
   font-style: italic;
-  color: #6c757d;
-  margin-bottom: 1rem;
-}
-
-.mutedText {
-  color: #6c757d;
-  margin-bottom: 0.5rem;
-}
-
-.serieOverview {
+  font-size: 1rem;
   color: var(--foreground);
-  margin-bottom: 1rem;
-  line-height: 1.6;
+  opacity: 0.85;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* ─── Liste épisodes ─── */
+.episodesSection {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
 }
 
 .notFoundMessage {
   text-align: center;
   margin-top: 3rem;
   color: var(--foreground);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .hero {
+    height: 35vh;
+    min-height: 240px;
+  }
+
+  .heroContent {
+    padding: 1rem 1rem 5rem;
+  }
+
+  .episodesSection {
+    padding: 0 1rem 3rem;
+  }
 }

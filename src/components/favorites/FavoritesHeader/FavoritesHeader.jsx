@@ -56,7 +56,6 @@ export default function FavoritesHeader({ favorites, isLoading = false }) {
 }
 
 function Stat({ label, value, isLoading }) {
-  console.log(`Stat ${label} — isLoading: ${isLoading}, value: ${value}`);
   return (
     <div className={styles.stat}>
       <span className={styles.statValue}>

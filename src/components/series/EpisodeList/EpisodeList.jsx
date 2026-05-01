@@ -1,10 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import styles from "./EpisodeList.module.css";
 import { useEpisodeList } from "@/hooks/useEpisodeList";
-import Icon from "@mdi/react";
-import { mdiChevronDown, mdiChevronUp } from "@mdi/js";
 import EpisodeCard from "../EpisodeCard/EpisodeCard";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 
@@ -35,13 +32,19 @@ function SeasonBlock({ seasonNumber, episodes, onToggle }) {
 
   return (
     <div className={styles.season}>
-      <SectionHeader title={`Season ${seasonNumber}`} subtitle={`${watchedCount}/${airedEpisodes.length}`}>
-        <div className={styles.episodeGrid}>
+      <SectionHeader
+        title={`Season ${seasonNumber}`}
+        subtitle={`${watchedCount}/${airedEpisodes.length}`}
+        storageKey={`series-season-${seasonNumber}-open`}
+        defaultOpen={watchedCount < airedEpisodes.length}
+      >
+        <div className={styles.episodeRows}>
           {episodes.map((ep) => (
             <EpisodeCard
               key={ep._id ?? `${ep.seasonNumber}-${ep.episodeNumber}`}
               ep={ep}
               onToggle={onToggle}
+              layout="row"
               disableTooltip
             />
           ))}
