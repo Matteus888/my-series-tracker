@@ -10,7 +10,7 @@ const TrackedSeriesContext = createContext(null);
 
 export const TrackedSeriesProvider = ({ children }) => {
   const [trackedSeries, setTrackedSeries] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [watchedCount, setWatchedCount] = useState(0);
 
@@ -22,6 +22,7 @@ export const TrackedSeriesProvider = ({ children }) => {
   const fetchTrackedSeries = useCallback(async () => {
     if (!session) {
       setTrackedSeries([]);
+      setIsLoading(false);
       return;
     }
     setIsLoading(true);

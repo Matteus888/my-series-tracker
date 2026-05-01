@@ -1,7 +1,18 @@
-import styles from "./FavoritesHeader.module.css";
-import { computeAverageScore } from "@/lib/utils/ratings.utils";
+"use client";
 
-export default function FavoritesHeader({ favorites }) {
+import styles from "./FavoritesHeader.module.css";
+import { useState, useEffect } from "react";
+import { computeAverageScore } from "@/lib/utils/ratings.utils";
+import Icon from "@mdi/react";
+import { mdiLoading } from "@mdi/js";
+
+export default function FavoritesHeader({ favorites, isLoading = false }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const favoritesCount = favorites.length;
 
   // Score moyen
@@ -25,6 +36,9 @@ export default function FavoritesHeader({ favorites }) {
     }
   }
 
+  // Force le loading tant que le composant n'est pas monté côté client
+  const showLoading = !mounted || isLoading;
+
   return (
     <section className={styles.wrapper}>
       <div className={styles.title}>
@@ -33,18 +47,21 @@ export default function FavoritesHeader({ favorites }) {
       </div>
 
       <div className={styles.stats}>
-        <Stat label="Favorites" value={favoritesCount} />
-        <Stat label="Avg score" value={avgScore !== null ? avgScore : "—"} />
-        <Stat label="Top genre" value={topGenre ?? "—"} />
+        <Stat label="Favorites" value={favoritesCount} isLoading={showLoading} />
+        <Stat label="Avg score" value={avgScore !== null ? avgScore : "—"} isLoading={showLoading} />
+        <Stat label="Top genre" value={topGenre ?? "—"} isLoading={showLoading} />
       </div>
     </section>
   );
 }
 
-function Stat({ label, value }) {
+function Stat({ label, value, isLoading }) {
+  console.log(`Stat ${label} — isLoading: ${isLoading}, value: ${value}`);
   return (
     <div className={styles.stat}>
-      <span className={styles.statValue}>{value}</span>
+      <span className={styles.statValue}>
+        {isLoading ? <Icon path={mdiLoading} size={0.9} className={styles.spinner} /> : value}
+      </span>
       <span className={styles.statLabel}>{label}</span>
     </div>
   );

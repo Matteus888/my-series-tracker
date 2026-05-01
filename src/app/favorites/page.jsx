@@ -9,6 +9,8 @@ import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import FavoritesHeader from "@/components/favorites/FavoritesHeader/FavoritesHeader";
 import { mdiBookmarkPlusOutline } from "@mdi/js";
 
+const SKELETON_COUNT = 12;
+
 export default function FavoritesPage() {
   const { trackedSeries, isLoading } = useTrackedSeries();
 
@@ -17,10 +19,11 @@ export default function FavoritesPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="Favorites" icon={mdiBookmarkPlusOutline} />
-      {!isLoading && favorites.length > 0 && <FavoritesHeader favorites={favorites} />}
+      <FavoritesHeader favorites={favorites} isLoading={isLoading} />
+
       {isLoading ? (
         <div className={styles.grid}>
-          {Array.from({ length: favorites.length }).map((_, i) => (
+          {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
             <SerieCardSkeleton key={i} />
           ))}
         </div>
