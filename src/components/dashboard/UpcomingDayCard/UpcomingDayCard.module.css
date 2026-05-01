@@ -151,7 +151,9 @@
   height: 0.85rem;
   width: auto;
   margin-left: auto;
-  filter: brightness(0) invert(1);
   opacity: 0.85;
-  /* margin-left: auto; */
+}
+
+.footerNetworkLogoInverted {
+  filter: brightness(0) invert(1);
 }

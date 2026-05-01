@@ -4,6 +4,7 @@ import styles from "./SeriePresentation.module.css";
 import Image from "next/image";
 import { formatDate } from "@/lib/utils/date.utils";
 import { useSerieCard } from "@/hooks/useSerieCard";
+import { shouldInvertLogo } from "@/lib/utils/network.utils";
 import SerieCardPopovers from "@/components/series/SerieCard/SerieCardPopovers";
 import SeriePresentationActions from "./SeriePresentationActions";
 
@@ -94,7 +95,7 @@ export default function SeriePresentation({ serie }) {
                     alt={n.name}
                     width={60}
                     height={24}
-                    className={styles.networkLogo}
+                    className={`${styles.networkLogo} ${shouldInvertLogo(n.id) ? styles.networkLogoInverted : ""}`}
                   />
                 ) : (
                   <span key={n.id} className={styles.networkLabel}>

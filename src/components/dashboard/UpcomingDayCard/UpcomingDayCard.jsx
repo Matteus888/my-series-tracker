@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDateLabel } from "@/lib/utils/date.utils";
 import { formatDuration } from "@/lib/utils/duration.utils";
+import { shouldInvertLogo } from "@/lib/utils/network.utils";
 import styles from "./UpcomingDayCard.module.css";
 
 export default function UpcomingDayCard({ day }) {
@@ -76,7 +77,7 @@ export default function UpcomingDayCard({ day }) {
               width={32}
               height={32}
               loading="eager"
-              className={styles.footerNetworkLogo}
+              className={`${styles.footerNetworkLogo} ${shouldInvertLogo(network.id) ? styles.footerNetworkLogoInverted : ""}`}
             />
           )}
         </div>

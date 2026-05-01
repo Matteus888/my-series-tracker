@@ -117,8 +117,11 @@
 .networkLogo {
   height: 24px;
   width: auto;
-  filter: brightness(0) invert(1);
   opacity: 0.8;
+}
+
+.networkLogoInverted {
+  filter: brightness(0) invert(1);
 }
 
 /* ─── Responsive ─── */
