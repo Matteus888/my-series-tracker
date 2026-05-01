@@ -78,7 +78,7 @@ export default function AccountPasswordForm() {
           />
         </div>
         <button type="submit" className={styles.saveButton} title="Save changes" disabled={isLoading}>
-          <Icon path={mdiContentSaveMoveOutline} size={1} />
+          <Icon path={mdiContentSaveMoveOutline} size={0.8} />
         </button>
       </form>
     </>

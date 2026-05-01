@@ -93,9 +93,10 @@ export default function SeriePresentation({ serie }) {
                     key={n.id}
                     src={`https://image.tmdb.org/t/p/w92${n.logo_path}`}
                     alt={n.name}
-                    width={60}
-                    height={24}
+                    width={92}
+                    height={92}
                     className={`${styles.networkLogo} ${shouldInvertLogo(n.id) ? styles.networkLogoInverted : ""}`}
+                    style={{ height: 24, width: "auto", opacity: 0.8 }}
                   />
                 ) : (
                   <span key={n.id} className={styles.networkLabel}>

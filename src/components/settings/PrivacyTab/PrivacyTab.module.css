@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 1.25rem;
   padding: 1.25rem 1.5rem;
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), rgba(var(--card-bg-rgb), 0.6);
+  background-color: var(--background-secondary);
   border: 1px solid var(--border);
 }
 
@@ -33,7 +33,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1rem 1.25rem;
-  background-color: var(--background-secondary);
+  background-color: var(--background-primary);
   border: 1px solid var(--border);
   transition:
     border-color 0.15s ease,
@@ -42,7 +42,7 @@
 
 .miniCardActive {
   border-color: var(--blue);
-  background-color: color-mix(in srgb, var(--blue) 8%, var(--background-secondary));
+  background-color: color-mix(in srgb, var(--blue) 8%, var(--background-primary));
 }
 
 .miniCardText {
@@ -92,7 +92,7 @@
   padding: 0 6px;
   font-size: 0.6rem;
   font-weight: 600;
-  background-color: var(--background-primary);
+  background-color: var(--background-secondary);
   border: 1px solid var(--border);
   color: var(--foreground);
   transition: all 0.2s ease;
