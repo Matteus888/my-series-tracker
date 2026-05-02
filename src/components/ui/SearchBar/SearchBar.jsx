@@ -6,7 +6,8 @@ import { mdiMagnify, mdiClose } from "@mdi/js";
 import { useEffect, useRef, useState } from "react";
 import { useSearch } from "@/context/SearchContext";
 import { searchSeries } from "@/lib/api/tmdb.api";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { sortByRelevance } from "@/lib/utils/searchScore.utils";
 import DynamicSearchResult from "../../series/DynamicSearchResult/DynamicSearchResult";
 import DynamicSearchResultSkeleton from "../../series/DynamicSearchResultSkeleton/DynamicSearchResultSkeleton";
 
@@ -14,8 +15,11 @@ export default function SearchBar() {
   const { query, setQuery, results, setResults, loading, setLoading, isOpen, setIsOpen } = useSearch();
   const searchInputRef = useRef(null);
   const router = useRouter();
+  const pathname = usePathname();
   const [totalResults, setTotalResults] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(-1); // -1 = rien de sélectionné
+
+  const isOnSearchPage = pathname === "/search";
 
   // Recherche live avec debounce
   useEffect(() => {
@@ -25,14 +29,27 @@ export default function SearchBar() {
       setResults([]);
       setTotalResults(0);
       setIsOpen(false);
+
+      // Sur /search, on nettoie l'URL si l'input est vidé
+      if (isOnSearchPage) {
+        router.replace("/search");
+      }
       return;
     }
 
     const timeoutId = setTimeout(async () => {
+      // Sur /search : on push la query dans l'URL, c'est la page qui fetch
+      if (isOnSearchPage) {
+        router.replace(`/search?query=${encodeURIComponent(query)}`);
+        setIsOpen(false);
+        return;
+      }
+
       setLoading(true);
       try {
         const data = await searchSeries(query, 1);
-        setResults(data.results.slice(0, 10));
+        const sorted = sortByRelevance(data.results, query);
+        setResults(sorted.slice(0, 10));
         setTotalResults(data.totalResults);
         setIsOpen(true);
       } catch (err) {
@@ -45,7 +62,7 @@ export default function SearchBar() {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [query, setResults, setLoading, setIsOpen]);
+  }, [query, setResults, setLoading, setIsOpen, isOnSearchPage, router]);
 
   // Fermeture de la liste si on clique en dehors
   useEffect(() => {
@@ -65,11 +82,18 @@ export default function SearchBar() {
     if (query.trim()) {
       router.push(`/search?query=${encodeURIComponent(query.trim())}`);
       setIsOpen(false);
-      setQuery("");
+      if (!isOnSearchPage) setQuery("");
     }
   };
 
   const handleKeyDown = (e) => {
+    if (isOnSearchPage) {
+      if (e.key === "Escape") {
+        setQuery("");
+      }
+      return;
+    }
+
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex((prev) => (prev < results.length - 1 ? prev + 1 : prev));
@@ -99,6 +123,8 @@ export default function SearchBar() {
     setQuery("");
   };
 
+  const showDropdown = isOpen && !isOnSearchPage;
+
   return (
     <div className={styles.container} ref={searchInputRef}>
       <input
@@ -108,7 +134,7 @@ export default function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => {
-          if (query.trim() && results.length > 0) setIsOpen(true);
+          if (!isOnSearchPage && query.trim() && results.length > 0) setIsOpen(true);
         }}
         onKeyDown={handleKeyDown}
       />
@@ -123,7 +149,7 @@ export default function SearchBar() {
         {query && <Icon path={mdiClose} size={0.8} />}
       </span>
       {/* Liste des résultats */}
-      {isOpen && (
+      {showDropdown && (
         <div className={styles.resultsContainer}>
           <div className={styles.resultsList}>
             {loading ? (
