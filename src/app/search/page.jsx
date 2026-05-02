@@ -11,6 +11,7 @@ import SidebarHeader from "@/components/layout/SidebarHeader/SidebarHeader";
 import SerieCard from "@/components/series/SerieCard/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton/SerieCardSkeleton";
 import Pagination from "@/components/ui/Pagination/Pagination";
+import NoSearchQueryCard from "@/components/series/NoSearchQueryCard/NoSearchQueryCard";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -135,10 +136,10 @@ export default function SearchPage() {
               <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage} />
             )}
           </>
-        ) : query ? (
-          <p className={styles.emptyMessage}>No result found.</p>
         ) : (
-          <p className={styles.emptyMessage}>Type something to search.</p>
+          <div className={styles.emptyState}>
+            <NoSearchQueryCard hasQuery={!!query} />
+          </div>
         )}
       </div>
     </div>

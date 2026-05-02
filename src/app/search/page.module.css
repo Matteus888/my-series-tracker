@@ -76,8 +76,7 @@
   padding: 0;
 }
 
-.emptyMessage {
-  text-align: center;
-  padding: 2rem;
-  color: var(--foreground);
+.emptyState {
+  padding: 1rem;
+  max-width: 400px;
 }
