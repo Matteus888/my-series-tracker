@@ -11,7 +11,8 @@ import SidebarHeader from "@/components/layout/SidebarHeader/SidebarHeader";
 import SerieCard from "@/components/series/SerieCard/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton/SerieCardSkeleton";
 import Pagination from "@/components/ui/Pagination/Pagination";
-import NoSearchQueryCard from "@/components/series/NoSearchQueryCard/NoSearchQueryCard";
+import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
+import { mdiMagnify } from "@mdi/js";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -136,10 +137,14 @@ export default function SearchPage() {
               <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleChangePage} />
             )}
           </>
+        ) : query ? (
+          <EmptyStateCard icon={mdiMagnify} label="No result found" subtitle="Try another title or keyword" />
         ) : (
-          <div className={styles.emptyState}>
-            <NoSearchQueryCard hasQuery={!!query} />
-          </div>
+          <EmptyStateCard
+            icon={mdiMagnify}
+            label="Start your search"
+            subtitle="Type a series title in the search bar"
+          />
         )}
       </div>
     </div>

@@ -21,8 +21,3 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
 }
-
-.empty {
-  color: #6c757d;
-  font-size: 0.875rem;
-}

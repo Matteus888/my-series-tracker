@@ -10,7 +10,8 @@ import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import ListsHeader from "@/components/lists/ListsHeader/ListsHeader";
-import { mdiPlaylistPlus } from "@mdi/js";
+import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
+import { mdiPlaylistPlus, mdiPlaylistRemove, mdiBookmarkOutline } from "@mdi/js";
 
 export default function ListsPage() {
   const { lists, watchlist, isLoading: listsLoading } = useList();
@@ -51,7 +52,11 @@ export default function ListsPage() {
                 </div>
               ))
             ) : watchlistSeries.length === 0 ? (
-              <p className={styles.empty}>No series in your watchlist.</p>
+              <EmptyStateCard
+                icon={mdiBookmarkOutline}
+                label="Your watchlist is empty"
+                subtitle="Bookmark shows you want to watch later"
+              />
             ) : (
               watchlistSeries.map((serie) => {
                 const item = {
@@ -78,7 +83,11 @@ export default function ListsPage() {
           <div className={styles.carouselWrapper}>
             <div className={styles.carousel} ref={scrollerRef}>
               {list.series.length === 0 ? (
-                <p className={styles.empty}>No series in this list.</p>
+                <EmptyStateCard
+                  icon={mdiPlaylistRemove}
+                  label="This list is empty"
+                  subtitle="Add series from the search or browse pages"
+                />
               ) : (
                 list.series.map((serie) => {
                   const item = {
@@ -103,6 +112,13 @@ export default function ListsPage() {
           </div>
         </SectionHeader>
       ))}
+      {customLists.length === 0 && (
+        <EmptyStateCard
+          icon={mdiPlaylistPlus}
+          label="No custom lists yet"
+          subtitle="Create your first list to organize your shows by theme or mood"
+        />
+      )}
     </div>
   );
 }

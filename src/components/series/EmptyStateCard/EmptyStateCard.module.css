@@ -5,10 +5,9 @@
   padding: 0.75rem 1rem;
   border: 1px solid var(--border);
   background-color: var(--background-secondary);
-  border-radius: 4px;
   color: var(--foreground);
-  height: 100%;
   min-height: 90px;
+  max-width: 500px;
 }
 
 .iconWrapper {
@@ -44,4 +43,8 @@
   color: var(--foreground);
   opacity: 0.7;
   letter-spacing: 0.01em;
+}
+
+.action {
+  margin-top: 0.5rem;
 }

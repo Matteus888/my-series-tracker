@@ -7,6 +7,7 @@ import SerieCard from "@/components/series/SerieCard/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton/SerieCardSkeleton";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import FavoritesHeader from "@/components/favorites/FavoritesHeader/FavoritesHeader";
+import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
 import { mdiBookmarkPlusOutline } from "@mdi/js";
 
 const SKELETON_COUNT = 12;
@@ -36,7 +37,11 @@ export default function FavoritesPage() {
           })}
         </div>
       ) : (
-        <p className={styles.empty}>No favorites yet. Click the bookmark icon on a show to add it here.</p>
+        <EmptyStateCard
+          icon={mdiBookmarkPlusOutline}
+          label="No favorites yet"
+          subtitle="Click the bookmark icon on a show to add it here"
+        />
       )}
     </div>
   );

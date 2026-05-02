@@ -6,6 +6,7 @@ import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import ContinueWatchingCard from "@/components/dashboard/ContinueWatchingCard/ContinueWatchingCard";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import WatchingHeader from "@/components/watching/WatchingHeader/WatchingHeader";
+import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import { mdiTelevisionPlay } from "@mdi/js";
 
@@ -92,7 +93,11 @@ export default function WatchingPage() {
     return (
       <div className={styles.page}>
         <PageTitle title="Continue watching" icon={mdiTelevisionPlay} />
-        <p className={styles.empty}>No series in progress.</p>
+        <EmptyStateCard
+          icon={mdiTelevisionPlay}
+          label="Nothing in progress"
+          subtitle="Start watching a show to see it here"
+        />
       </div>
     );
 
