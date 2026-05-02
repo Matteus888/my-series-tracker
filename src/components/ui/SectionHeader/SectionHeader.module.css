@@ -109,3 +109,10 @@
     transform: none;
   }
 }
+
+.actions {
+  display: flex;
+  align-items: center;
+  margin-left: 0.1rem;
+  position: relative;
+}

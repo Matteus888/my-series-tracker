@@ -11,6 +11,7 @@ import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import ListsHeader from "@/components/lists/ListsHeader/ListsHeader";
 import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
+import ListActions from "@/components/lists/ListActions/ListActions";
 import { mdiPlaylistPlus, mdiPlaylistRemove, mdiBookmarkOutline } from "@mdi/js";
 
 export default function ListsPage() {
@@ -79,6 +80,7 @@ export default function ListsPage() {
           key={list._id}
           title={`${list.name} (${list.series.length})`}
           storageKey={`section-list-${list._id}`}
+          actions={<ListActions list={list} />}
         >
           <div className={styles.carouselWrapper}>
             <div className={styles.carousel} ref={scrollerRef}>

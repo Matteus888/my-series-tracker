@@ -16,6 +16,7 @@ export default function SectionHeader({
   defaultOpen = true,
   children,
   storageKey,
+  actions,
 }) {
   const persistedState = usePersistedOpen(storageKey ?? null, defaultOpen);
   const localState = useState(defaultOpen);
@@ -49,6 +50,7 @@ export default function SectionHeader({
           </>
         )}
         {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
+        {actions && <div className={styles.actions}>{actions}</div>}
       </div>
       <div className={`${styles.collapsible} ${isOpen ? styles.open : styles.closed}`} aria-hidden={!isOpen}>
         <div className={styles.collapsibleInner}>{children}</div>
