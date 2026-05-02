@@ -52,6 +52,7 @@
   min-width: 100%;
   padding: 0;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
   position: relative;
@@ -74,5 +75,20 @@
 
 .button:global(.check.active) {
   background-color: var(--blue);
+  color: var(--foreground);
+}
+
+.heartWrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.25rem;
+  cursor: pointer;
+}
+
+.rating {
+  font-size: 0.75rem;
   color: var(--foreground);
 }

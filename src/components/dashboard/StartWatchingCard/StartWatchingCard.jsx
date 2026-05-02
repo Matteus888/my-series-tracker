@@ -8,16 +8,20 @@ import { mdiCheck, mdiPlaylistPlus } from "@mdi/js";
 import { usePopover } from "@/hooks/usePopover";
 import WatchlistPopover from "@/components/ui/WatchlistPopover/WatchlistPopover";
 import ConfirmPopover from "@/components/ui/ConfirmPopover/ConfirmPopover";
+import RatingsPopover from "@/components/ui/RatingsPopover/RatingsPopover";
+import HeartRating from "@/components/ui/HeartRating/HeartRating";
 import { useList } from "@/context/ListContext";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import { useSeries } from "@/hooks/useSeries";
+import { computeAverageScore } from "@/lib/utils/ratings.utils";
 
 export default function StartWatchingCard({ item, onCheck, isChecking, showCheck = false }) {
   const { tmdbId, title, posterPath } = item;
   const watchlistPopover = usePopover();
   const confirmPopover = usePopover();
+  const ratingsPopover = usePopover();
   const { lists } = useList();
-  const { isTracked } = useTrackedSeries();
+  const { isTracked, trackedSeries } = useTrackedSeries();
   const tracked = isTracked(tmdbId);
 
   // Objet serie compatible avec WatchlistPopover
@@ -26,6 +30,11 @@ export default function StartWatchingCard({ item, onCheck, isChecking, showCheck
   const { toggle } = useSeries(tmdbId, serie);
 
   const inAnyList = lists.some((l) => l.series.some((s) => s.tmdbId === tmdbId));
+
+  // Note moyenne TMDB+IMDB de la série trackée (pour afficher le score à droite)
+  const trackedEntry = trackedSeries.find((s) => s.tmdbId === tmdbId);
+  const ratings = trackedEntry?.seriesId?.ratings ?? null;
+  const score = ratings ? computeAverageScore(ratings) : null;
 
   const handleConfirm = (confirm) => {
     if (tracked) {
@@ -55,6 +64,7 @@ export default function StartWatchingCard({ item, onCheck, isChecking, showCheck
               popoverRef={confirmPopover.popoverRef}
             />
           )}
+          {ratingsPopover.isOpen && <RatingsPopover serie={serie} popoverRef={ratingsPopover.popoverRef} />}
           <Link href={`/series/${tmdbId}`} className={styles.imageLink}>
             {posterPath ? (
               <Image
@@ -95,6 +105,18 @@ export default function StartWatchingCard({ item, onCheck, isChecking, showCheck
               <Icon path={mdiPlaylistPlus} size={1} />
             </button>
           </div>
+
+          {/* Heart à droite — uniquement si trackée et score dispo */}
+          {tracked && (score ?? 0) > 0 && (
+            <div
+              className={`btn heartWrapper ${styles.heartWrapper} ${ratingsPopover.isOpen ? "active" : ""}`}
+              onClick={() => ratingsPopover.toggle()}
+              title={trackedEntry?.rating ? `Your rating: ${trackedEntry.rating}/10` : "Rate this show"}
+            >
+              <HeartRating percentage={score} />
+              <span className={styles.rating}>{score}%</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
