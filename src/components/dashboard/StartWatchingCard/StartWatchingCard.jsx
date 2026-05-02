@@ -9,20 +9,31 @@ import { usePopover } from "@/hooks/usePopover";
 import WatchlistPopover from "@/components/ui/WatchlistPopover/WatchlistPopover";
 import ConfirmPopover from "@/components/ui/ConfirmPopover/ConfirmPopover";
 import { useList } from "@/context/ListContext";
+import { useTrackedSeries } from "@/context/TrackedSeriesContext";
+import { useSeries } from "@/hooks/useSeries";
 
 export default function StartWatchingCard({ item, onCheck, isChecking, showCheck = false }) {
   const { tmdbId, title, posterPath } = item;
   const watchlistPopover = usePopover();
   const confirmPopover = usePopover();
   const { lists } = useList();
+  const { isTracked } = useTrackedSeries();
+  const tracked = isTracked(tmdbId);
 
   // Objet serie compatible avec WatchlistPopover
   const serie = { id: tmdbId, name: title, poster_path: posterPath };
+
+  const { toggle } = useSeries(tmdbId, serie);
+
   const inAnyList = lists.some((l) => l.series.some((s) => s.tmdbId === tmdbId));
 
   const handleConfirm = (confirm) => {
-    if (confirm === "first") onCheck(item, "first");
-    if (confirm === "all") onCheck(item, "all");
+    if (tracked) {
+      if (confirm) toggle();
+    } else {
+      if (confirm === "first") onCheck?.(item, "first");
+      if (confirm === "all") onCheck?.(item, "all");
+    }
     confirmPopover.close();
   };
 
@@ -39,7 +50,7 @@ export default function StartWatchingCard({ item, onCheck, isChecking, showCheck
           {confirmPopover.isOpen && (
             <ConfirmPopover
               serieName={title}
-              isTracked={false}
+              isTracked={tracked}
               onConfirm={handleConfirm}
               popoverRef={confirmPopover.popoverRef}
             />
@@ -66,10 +77,10 @@ export default function StartWatchingCard({ item, onCheck, isChecking, showCheck
             {/* Check */}
             {showCheck && (
               <button
-                className={`btn check ${styles.button} ${isChecking || confirmPopover.isOpen ? "active" : ""}`}
+                className={`btn check ${styles.button} ${tracked || isChecking || confirmPopover.isOpen ? "active" : ""}`}
                 onClick={() => confirmPopover.open()}
                 disabled={isChecking}
-                title="Start watching"
+                title={tracked ? "Tracked" : "Start watching"}
               >
                 <Icon path={mdiCheck} size={1} />
               </button>

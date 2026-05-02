@@ -71,3 +71,8 @@
   border-radius: 0;
   flex-shrink: 0;
 }
+
+.button:global(.check.active) {
+  background-color: var(--blue);
+  color: var(--foreground);
+}

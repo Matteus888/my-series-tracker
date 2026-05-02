@@ -3,6 +3,7 @@
 import styles from "./page.module.css";
 import { useList } from "@/context/ListContext";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
+import { useStartWatching } from "@/hooks/useStartWatching";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import StartWatchingCard from "@/components/dashboard/StartWatchingCard/StartWatchingCard";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
@@ -14,6 +15,7 @@ import { mdiPlaylistPlus } from "@mdi/js";
 export default function ListsPage() {
   const { lists, watchlist, isLoading: listsLoading } = useList();
   const { scrollerRef, canScrollLeft, canScrollRight, scrollBy } = useCarouselArrows();
+  const { checkFirstEpisode, checkingId } = useStartWatching();
 
   const customLists = lists.filter((l) => !l.isDefault);
   const watchlistSeries = watchlist?.series ?? [];
@@ -85,7 +87,15 @@ export default function ListsPage() {
                     title: serie.title,
                     posterPath: serie.posterPath ?? null,
                   };
-                  return <StartWatchingCard key={item.seriesId} item={item} showCheck={false} />;
+                  return (
+                    <StartWatchingCard
+                      key={item.seriesId}
+                      item={item}
+                      showCheck={true}
+                      onCheck={checkFirstEpisode}
+                      isChecking={checkingId === item.seriesId}
+                    />
+                  );
                 })
               )}
             </div>
