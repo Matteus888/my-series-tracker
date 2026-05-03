@@ -121,6 +121,22 @@ const seriesSchema = new mongoose.Schema(
         logoPath: { type: String, trim: true },
       },
     ],
+    cast: [
+      {
+        tmdbId: { type: Number, required: true },
+        name: { type: String, trim: true },
+        character: { type: String, trim: true },
+        profilePath: { type: String, trim: true },
+        order: { type: Number },
+      },
+    ],
+    createdBy: [
+      {
+        tmdbId: { type: Number, required: true },
+        name: { type: String, trim: true },
+        profilePath: { type: String, trim: true },
+      },
+    ],
     isPopular: {
       type: Boolean,
       default: false, // Peut être mis à jour via un cron job (ex: séries les plus suivies)

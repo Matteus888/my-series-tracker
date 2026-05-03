@@ -75,6 +75,47 @@ export default async function SeriesPage({ params }) {
     }
   }
 
+  // ─── Cast ─────────────────────────────────────────
+  let cast = [];
+  if (seriesDoc?.cast?.length > 0) {
+    cast = seriesDoc.cast.map((c) => ({
+      tmdbId: c.tmdbId,
+      name: c.name,
+      character: c.character,
+      profilePath: c.profilePath,
+    }));
+  } else if (serie.aggregate_credits?.cast?.length > 0) {
+    cast = serie.aggregate_credits.cast
+      .sort((a, b) => (b.total_episode_count ?? 0) - (a.total_episode_count ?? 0))
+      .slice(0, 20)
+      .map((c) => ({
+        tmdbId: c.id,
+        name: c.name,
+        character:
+          (c.roles ?? [])
+            .map((r) => r.character)
+            .filter(Boolean)
+            .join(" / ") || null,
+        profilePath: c.profile_path ?? null,
+      }));
+  }
+
+  // ─── Created by ────────────────────────────────────
+  let createdBy = [];
+  if (seriesDoc?.createdBy?.length > 0) {
+    createdBy = seriesDoc.createdBy.map((c) => ({
+      tmdbId: c.tmdbId,
+      name: c.name,
+      profilePath: c.profilePath,
+    }));
+  } else if (serie.created_by?.length > 0) {
+    createdBy = serie.created_by.map((c) => ({
+      tmdbId: c.id,
+      name: c.name,
+      profilePath: c.profile_path ?? null,
+    }));
+  }
+
   const serieData = {
     name: serie.name,
     poster_path: serie.poster_path,
@@ -111,7 +152,13 @@ export default async function SeriesPage({ params }) {
       </div>
 
       {/* Carte de présentation */}
-      <SeriePresentation serie={serie} serieData={serieData} ratings={seriesRatings} />
+      <SeriePresentation
+        serie={serie}
+        serieData={serieData}
+        ratings={seriesRatings}
+        cast={cast}
+        createdBy={createdBy}
+      />
 
       {/* Liste épisodes */}
       {episodeProgress.length > 0 && (

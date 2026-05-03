@@ -1,0 +1,144 @@
+.wrapper {
+  border: 1px solid var(--border);
+  background: var(--background-secondary);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: 1rem 1.5rem 0.5rem;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+  letter-spacing: 0.02rem;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.carouselContainer {
+  position: relative;
+}
+
+.carousel {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem 1rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.castItem {
+  flex: 0 0 auto;
+  width: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.15s ease;
+}
+
+.castItem:hover {
+  opacity: 0.85;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 110px;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--background-third);
+}
+
+.image {
+  object-fit: cover;
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground);
+  font-size: 1.8rem;
+  font-weight: 600;
+  opacity: 0.4;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0 0.1rem;
+}
+
+.name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.character {
+  font-size: 0.7rem;
+  color: var(--foreground);
+  opacity: 0.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--background-primary-rgb), 0.35);
+  color: rgba(var(--foreground-rgb), 0.8);
+  border: none;
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.arrow:hover {
+  background: rgba(var(--background-primary-rgb), 0.6);
+  color: rgba(var(--foreground-rgb), 1);
+}
+
+.arrowLeft {
+  left: 0.5rem;
+}
+
+.arrowRight {
+  right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .carousel {
+    padding: 0.75rem 1rem 1rem;
+  }
+  .header {
+    padding: 1rem 1rem 0.5rem;
+  }
+}

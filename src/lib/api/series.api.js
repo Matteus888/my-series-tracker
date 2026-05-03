@@ -8,6 +8,40 @@ import { getOmdbRatings } from "./omdb.api";
 import { upsertEpisodes } from "@/lib/db/upsertEpisodes";
 import dbConnect from "@/lib/db/db.connect";
 
+const buildCastFromTmdb = (aggregateCredits, limit = 20) => {
+  if (!aggregateCredits?.cast) return [];
+
+  return (
+    aggregateCredits.cast
+      // Trie par nombre d'épisodes décroissant (les plus présents en haut)
+      .sort((a, b) => (b.total_episode_count ?? 0) - (a.total_episode_count ?? 0))
+      .slice(0, limit)
+      .map((c) => {
+        // Concatène les rôles si l'acteur a joué plusieurs personnages
+        const character = (c.roles ?? [])
+          .map((r) => r.character)
+          .filter(Boolean)
+          .join(" / ");
+
+        return {
+          tmdbId: c.id,
+          name: c.name,
+          character: character || null,
+          profilePath: c.profile_path ?? null,
+          order: c.order,
+        };
+      })
+  );
+};
+
+const buildCreatedByFromTmdb = (createdBy = []) => {
+  return createdBy.map((c) => ({
+    tmdbId: c.id,
+    name: c.name,
+    profilePath: c.profile_path ?? null,
+  }));
+};
+
 export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, serieData, options = {}) => {
   await dbConnect();
 
@@ -45,6 +79,8 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
             name: n.name,
             logoPath: n.logo_path ?? null,
           })) ?? [],
+        cast: buildCastFromTmdb(seriesDetails.aggregate_credits),
+        createdBy: buildCreatedByFromTmdb(seriesDetails.created_by),
         imdbId,
         "ratings.tmdb.score": serieData.vote_average,
         "ratings.tmdb.voteCount": serieData.vote_count,
@@ -270,6 +306,8 @@ export const syncSeriesIfStale = async (SeriesModel, tmdbId) => {
             name: n.name,
             logoPath: n.logo_path ?? null,
           })) ?? [],
+        cast: buildCastFromTmdb(seriesDetails.aggregate_credits),
+        createdBy: buildCreatedByFromTmdb(seriesDetails.created_by),
         lastSyncedAt: new Date(),
         imdbId,
         "ratings.tmdb.score": seriesDetails.vote_average,
