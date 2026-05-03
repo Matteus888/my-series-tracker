@@ -56,7 +56,7 @@ export default function CalendarPage() {
     return (
       <div className={styles.page}>
         <PageTitle title="Calendar" icon={mdiCalendarClockOutline} />
-        <CalendarHeader days={days} />
+        <CalendarHeader days={days} isLoading={loading} />
         <PageLoader />
       </div>
     );
@@ -64,7 +64,7 @@ export default function CalendarPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="Calendar" icon={mdiCalendarClockOutline} />
-      <CalendarHeader days={days} />
+      <CalendarHeader days={days} isLoading={loading} />
       <div className={styles.layout}>
         <div className={styles.main}>
           {/* Section Today — toujours affichée */}

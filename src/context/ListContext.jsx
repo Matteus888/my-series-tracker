@@ -10,12 +10,13 @@ export const ListProvider = ({ children }) => {
   const { data: session } = useSession();
   const { showToast } = useToast();
   const [lists, setLists] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchLists = useCallback(async () => {
     if (!session) {
       setLists([]);
+      setIsLoading(false);
       return;
     }
     setIsLoading(true);

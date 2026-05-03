@@ -1,6 +1,8 @@
 import styles from "./ListsHeader.module.css";
+import Icon from "@mdi/react";
+import { mdiLoading } from "@mdi/js";
 
-export default function ListsHeader({ lists }) {
+export default function ListsHeader({ lists, isLoading = false }) {
   const watchlist = lists.find((l) => l.isDefault);
   const watchlistCount = watchlist?.series.length ?? 0;
 
@@ -25,18 +27,20 @@ export default function ListsHeader({ lists }) {
       </div>
 
       <div className={styles.stats}>
-        <Stat label="Lists" value={listsCount} />
-        <Stat label="Watchlist" value={watchlistCount} />
-        <Stat label="Total series" value={totalSeries} />
+        <Stat label="Lists" value={listsCount} isLoading={isLoading} />
+        <Stat label="Watchlist" value={watchlistCount} isLoading={isLoading} />
+        <Stat label="Total series" value={totalSeries} isLoading={isLoading} />
       </div>
     </section>
   );
 }
 
-function Stat({ label, value }) {
+function Stat({ label, value, isLoading }) {
   return (
     <div className={styles.stat}>
-      <span className={styles.statValue}>{value}</span>
+      <span className={styles.statValue}>
+        {isLoading ? <Icon path={mdiLoading} size={0.9} className={styles.spinner} /> : value}
+      </span>
       <span className={styles.statLabel}>{label}</span>
     </div>
   );

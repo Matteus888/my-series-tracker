@@ -85,7 +85,7 @@ export default function WatchingPage() {
     return (
       <div className={styles.page}>
         <PageTitle title="Continue watching" icon={mdiTelevisionPlay} />
-        <WatchingHeader items={items} />
+        <WatchingHeader items={items} isLoading={loading} />
         <PageLoader />
       </div>
     );
@@ -94,7 +94,7 @@ export default function WatchingPage() {
     return (
       <div className={styles.page}>
         <PageTitle title="Continue watching" icon={mdiTelevisionPlay} />
-        <WatchingHeader items={items} />
+        <WatchingHeader items={items} isLoading={loading} />
         <EmptyStateCard
           icon={mdiTelevisionPlay}
           label="Nothing in progress"
@@ -106,7 +106,7 @@ export default function WatchingPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="Continue watching" icon={mdiTelevisionPlay} />
-      <WatchingHeader items={items} />
+      <WatchingHeader items={items} isLoading={loading} />
       <div className={styles.grid}>
         {items.map((item) => (
           <div key={item.seriesId} className={styles.gridItem}>

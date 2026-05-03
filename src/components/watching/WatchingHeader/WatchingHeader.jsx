@@ -1,7 +1,9 @@
 import styles from "./WatchingHeader.module.css";
 import { formatLongDuration } from "@/lib/utils/duration.utils";
+import Icon from "@mdi/react";
+import { mdiLoading } from "@mdi/js";
 
-export default function WatchingHeader({ items }) {
+export default function WatchingHeader({ items, isLoading = false }) {
   const seriesCount = items.length;
 
   const totalRemainingEpisodes = items.reduce((sum, item) => sum + (item.remainingCount ?? 0), 0);
@@ -18,18 +20,20 @@ export default function WatchingHeader({ items }) {
       </div>
 
       <div className={styles.stats}>
-        <Stat label="Series" value={seriesCount} />
-        <Stat label="Episodes left" value={totalRemainingEpisodes} />
-        <Stat label="Time left" value={formatLongDuration(totalRemainingDuration) ?? "0min"} />
+        <Stat label="Series" value={seriesCount} isLoading={isLoading} />
+        <Stat label="Episodes left" value={totalRemainingEpisodes} isLoading={isLoading} />
+        <Stat label="Time left" value={formatLongDuration(totalRemainingDuration) ?? "0min"} isLoading={isLoading} />
       </div>
     </section>
   );
 }
 
-function Stat({ label, value }) {
+function Stat({ label, value, isLoading }) {
   return (
     <div className={styles.stat}>
-      <span className={styles.statValue}>{value}</span>
+      <span className={styles.statValue}>
+        {isLoading ? <Icon path={mdiLoading} size={0.9} className={styles.spinner} /> : value}
+      </span>
       <span className={styles.statLabel}>{label}</span>
     </div>
   );

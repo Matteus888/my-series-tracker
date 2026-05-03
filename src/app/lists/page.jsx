@@ -26,7 +26,7 @@ export default function ListsPage() {
     return (
       <div className={styles.page}>
         <PageTitle title="Lists" icon={mdiPlaylistPlus} />
-        <ListsHeader lists={lists} />
+        <ListsHeader lists={lists} isLoading={listsLoading} />
         <PageLoader />
       </div>
     );
@@ -34,7 +34,7 @@ export default function ListsPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="Lists" icon={mdiPlaylistPlus} />
-      <ListsHeader lists={lists} />
+      <ListsHeader lists={lists} isLoading={listsLoading} />
       {/* Plan to Watch */}
       <SectionHeader title="Plan to watch" storageKey="section-list-plan-to-watch">
         <div className={styles.carouselWrapper}>

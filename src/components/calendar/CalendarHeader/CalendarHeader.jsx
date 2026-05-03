@@ -1,6 +1,8 @@
 import styles from "./CalendarHeader.module.css";
+import Icon from "@mdi/react";
+import { mdiLoading } from "@mdi/js";
 
-export default function CalendarHeader({ days }) {
+export default function CalendarHeader({ days, isLoading = false }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -38,18 +40,20 @@ export default function CalendarHeader({ days }) {
       </div>
 
       <div className={styles.stats}>
-        <Stat label="Series" value={seriesCount} />
-        <Stat label="Episodes" value={totalEpisodes} />
-        <Stat label="This week" value={thisWeekEpisodes} />
+        <Stat label="Series" value={seriesCount} isLoading={isLoading} />
+        <Stat label="Episodes" value={totalEpisodes} isLoading={isLoading} />
+        <Stat label="This week" value={thisWeekEpisodes} isLoading={isLoading} />
       </div>
     </section>
   );
 }
 
-function Stat({ label, value }) {
+function Stat({ label, value, isLoading }) {
   return (
     <div className={styles.stat}>
-      <span className={styles.statValue}>{value}</span>
+      <span className={styles.statValue}>
+        {isLoading ? <Icon path={mdiLoading} size={0.9} className={styles.spinner} /> : value}
+      </span>
       <span className={styles.statLabel}>{label}</span>
     </div>
   );

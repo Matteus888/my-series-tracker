@@ -82,7 +82,7 @@ export default function HistoryPage() {
     return (
       <div className={styles.page}>
         <PageTitle title="History" icon={mdiHistory} />
-        <HistoryHeader days={days} />
+        <HistoryHeader days={days} isLoading={loading} />
         <PageLoader />
       </div>
     );
@@ -91,7 +91,7 @@ export default function HistoryPage() {
     return (
       <div className={styles.page}>
         <PageTitle title="History" icon={mdiHistory} />
-        <HistoryHeader days={days} />
+        <HistoryHeader days={days} isLoading={loading} />
         <p className={styles.muted}>No episodes watched in the last 30 days.</p>
       </div>
     );
@@ -99,7 +99,7 @@ export default function HistoryPage() {
   return (
     <div className={styles.page}>
       <PageTitle title="History" icon={mdiHistory} />
-      <HistoryHeader days={days} />
+      <HistoryHeader days={days} isLoading={loading} />
       <div className={styles.layout}>
         <div className={styles.main}>
           {days.map((day) => (

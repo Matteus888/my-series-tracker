@@ -1,18 +1,11 @@
 "use client";
 
 import styles from "./FavoritesHeader.module.css";
-import { useState, useEffect } from "react";
 import { computeAverageScore } from "@/lib/utils/ratings.utils";
 import Icon from "@mdi/react";
 import { mdiLoading } from "@mdi/js";
 
 export default function FavoritesHeader({ favorites, isLoading = false }) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const favoritesCount = favorites.length;
 
   // Score moyen
@@ -37,7 +30,7 @@ export default function FavoritesHeader({ favorites, isLoading = false }) {
   }
 
   // Force le loading tant que le composant n'est pas monté côté client
-  const showLoading = !mounted || isLoading;
+  // const showLoading = !mounted || isLoading;
 
   return (
     <section className={styles.wrapper}>
@@ -47,9 +40,9 @@ export default function FavoritesHeader({ favorites, isLoading = false }) {
       </div>
 
       <div className={styles.stats}>
-        <Stat label="Favorites" value={favoritesCount} isLoading={showLoading} />
-        <Stat label="Avg score" value={avgScore !== null ? avgScore : "—"} isLoading={showLoading} />
-        <Stat label="Top genre" value={topGenre ?? "—"} isLoading={showLoading} />
+        <Stat label="Favorites" value={favoritesCount} isLoading={isLoading} />
+        <Stat label="Avg score" value={avgScore !== null ? avgScore : "—"} isLoading={isLoading} />
+        <Stat label="Top genre" value={topGenre ?? "—"} isLoading={isLoading} />
       </div>
     </section>
   );
