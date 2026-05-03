@@ -4,6 +4,7 @@
   text-decoration: none;
   color: var(--foreground);
   background-color: transparent;
+
   opacity: 0.7;
   transition: opacity 0.15s ease;
 }
@@ -11,6 +12,10 @@
 .resultContainer:hover,
 .selected {
   opacity: 1;
+}
+
+.resultContainer:hover .infoContainer {
+  transform: scale(1.08);
 }
 
 .contentWrapper {
@@ -39,12 +44,15 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transform-origin: center left;
+  will-change: transform;
+  transition: transform 0.15s ease;
 }
 
 .title {
   margin: 0;
   font-weight: 500;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
