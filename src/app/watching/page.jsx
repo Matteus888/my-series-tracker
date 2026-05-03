@@ -85,6 +85,7 @@ export default function WatchingPage() {
     return (
       <div className={styles.page}>
         <PageTitle title="Continue watching" icon={mdiTelevisionPlay} />
+        <WatchingHeader items={items} />
         <PageLoader />
       </div>
     );
@@ -93,6 +94,7 @@ export default function WatchingPage() {
     return (
       <div className={styles.page}>
         <PageTitle title="Continue watching" icon={mdiTelevisionPlay} />
+        <WatchingHeader items={items} />
         <EmptyStateCard
           icon={mdiTelevisionPlay}
           label="Nothing in progress"

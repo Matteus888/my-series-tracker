@@ -19,11 +19,11 @@ export default function NavBar() {
       <ul className={styles.navList}>
         {session ? (
           <>
-            <li>
+            {/* <li>
               <Link className={`${styles.navLink} ${isActive("/dashboard") ? styles.active : ""}`} href="/dashboard">
                 <span className={styles.navText}>Dashboard</span>
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link className={`${styles.navLink} ${isActive("/series") ? styles.active : ""}`} href="/series">
                 <span className={styles.navText}>Series</span>

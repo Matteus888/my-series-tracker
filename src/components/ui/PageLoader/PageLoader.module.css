@@ -1,13 +1,13 @@
-.overlay {
-  position: fixed;
-  inset: 0;
-  top: 45px;
+.wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(1px);
-  z-index: calc(var(--z-header) - 1);
+  flex: 1;
 }
 
 .spinner {

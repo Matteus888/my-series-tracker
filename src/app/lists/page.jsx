@@ -26,6 +26,7 @@ export default function ListsPage() {
     return (
       <div className={styles.page}>
         <PageTitle title="Lists" icon={mdiPlaylistPlus} />
+        <ListsHeader lists={lists} />
         <PageLoader />
       </div>
     );

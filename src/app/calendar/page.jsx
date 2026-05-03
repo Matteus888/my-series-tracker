@@ -56,6 +56,7 @@ export default function CalendarPage() {
     return (
       <div className={styles.page}>
         <PageTitle title="Calendar" icon={mdiCalendarClockOutline} />
+        <CalendarHeader days={days} />
         <PageLoader />
       </div>
     );

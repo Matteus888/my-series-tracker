@@ -4,13 +4,11 @@ import styles from "./page.module.css";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import { normalizeSerieData } from "@/lib/utils/serie.utils";
 import SerieCard from "@/components/series/SerieCard/SerieCard";
-import SerieCardSkeleton from "@/components/series/SerieCardSkeleton/SerieCardSkeleton";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
+import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import FavoritesHeader from "@/components/favorites/FavoritesHeader/FavoritesHeader";
 import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
 import { mdiBookmarkPlusOutline } from "@mdi/js";
-
-const SKELETON_COUNT = 12;
 
 export default function FavoritesPage() {
   const { trackedSeries, isLoading } = useTrackedSeries();
@@ -23,11 +21,7 @@ export default function FavoritesPage() {
       <FavoritesHeader favorites={favorites} isLoading={isLoading} />
 
       {isLoading ? (
-        <div className={styles.grid}>
-          {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-            <SerieCardSkeleton key={i} />
-          ))}
-        </div>
+        <PageLoader />
       ) : favorites.length > 0 ? (
         <div className={styles.grid}>
           {favorites.map((tracked) => {
