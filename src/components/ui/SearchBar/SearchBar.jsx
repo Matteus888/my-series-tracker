@@ -83,6 +83,9 @@ export default function SearchBar() {
       router.push(`/search?query=${encodeURIComponent(query.trim())}`);
       setIsOpen(false);
       if (!isOnSearchPage) setQuery("");
+    } else if (!isOnSearchPage) {
+      router.push("/search");
+      setIsOpen(false);
     }
   };
 
