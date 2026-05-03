@@ -43,12 +43,12 @@ export default function UpcomingDayCard({ day }) {
               ? `Season ${ep.seasonNumber}`
               : `S${String(ep.seasonNumber).padStart(2, "0")} • E${String(ep.episodeNumber).padStart(2, "0")}`;
 
-            const isPremiere = !isBatch && ep.episodeNumber === 1;
+            const isPremiere = isBatch || (!isBatch && ep.episodeNumber === 1);
             const isFinale = !isBatch && ep.seasonEpisodeCount != null && ep.episodeNumber === ep.seasonEpisodeCount;
             const badge = isPremiere
               ? { label: "Premiere", className: styles.badgePremiere }
               : isFinale
-                ? { label: "Final", className: styles.badgeFinal }
+                ? { label: "Finale", className: styles.badgeFinal }
                 : null;
             return (
               <li

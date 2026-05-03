@@ -22,7 +22,7 @@ export default function ContinueWatchingCard({ item, onCheck }) {
   const badge = isPremiere
     ? { label: "Premiere", className: styles.badgePremiere }
     : isFinale
-      ? { label: "Final", className: styles.badgeFinal }
+      ? { label: "Finale", className: styles.badgeFinal }
       : null;
 
   return (
