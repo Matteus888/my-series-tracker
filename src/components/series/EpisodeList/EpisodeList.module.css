@@ -4,26 +4,20 @@
   gap: 1rem;
 }
 
-.sectionTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--foreground);
-  margin-bottom: 0.5rem;
-}
-
-.season {
-  overflow: hidden;
-}
-
-.episodeGrid {
-  display: flex;
-  flex-wrap: wrap;
-  border-top: 1px solid var(--border);
-}
-
 .episodeRows {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.5rem 0;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.counter {
+  font-size: 0.8rem;
+  color: #6c757d;
 }

@@ -1,0 +1,83 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.2rem 0.3rem 0.2rem 0.5rem;
+  background: var(--background-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--foreground);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.trigger:hover .chevron,
+.trigger.active .chevron {
+  transform: scale(1.5);
+}
+
+.value {
+  min-width: 1ch;
+  text-align: center;
+}
+
+.chevron {
+  opacity: 0.7;
+  transition: transform 0.15s ease;
+}
+
+.trigger.active .chevron {
+  transform: rotate(180deg) scale(1.5);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 1000;
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0;
+  background: var(--background-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 100%;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+  text-align: left;
+  color: var(--foreground);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.optionValue {
+  display: inline-block;
+  min-width: 1ch;
+  text-align: center;
+  transition: transform 0.15s ease;
+}
+
+.option:hover .optionValue {
+  transform: scale(1.3);
+}
+
+.option.selected {
+  background: var(--background-hover);
+  font-weight: 600;
+}

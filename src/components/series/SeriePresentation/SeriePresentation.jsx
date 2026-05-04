@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils/date.utils";
 import { useSerieCard } from "@/hooks/useSerieCard";
+import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import { shouldInvertLogo } from "@/lib/utils/network.utils";
 import SerieCardPopovers from "@/components/series/SerieCard/SerieCardPopovers";
 import SeriePresentationActions from "./SeriePresentationActions";
@@ -37,6 +38,9 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
     handleWatchlist,
     handleRatings,
   } = useSerieCard(tmdbSerie);
+
+  const { progressMap } = useTrackedSeries();
+  const progress = progressMap[String(serie.id)];
 
   return (
     <div className={styles.presentation}>
@@ -74,6 +78,11 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
                 </span>
               )}
               {serie.number_of_episodes && <span className={styles.metaItem}>{serie.number_of_episodes} episodes</span>}
+              {isTracked && progress && (
+                <span className={styles.metaItem}>
+                  {progress.watchedCount}/{progress.totalCount} watched
+                </span>
+              )}
             </div>
 
             {serie.genres?.length > 0 && (
