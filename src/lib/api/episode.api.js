@@ -245,11 +245,9 @@ export const getCalendar = async (UserModel, userId) => {
 
   if (watchingSeries.length === 0 && watchlistSeries.length === 0) return [];
 
-  // const now = new Date();
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
-  // Map seriesId: données série pour lookup rapide (dédoublonnage automatique)
   const seriesMap = new Map();
   for (const t of watchingSeries) {
     seriesMap.set(t.seriesId._id.toString(), t.seriesId);
@@ -301,12 +299,9 @@ export const getCalendar = async (UserModel, userId) => {
     });
   }
 
-  // Agrège les "drops" : >3 épisodes d'une même saison le même jour → 1 entrée season-batch
-  const SEASON_BATCH_THRESHOLD = 3;
   const result = Object.entries(grouped)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([date, episodes]) => {
-      // Compte les épisodes par (seriesId + seasonNumber)
       const bySeason = new Map();
       for (const ep of episodes) {
         const key = `${ep.seriesId}__${ep.seasonNumber}`;
@@ -316,35 +311,37 @@ export const getCalendar = async (UserModel, userId) => {
 
       const finalItems = [];
       for (const [, eps] of bySeason) {
-        if (eps.length > SEASON_BATCH_THRESHOLD) {
-          // On agrège — on prend le premier épisode comme "représentant"
-          const first = eps[0];
-          finalItems.push({
-            type: "season-batch",
-            batchKey: `${first.seriesId}-s${first.seasonNumber}-${date}`,
-            seriesId: first.seriesId,
-            tmdbId: first.tmdbId,
-            seriesTitle: first.seriesTitle,
-            seasonNumber: first.seasonNumber,
-            episodeCount: eps.length,
-            posterPath: first.posterPath,
-            airDate: first.airDate,
-            networks: first.networks,
-          });
-        } else {
-          for (const ep of eps) {
-            finalItems.push({ type: "episode", ...ep });
-          }
-        }
+        // Tri par numéro d'épisode (utile pour l'affichage liste/plage)
+        eps.sort((a, b) => a.episodeNumber - b.episodeNumber);
+        const first = eps[0];
+
+        const isFullSeason = first.seasonEpisodeCount != null && eps.length === first.seasonEpisodeCount;
+
+        finalItems.push({
+          type: "season-day",
+          itemKey: `${first.seriesId}-s${first.seasonNumber}-${date}`,
+          seriesId: first.seriesId,
+          tmdbId: first.tmdbId,
+          seriesTitle: first.seriesTitle,
+          seasonNumber: first.seasonNumber,
+          posterPath: first.posterPath,
+          airDate: first.airDate,
+          networks: first.networks,
+          seasonEpisodeCount: first.seasonEpisodeCount,
+          isFullSeason,
+          episodes: eps.map((e) => ({
+            episodeId: e.episodeId,
+            episodeNumber: e.episodeNumber,
+            title: e.title,
+            overview: e.overview,
+            duration: e.duration,
+            ratings: e.ratings,
+          })),
+        });
       }
 
       // Trie : épisodes par seasonNumber/episodeNumber, batch en premier dans le jour
-      finalItems.sort((a, b) => {
-        if (a.type !== b.type) return a.type === "season-batch" ? -1 : 1;
-        if (a.seasonNumber !== b.seasonNumber) return a.seasonNumber - b.seasonNumber;
-        return (a.episodeNumber ?? 0) - (b.episodeNumber ?? 0);
-      });
-
+      finalItems.sort((a, b) => a.seasonNumber - b.seasonNumber);
       return { date, episodes: finalItems };
     });
 

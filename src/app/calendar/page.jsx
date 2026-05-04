@@ -73,7 +73,7 @@ export default function CalendarPage() {
               {todayDay ? (
                 <div className={styles.grid}>
                   {todayDay.episodes.map((ep) => (
-                    <div key={ep.type === "season-batch" ? ep.batchKey : ep.episodeId} className={styles.gridItem}>
+                    <div key={ep.itemKey} className={styles.gridItem}>
                       <CalendarSerieCard episode={ep} />
                     </div>
                   ))}
@@ -94,7 +94,7 @@ export default function CalendarPage() {
               <SectionHeader title={formatDateLabel(day.date)}>
                 <div className={styles.grid}>
                   {day.episodes.map((ep) => (
-                    <div key={ep.type === "season-batch" ? ep.batchKey : ep.episodeId} className={styles.gridItem}>
+                    <div key={ep.itemKey} className={styles.gridItem}>
                       <CalendarSerieCard episode={ep} />
                     </div>
                   ))}
