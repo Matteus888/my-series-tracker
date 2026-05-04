@@ -1,11 +1,11 @@
 "use client";
 
 import styles from "./CastCarousel.module.css";
-import Image from "next/image";
-import Link from "next/link";
-import Icon from "@mdi/react";
-import { mdiChevronLeft, mdiChevronRight } from "@mdi/js";
+import { mdiDramaMasks } from "@mdi/js";
+import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
+import CastCard from "../CastCard/CastCard";
+import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 
 export default function CastCarousel({ cast = [] }) {
   const { scrollerRef, canScrollLeft, canScrollRight, scrollBy } = useCarouselArrows();
@@ -13,58 +13,21 @@ export default function CastCarousel({ cast = [] }) {
   if (cast.length === 0) return null;
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.header}>
-        <h3 className={styles.title}>Cast</h3>
-      </div>
-
+    <SectionHeader
+      icon={mdiDramaMasks}
+      title="Cast"
+      subtitle={`${cast.length} actors`}
+      storageKey="series-cast-open"
+      defaultOpen={true}
+    >
       <div className={styles.carouselContainer}>
-        {canScrollLeft && (
-          <button
-            className={`${styles.arrow} ${styles.arrowLeft} search-nav-arrow`}
-            onClick={() => scrollBy("left")}
-            aria-label="Scroll left"
-          >
-            <Icon path={mdiChevronLeft} size={1.4} />
-          </button>
-        )}
-
-        <div className={styles.carousel} ref={scrollerRef}>
+        <CarouselArrows canScrollLeft={canScrollLeft} canScrollRight={canScrollRight} onScroll={scrollBy} />
+        <div className={styles.track} ref={scrollerRef}>
           {cast.map((person) => (
-            <Link key={person.tmdbId} href={`/person/${person.tmdbId}`} className={styles.castItem}>
-              <div className={styles.imageWrapper}>
-                {person.profilePath ? (
-                  <Image
-                    src={`https://image.tmdb.org/t/p/w185${person.profilePath}`}
-                    alt={person.name}
-                    fill
-                    sizes="120px"
-                    className={styles.image}
-                  />
-                ) : (
-                  <div className={styles.placeholder}>
-                    <span>{person.name?.charAt(0) ?? "?"}</span>
-                  </div>
-                )}
-              </div>
-              <div className={styles.info}>
-                <span className={styles.name}>{person.name}</span>
-                {person.character && <span className={styles.character}>{person.character}</span>}
-              </div>
-            </Link>
+            <CastCard key={person.tmdbId} person={person} />
           ))}
         </div>
-
-        {canScrollRight && (
-          <button
-            className={`${styles.arrow} ${styles.arrowRight} search-nav-arrow`}
-            onClick={() => scrollBy("right")}
-            aria-label="Scroll right"
-          >
-            <Icon path={mdiChevronRight} size={1.4} />
-          </button>
-        )}
       </div>
-    </div>
+    </SectionHeader>
   );
 }

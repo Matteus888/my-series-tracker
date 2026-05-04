@@ -40,28 +40,28 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
 
   return (
     <div className={styles.presentation}>
-      {/* Poster + popovers */}
-      <div className={styles.posterWrapper}>
-        <SerieCardPopovers
-          serie={tmdbSerie}
-          isTracked={isTracked}
-          confirmPopover={confirmPopover}
-          watchlistPopover={watchlistPopover}
-          ratingsPopover={ratingsPopover}
-          onConfirm={handleConfirm}
-        />
-        <Image
-          src={serie.poster_path ? `https://image.tmdb.org/t/p/w342${serie.poster_path}` : "/placeholder.webp"}
-          alt={serie.name}
-          width={220}
-          height={330}
-          className={styles.posterImage}
-          priority
-        />
-      </div>
+      {/* Ligne du haut : poster + infos */}
+      <div className={styles.topRow}>
+        {/* Poster + popovers */}
+        <div className={styles.posterWrapper}>
+          <SerieCardPopovers
+            serie={tmdbSerie}
+            isTracked={isTracked}
+            confirmPopover={confirmPopover}
+            watchlistPopover={watchlistPopover}
+            ratingsPopover={ratingsPopover}
+            onConfirm={handleConfirm}
+          />
+          <Image
+            src={serie.poster_path ? `https://image.tmdb.org/t/p/w342${serie.poster_path}` : "/placeholder.webp"}
+            alt={serie.name}
+            width={220}
+            height={330}
+            className={styles.posterImage}
+            priority
+          />
+        </div>
 
-      {/* Colonne droite : infos + cast */}
-      <div className={styles.rightColumn}>
         {/* Bloc infos */}
         <div className={styles.infoWrapper}>
           <div className={styles.info}>
@@ -113,7 +113,7 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
                       alt={n.name}
                       width={92}
                       height={92}
-                      className={`${styles.networkLogo} ${shouldInvertLogo(n.id) ? styles.networkLogoInverted : ""}`}
+                      className={shouldInvertLogo(n.id) ? styles.networkLogoInverted : ""}
                       style={{ height: 24, width: "auto", opacity: 0.8 }}
                     />
                   ) : (
@@ -126,7 +126,6 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
             )}
           </div>
 
-          {/* Footer collé en bas à gauche */}
           <div className={`card-footer ${styles.footer}`}>
             <SeriePresentationActions
               isTracked={isTracked}
@@ -144,9 +143,10 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
             />
           </div>
         </div>
-        {/* Bloc casting */}
-        {cast.length > 0 && <CastCarousel cast={cast} />}
       </div>
+
+      {/* Carousel casting sur toute la largeur */}
+      {cast.length > 0 && <CastCarousel cast={cast} />}
     </div>
   );
 }

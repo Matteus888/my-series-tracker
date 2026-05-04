@@ -5,6 +5,13 @@
   max-width: 1400px;
   padding: 0 2rem;
   display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ─── Ligne du haut : poster + infos côte à côte ─── */
+.topRow {
+  display: flex;
   gap: 2rem;
   align-items: flex-start;
 }
@@ -22,15 +29,6 @@
   width: 100%;
   height: auto;
   display: block;
-}
-
-/* ─── Colonne droite : empile infoWrapper et CastCarousel ─── */
-.rightColumn {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
 }
 
 /* ─── Bloc infos ─── */
@@ -158,10 +156,6 @@
   opacity: 0.6;
 }
 
-.networkLogo {
-  opacity: 0.8;
-}
-
 .networkLogoInverted {
   filter: brightness(0) invert(1);
 }
@@ -169,9 +163,13 @@
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
   .presentation {
-    flex-direction: column;
     margin-top: -4rem;
     padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .topRow {
+    flex-direction: column;
     gap: 1rem;
     align-items: center;
   }
