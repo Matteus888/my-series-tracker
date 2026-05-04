@@ -145,6 +145,10 @@ const seriesSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    releaseTimeOverride: {
+      dayOffset: { type: Number, min: 0, max: 1 },
+      hourUTC: { type: Number, min: 0, max: 23 },
+    },
     lastSyncedAt: {
       type: Date,
       default: null,

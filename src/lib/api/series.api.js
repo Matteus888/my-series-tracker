@@ -92,7 +92,7 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
     { upsert: true, returnDocument: "after", runValidators: true },
   );
 
-  const episodeIdMap = await upsertEpisodes(series._id, Number(tmdbId), seasons, seriesDetails.networks ?? []);
+  const episodeIdMap = await upsertEpisodes(series._id, Number(tmdbId), seasons, seriesDetails.networks ?? [], null);
 
   const user = await UserModel.findById(userId);
   if (!user) throw new Error("User not found");
@@ -320,7 +320,13 @@ export const syncSeriesIfStale = async (SeriesModel, tmdbId) => {
     { runValidators: true },
   );
 
-  await upsertEpisodes(series._id, Number(tmdbId), seasons, seriesDetails.networks ?? []);
+  await upsertEpisodes(
+    series._id,
+    Number(tmdbId),
+    seasons,
+    seriesDetails.networks ?? [],
+    series.releaseTimeOverride ?? null,
+  );
 };
 
 export const getSeriesProgress = async (userId, UserModel) => {

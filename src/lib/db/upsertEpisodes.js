@@ -11,7 +11,7 @@ import { computeAirDateTime } from "../utils/airDateTime.utils";
  * @param {Array}    networks   - networks de la série (pour ajuster l'airDate)
  * @returns {Promise<Map<number, ObjectId>>}  tmdbEpisodeId → episode._id
  */
-export const upsertEpisodes = async (seriesId, tmdbSeriesId, seasons, networks = []) => {
+export const upsertEpisodes = async (seriesId, tmdbSeriesId, seasons, networks = [], releaseTimeOverride = null) => {
   const operations = [];
 
   for (const season of seasons) {
@@ -30,7 +30,10 @@ export const upsertEpisodes = async (seriesId, tmdbSeriesId, seasons, networks =
           title: ep.name ?? null,
           overview: ep.overview ?? null,
           stillPath: ep.still_path ?? null,
-          airDate: computeAirDateTime(ep.air_date, networks),
+          airDate: computeAirDateTime(ep.air_date, networks, {
+            override: releaseTimeOverride,
+            tmdbAirTime: season.air_time,
+          }),
           duration: ep.runtime ?? null,
           "ratings.tmdb.score": ep.vote_average ?? null,
           "ratings.tmdb.voteCount": ep.vote_count ?? 0,
