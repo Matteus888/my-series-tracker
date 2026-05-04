@@ -57,7 +57,7 @@
 .option {
   display: block;
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.7rem;
   background: transparent;
   border: none;
   text-align: left;
@@ -69,12 +69,20 @@
 .optionValue {
   display: inline-block;
   min-width: 1ch;
-  text-align: center;
-  transition: transform 0.15s ease;
+  width: 100%;
+  opacity: 0.7;
+  text-align: left;
+  transform-origin: center left;
+  transition: opacity 0.15s ease;
 }
 
 .option:hover .optionValue {
-  transform: scale(1.3);
+  transform: scale(1.2);
+}
+
+.option:hover .optionValue,
+.option:active .optionValue {
+  opacity: 1;
 }
 
 .option.selected {
