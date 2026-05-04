@@ -21,9 +21,7 @@ export default function ListsHeader({ lists, isLoading = false }) {
     <section className={styles.wrapper}>
       <div className={styles.title}>
         <h2 className={styles.heading}>Your lists</h2>
-        <p className={styles.subtitle}>
-          {listsCount} list{listsCount > 1 ? "s" : ""} to organize your series
-        </p>
+        <p className={styles.subtitle}>Organize your life in lists</p>
       </div>
 
       <div className={styles.stats}>

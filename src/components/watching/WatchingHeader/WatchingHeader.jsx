@@ -14,9 +14,7 @@ export default function WatchingHeader({ items, isLoading = false }) {
     <section className={styles.wrapper}>
       <div className={styles.title}>
         <h2 className={styles.heading}>In progress</h2>
-        <p className={styles.subtitle}>
-          {seriesCount} serie{seriesCount > 1 ? "s " : " "} you&apos;re currently watching
-        </p>
+        <p className={styles.subtitle}>The serie{seriesCount > 1 ? "s " : " "} you&apos;re currently watching</p>
       </div>
 
       <div className={styles.stats}>
