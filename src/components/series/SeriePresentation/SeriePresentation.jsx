@@ -10,6 +10,7 @@ import { shouldInvertLogo } from "@/lib/utils/network.utils";
 import SerieCardPopovers from "@/components/series/SerieCard/SerieCardPopovers";
 import SeriePresentationActions from "./SeriePresentationActions";
 import CastCarousel from "../CastCarousel/CastCarousel";
+import VideoSection from "../VideoSection/VideoSection";
 
 export default function SeriePresentation({ serie, serieData, ratings, cast = [], createdBy = [] }) {
   const tmdbSerie = {
@@ -156,6 +157,8 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
 
       {/* Carousel casting sur toute la largeur */}
       {cast.length > 0 && <CastCarousel cast={cast} />}
+
+      <VideoSection tmdbId={serie.id} />
     </div>
   );
 }

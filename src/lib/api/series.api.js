@@ -3,7 +3,7 @@ import { User } from "@/models/user.model";
 import { Episode } from "@/models/episode.model";
 import { UserList } from "@/models/userList.model";
 import { EpisodeProgress } from "@/models/episodeProgress.model";
-import { getAllSeasonsWithEpisodes } from "./tmdb.api";
+import { getAllSeasonsWithEpisodes, getSeriesDetails, getSeriesVideos, getSeasonVideos } from "./tmdb.api";
 import { getOmdbRatings } from "./omdb.api";
 import { upsertEpisodes } from "@/lib/db/upsertEpisodes";
 import dbConnect from "@/lib/db/db.connect";
@@ -346,3 +346,58 @@ export const getSeriesProgress = async (userId, UserModel) => {
 
   return results;
 };
+
+export async function fetchSeriesVideos(tmdbId) {
+  const numericId = Number(tmdbId);
+
+  // Récupère les saisons depuis la base si la série est déjà sync
+  const serie = await Series.findOne({ tmdbId: numericId }).lean();
+
+  let seasonNumbers = [];
+  if (serie?.seasons?.length) {
+    seasonNumbers = serie.seasons.map((s) => s.seasonNumber).filter((n) => n > 0);
+  } else {
+    // Fallback : fetch TMDB si la série n'est pas en base
+    const detail = await getSeriesDetails(numericId);
+    if (!detail) return [];
+    seasonNumbers = (detail.seasons ?? []).map((s) => s.season_number).filter((n) => n > 0);
+  }
+
+  const [mainVideos, ...seasonVideosArr] = await Promise.all([
+    getSeriesVideos(numericId),
+    ...seasonNumbers.map((n) => getSeasonVideos(numericId, n)),
+  ]);
+
+  const videos = [];
+
+  for (const v of mainVideos) {
+    if (!v.official || v.site !== "YouTube") continue;
+    videos.push({
+      key: v.key,
+      name: v.name,
+      type: v.type,
+      source: "main",
+      sourceLabel: "Series",
+      publishedAt: v.published_at,
+    });
+  }
+
+  seasonVideosArr.forEach((seasonVideos, idx) => {
+    const seasonNumber = seasonNumbers[idx];
+    for (const v of seasonVideos) {
+      if (!v.official || v.site !== "YouTube") continue;
+      videos.push({
+        key: v.key,
+        name: v.name,
+        type: v.type,
+        source: `season-${seasonNumber}`,
+        sourceLabel: `Season ${seasonNumber}`,
+        publishedAt: v.published_at,
+      });
+    }
+  });
+
+  videos.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+
+  return videos;
+}
