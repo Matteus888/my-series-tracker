@@ -21,15 +21,17 @@ export default function CalendarSerieCard({ episode }) {
   const firstEp = episodes[0];
 
   // Badge premiere/finale (uniquement quand 1 seul épisode pertinent)
+  const episodeNumbers = episodes.map((e) => e.episodeNumber);
+  const includesPremiere = episodeNumbers.includes(1);
+  const includesFinale = seasonEpisodeCount != null && episodeNumbers.includes(seasonEpisodeCount);
+
   let badge = null;
-  if (isSingle) {
-    if (firstEp.episodeNumber === 1) {
-      badge = { label: "Premiere", className: styles.badgePremiere };
-    } else if (seasonEpisodeCount && firstEp.episodeNumber === seasonEpisodeCount) {
-      badge = { label: "Finale", className: styles.badgeFinale };
-    }
-  } else if (isFullSeason) {
+  if (isFullSeason) {
     badge = { label: "Full season", className: styles.badgePremiere };
+  } else if (includesPremiere) {
+    badge = { label: "Premiere", className: styles.badgePremiere };
+  } else if (includesFinale) {
+    badge = { label: "Finale", className: styles.badgeFinale };
   }
 
   // Note : toujours celle du 1er épisode
