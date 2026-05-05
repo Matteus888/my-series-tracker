@@ -51,12 +51,13 @@ export default function UpcomingDayCard({ day }) {
                 ? `S${String(item.seasonNumber).padStart(2, "0")} • ${formatEpisodeLabel(epList)}`
                 : `S${String(item.seasonNumber).padStart(2, "0")} • E${String(firstEp.episodeNumber).padStart(2, "0")}`;
 
-            const isPremiere = item.isFullSeason || (!isMulti && firstEp.episodeNumber === 1);
+            const epNums = epList.map((e) => e.episodeNumber);
+            const isPremiere = item.isFullSeason || epNums.includes(1);
             const isFinale =
-              !isMulti &&
               !item.isFullSeason &&
+              !isPremiere &&
               item.seasonEpisodeCount != null &&
-              firstEp.episodeNumber === item.seasonEpisodeCount;
+              epNums.includes(item.seasonEpisodeCount);
 
             const badge = isPremiere
               ? { label: "Premiere", className: styles.badgePremiere }
