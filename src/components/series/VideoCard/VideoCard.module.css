@@ -54,8 +54,7 @@
 .footer {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.8rem;
+  padding: 0.6rem 0.8rem;
 }
 
 .title {
