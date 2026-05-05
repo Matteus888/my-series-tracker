@@ -1,15 +1,15 @@
 "use client";
 
-import styles from "./SeasonSelector.module.css";
+import styles from "./Dropdown.module.css";
 import Icon from "@mdi/react";
 import { mdiMenuDown } from "@mdi/js";
 import { usePopover } from "@/hooks/usePopover";
 
-export default function SeasonSelector({ seasons, activeSeason, onSelect }) {
+export default function Dropdown({ options, value, onChange }) {
   const { isOpen, toggle, close, popoverRef } = usePopover();
 
-  const handleSelect = (seasonNumber) => {
-    onSelect(seasonNumber);
+  const handleSelect = (option) => {
+    onChange(option);
     close();
   };
 
@@ -21,21 +21,21 @@ export default function SeasonSelector({ seasons, activeSeason, onSelect }) {
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <span className={styles.value}>{activeSeason}</span>
+        <span className={styles.value}>{value}</span>
         <Icon path={mdiMenuDown} size={0.8} className={styles.chevron} />
       </button>
 
       {isOpen && (
         <ul className={styles.menu} role="listbox">
-          {seasons.map((s) => (
-            <li key={s}>
+          {options.map((option) => (
+            <li key={option}>
               <button
-                className={`${styles.option} ${s === activeSeason ? styles.selected : ""}`}
-                onClick={() => handleSelect(s)}
+                className={`${styles.option} ${option === value ? styles.selected : ""}`}
+                onClick={() => handleSelect(option)}
                 role="option"
-                aria-selected={s === activeSeason}
+                aria-selected={option === value}
               >
-                <span className={styles.optionValue}>{s}</span>
+                <span className={styles.optionValue}>{option}</span>
               </button>
             </li>
           ))}

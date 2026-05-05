@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import styles from "./VideoSection.module.css";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
-import SeasonSelector from "../SeasonSelector/SeasonSelector";
+import Dropdown from "@/components/ui/Dropdown/Dropdown";
 import { useSeriesVideos } from "@/hooks/useSeriesVideos";
 import VideoCard from "../VideoCard/VideoCard";
 import VideoLightbox from "../VideoLightbox/VideoLightbox";
@@ -46,7 +46,7 @@ export default function VideoSection({ tmdbId }) {
         defaultOpen
         actions={
           <div className={styles.headerActions}>
-            <SeasonSelector seasons={availableTypes} activeSeason={activeType} onSelect={setSelectedType} />
+            <Dropdown options={availableTypes} value={activeType} onChange={setSelectedType} />
             <span className={styles.counter}>{filtered.length}</span>
           </div>
         }

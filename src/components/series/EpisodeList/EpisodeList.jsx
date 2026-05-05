@@ -5,7 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useEpisodeList } from "@/hooks/useEpisodeList";
 import EpisodeCard from "../EpisodeCard/EpisodeCard";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
-import SeasonSelector from "../SeasonSelector/SeasonSelector";
+import Dropdown from "@/components/ui/Dropdown/Dropdown";
 
 export default function EpisodeList({ initialProgress, tmdbId, serieData }) {
   const { seasons, toggleEpisode } = useEpisodeList(initialProgress, tmdbId, serieData);
@@ -92,7 +92,7 @@ export default function EpisodeList({ initialProgress, tmdbId, serieData }) {
         defaultOpen
         actions={
           <div className={styles.headerActions}>
-            <SeasonSelector seasons={seasonNumbers} activeSeason={activeSeason} onSelect={handleSelectSeason} />
+            <Dropdown options={seasonNumbers} value={activeSeason} onChange={handleSelectSeason} />
             <span className={styles.counter}>
               {watchedCount}/{airedEpisodes.length}
             </span>
