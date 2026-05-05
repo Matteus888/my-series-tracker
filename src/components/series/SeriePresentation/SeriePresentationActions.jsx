@@ -50,11 +50,12 @@ export default function SeriePresentationActions({
 
       {/* Heart rating — coeur seul, même taille que les autres */}
       <button
-        className={`btn heartWrapper ${styles.button} ${ratingsPopover.isOpen ? "active" : ""}`}
+        className={`btn heartWrapper ${styles.button} ${styles.heart} ${ratingsPopover.isOpen ? "active" : ""}`}
         onClick={onRatings}
         title={tracked?.rating ? `Your rating: ${tracked.rating}/10` : "Rate this show"}
       >
         <HeartRating percentage={score ?? 0} />
+        {score > 0 && <span className={styles.rating}>{score}%</span>}
       </button>
     </div>
   );

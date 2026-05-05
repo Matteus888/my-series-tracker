@@ -17,3 +17,14 @@
   justify-content: center;
   background-color: transparent;
 }
+
+.heart {
+  min-width: 55px;
+  gap: 0.25rem;
+  padding: 0 0.25rem;
+}
+
+.rating {
+  font-size: 0.75rem;
+  color: var(--foreground);
+}
