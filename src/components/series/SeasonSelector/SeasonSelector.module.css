@@ -1,6 +1,7 @@
 .wrapper {
   position: relative;
   display: inline-flex;
+  z-index: var(--z-popover);
 }
 
 .trigger {
@@ -44,12 +45,12 @@
   z-index: var(--z-popover);
   list-style: none;
   margin: 0;
-  padding: 0.5rem 0;
+  padding: 0;
   background: var(--background-secondary);
   border: 1px solid var(--border);
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-width: 100%;
+  min-width: max-content;
   max-height: 280px;
   overflow-y: auto;
 }
@@ -61,8 +62,9 @@
   background: transparent;
   border: none;
   text-align: left;
+  white-space: nowrap;
   color: var(--foreground);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
 }
 
@@ -73,19 +75,16 @@
   opacity: 0.7;
   text-align: left;
   transform-origin: center left;
-  transition: opacity 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
 
 .option:hover .optionValue {
-  transform: scale(1.2);
-}
-
-.option:hover .optionValue,
-.option:active .optionValue {
+  transform: scale(1.05);
   opacity: 1;
 }
 
-.option.selected {
-  background: var(--background-hover);
-  font-weight: 600;
+.option.selected .optionValue {
+  opacity: 1;
 }

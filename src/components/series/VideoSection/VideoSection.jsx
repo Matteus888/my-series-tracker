@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import styles from "./VideoSection.module.css";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import SeasonSelector from "../SeasonSelector/SeasonSelector";
@@ -11,7 +11,7 @@ import { useCarouselArrows } from "@/hooks/useCarouselArrows";
 
 export default function VideoSection({ tmdbId }) {
   const { videos, loading, error } = useSeriesVideos(tmdbId);
-  const [activeType, setActiveType] = useState(null);
+  const [selectedType, setSelectedType] = useState(null);
   const [activeVideo, setActiveVideo] = useState(null);
   const { trackRef, canScrollLeft, canScrollRight, scrollBy } = useCarouselArrows();
 
@@ -27,16 +27,11 @@ export default function VideoSection({ tmdbId }) {
     return types;
   }, [videos]);
 
-  // Init du type actif : "Trailer" si dispo, sinon le premier
-  useEffect(() => {
-    if (availableTypes.length === 0) {
-      setActiveType(null);
-      return;
-    }
-    if (activeType === null || !availableTypes.includes(activeType)) {
-      setActiveType(availableTypes.includes("Trailer") ? "Trailer" : availableTypes[0]);
-    }
-  }, [availableTypes, activeType]);
+  // Type actif : sélection user si valide, sinon fallback sur "Trailer" ou le premier
+  const activeType =
+    selectedType && availableTypes.includes(selectedType)
+      ? selectedType
+      : ((availableTypes.includes("Trailer") ? "Trailer" : availableTypes[0]) ?? null);
 
   const filtered = useMemo(() => videos.filter((v) => v.type === activeType), [videos, activeType]);
 
@@ -51,7 +46,7 @@ export default function VideoSection({ tmdbId }) {
         defaultOpen
         actions={
           <div className={styles.headerActions}>
-            <SeasonSelector seasons={availableTypes} activeSeason={activeType} onSelect={setActiveType} />
+            <SeasonSelector seasons={availableTypes} activeSeason={activeType} onSelect={setSelectedType} />
             <span className={styles.counter}>{filtered.length}</span>
           </div>
         }

@@ -1,7 +1,8 @@
 "use client";
 
 import styles from "./VideoCard.module.css";
-import { mdiPlayCircle } from "@mdi/js";
+import Image from "next/image";
+import { mdiPlayCircleOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 
 export default function VideoCard({ video, onClick }) {
@@ -10,18 +11,18 @@ export default function VideoCard({ video, onClick }) {
   return (
     <button className={styles.card} onClick={onClick} aria-label={`Play ${video.name}`}>
       <div className={styles.thumbWrapper}>
-        <img src={thumb} alt="" className={styles.thumb} loading="lazy" />
+        <Image src={thumb} alt="" fill sizes="(max-width: 768px) 50vw, 300px" className={styles.thumb} loading="lazy" />
         <div className={styles.overlay}>
-          <Icon path={mdiPlayCircle} size={2} className={styles.playIcon} />
+          <Icon path={mdiPlayCircleOutline} size={2} className={styles.playIcon} />
         </div>
       </div>
       <div className={styles.footer}>
         <span className={styles.title} title={video.name}>
           {video.name}
         </span>
-        <span className={styles.meta}>
+        {/* <span className={styles.meta}>
           {video.sourceLabel} · {video.type}
-        </span>
+        </span> */}
       </div>
     </button>
   );

@@ -138,7 +138,7 @@ export const getAllSeasonsWithEpisodes = async (seriesId) => {
 };
 
 export async function getSeriesVideos(tmdbId) {
-  const url = `${TMDB_BASE_URL}/tv/${tmdbId}/videos?api_key=${TMDB_API_KEY}&include_video_language=fr,en,null`;
+  const url = `${TMDB_BASE_URL}/tv/${tmdbId}/videos?api_key=${TMDB_API_KEY}&include_video_language=en,null`;
   const res = await fetch(url);
   if (!res.ok) return [];
   const data = await res.json();
@@ -146,7 +146,7 @@ export async function getSeriesVideos(tmdbId) {
 }
 
 export async function getSeasonVideos(tmdbId, seasonNumber) {
-  const url = `${TMDB_BASE_URL}/tv/${tmdbId}/season/${seasonNumber}/videos?api_key=${TMDB_API_KEY}&include_video_language=fr,en,null`;
+  const url = `${TMDB_BASE_URL}/tv/${tmdbId}/season/${seasonNumber}/videos?api_key=${TMDB_API_KEY}&include_video_language=en,null`;
   const res = await fetch(url);
   if (!res.ok) return [];
   const data = await res.json();
