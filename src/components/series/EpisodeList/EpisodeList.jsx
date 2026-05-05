@@ -101,13 +101,7 @@ export default function EpisodeList({ initialProgress, tmdbId, serieData }) {
       >
         <div className={styles.episodeRows}>
           {episodes.map((ep) => (
-            <EpisodeCard
-              key={ep._id ?? `${ep.seasonNumber}-${ep.episodeNumber}`}
-              ep={ep}
-              onToggle={toggleEpisode}
-              layout="row"
-              disableTooltip
-            />
+            <EpisodeCard key={ep._id ?? `${ep.seasonNumber}-${ep.episodeNumber}`} ep={ep} onToggle={toggleEpisode} />
           ))}
         </div>
       </SectionHeader>

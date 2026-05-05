@@ -3,7 +3,7 @@
 import styles from "./RecentlyWatchedSection.module.css";
 import { useRecentlyWatched } from "@/hooks/useRecentlyWatched";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
-import EpisodeCard from "@/components/series/EpisodeCard/EpisodeCard";
+import WatchedEpisodeCard from "../WatchedEpisodeCard/WatchedEpisodeCard";
 import SectionHeader from "../../ui/SectionHeader/SectionHeader";
 import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
@@ -56,7 +56,7 @@ export default function RecentlyWatchedSection() {
             <div className={styles.carousel} ref={scrollerRef}>
               {items.map((item) => (
                 <div key={item._id} className={styles.cardWrapper}>
-                  <EpisodeCard ep={item} onToggle={uncheckEpisode} seriesTitle={item.seriesTitle} showSeason />
+                  <WatchedEpisodeCard ep={item} onToggle={uncheckEpisode} seriesTitle={item.seriesTitle} showSeason />
                 </div>
               ))}
             </div>

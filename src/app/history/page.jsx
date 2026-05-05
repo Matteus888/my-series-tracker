@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import styles from "./page.module.css";
 import PageTitle from "@/components/ui/PageTitle/PageTitle";
 import HistoryHeader from "@/components/history/HistoryHeader/HistoryHeader";
-import EpisodeCard from "@/components/series/EpisodeCard/EpisodeCard";
+import WatchedEpisodeCard from "@/components/dashboard/WatchedEpisodeCard/WatchedEpisodeCard";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader/PageLoader";
 import MonthGrid from "@/components/ui/MonthGrid/MonthGrid";
@@ -108,7 +108,7 @@ export default function HistoryPage() {
                 <div className={styles.episodeGrid}>
                   {day.episodes.map((ep) => (
                     <div key={ep._id} className={styles.cardWrapper}>
-                      <EpisodeCard ep={ep} onToggle={uncheckEpisode} seriesTitle={ep.seriesTitle} showSeason />
+                      <WatchedEpisodeCard ep={ep} onToggle={uncheckEpisode} seriesTitle={ep.seriesTitle} showSeason />
                     </div>
                   ))}
                 </div>
