@@ -86,6 +86,13 @@ export const getContinueWatching = async (UserModel, userId) => {
   return results.filter(Boolean).sort((a, b) => new Date(b.lastWatchedAt) - new Date(a.lastWatchedAt));
 };
 
+export const getContinueWatchingCount = async (UserModel, userId) => {
+  await dbConnect();
+  const user = await UserModel.findById(userId).select("trackedSeries").lean();
+  if (!user) return 0;
+  return user.trackedSeries.filter((t) => t.status !== "dropped").length;
+};
+
 export const markEpisodeWatched = async (EpisodeModel, userId, episodeId, watched = true) => {
   await dbConnect();
 
@@ -197,6 +204,12 @@ export const getStartWatching = async (UserModel, userId) => {
   );
 
   return results.filter(Boolean);
+};
+
+export const getStartWatchingCount = async (userId) => {
+  await dbConnect();
+  const watchlist = await UserList.findOne({ userId, isDefault: true }).select("series").lean();
+  return watchlist?.series?.length ?? 0;
 };
 
 export const getRecentlyWatchedFlat = async (userId) => {

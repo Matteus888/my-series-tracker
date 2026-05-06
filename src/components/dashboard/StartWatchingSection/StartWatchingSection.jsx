@@ -9,7 +9,7 @@ import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import { mdiPlaylistPlus } from "@mdi/js";
 
-export default function StartWatchingSection() {
+export default function StartWatchingSection({ initialSkeletonCount = 0 }) {
   const { items, loading, error, checkFirstEpisode, checkingId } = useStartWatching();
   const { scrollerRef, canScrollLeft, canScrollRight, scrollBy } = useCarouselArrows();
 
@@ -29,21 +29,23 @@ export default function StartWatchingSection() {
       >
         <div className={styles.carouselWrapper}>
           {loading ? (
-            <div className={styles.carousel} ref={scrollerRef}>
-              {Array.from({ length: 2 }).map((_, i) => (
-                <div key={i} className={styles.skeletonContainer}>
-                  <div className={`card ${styles.skeletonCard}`}>
-                    <div className={styles.skeletonImage}>
-                      <div className={styles.skeletonPulse} />
-                    </div>
-                    <div className={styles.skeletonFooter}>
-                      <div className={styles.skeletonButton} />
-                      <div className={styles.skeletonButton} />
+            initialSkeletonCount === 0 ? null : (
+              <div className={styles.carousel} ref={scrollerRef}>
+                {Array.from({ length: Math.min(initialSkeletonCount, 10) }).map((_, i) => (
+                  <div key={i} className={styles.skeletonContainer}>
+                    <div className={`card ${styles.skeletonCard}`}>
+                      <div className={styles.skeletonImage}>
+                        <div className={styles.skeletonPulse} />
+                      </div>
+                      <div className={styles.skeletonFooter}>
+                        <div className={styles.skeletonButton} />
+                        <div className={styles.skeletonButton} />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )
           ) : isEmpty ? (
             <SectionEmptyState
               icon={mdiPlaylistPlus}
