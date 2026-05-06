@@ -56,7 +56,13 @@ export default function RecentlyWatchedSection() {
             <div className={styles.carousel} ref={scrollerRef}>
               {items.map((item) => (
                 <div key={item._id} className={styles.cardWrapper}>
-                  <WatchedEpisodeCard ep={item} onToggle={uncheckEpisode} seriesTitle={item.seriesTitle} showSeason />
+                  <WatchedEpisodeCard
+                    ep={item}
+                    onToggle={uncheckEpisode}
+                    seriesTitle={item.seriesTitle}
+                    showSeason
+                    showDate
+                  />
                 </div>
               ))}
             </div>

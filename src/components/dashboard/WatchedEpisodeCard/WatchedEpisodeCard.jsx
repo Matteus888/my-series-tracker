@@ -10,7 +10,15 @@ import { computeAverageScore } from "@/lib/utils/ratings.utils";
 import { usePopover } from "@/hooks/usePopover";
 import { useEpisodeRating } from "@/hooks/useEpisodeRating";
 
-export default function WatchedEpisodeCard({ ep, onToggle, onRate, seriesTitle, showSeason, disableTooltip }) {
+export default function WatchedEpisodeCard({
+  ep,
+  onToggle,
+  onRate,
+  seriesTitle,
+  showSeason,
+  showDate,
+  disableTooltip,
+}) {
   const now = new Date();
   const isAired = ep.airDate ? new Date(ep.airDate) <= now : false;
   const episodeCode = showSeason
@@ -22,9 +30,23 @@ export default function WatchedEpisodeCard({ ep, onToggle, onRate, seriesTitle, 
   const ratingsPopover = usePopover();
   const { rating, updateRating } = useEpisodeRating(ep._id, ep.rating, onRate);
 
+  const watchedTime = ep.watchedAt
+    ? new Date(ep.watchedAt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })
+    : null;
+  const watchedDate = ep.watchedAt
+    ? new Date(ep.watchedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "2-digit" })
+    : null;
+
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
-      {!disableTooltip && <div className="tooltip">{seriesTitle ?? ep.title ?? episodeCode}</div>}
+      {!disableTooltip && (
+        <div className="tooltip">
+          {seriesTitle ?? ep.title ?? episodeCode}
+          {ep.watched && watchedTime && (
+            <span className={styles.tooltipMeta}>{showDate ? `${watchedDate} • ${watchedTime}` : watchedTime}</span>
+          )}
+        </div>
+      )}
       <div className={`card ${styles.card} ${!isAired ? styles.notAired : ""}`}>
         {/* Still 16:9 */}
         <div className={styles.imageContainer}>

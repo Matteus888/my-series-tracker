@@ -125,3 +125,10 @@
   color: var(--foreground);
   white-space: nowrap;
 }
+
+.tooltipMeta {
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-top: 0.15rem;
+}
