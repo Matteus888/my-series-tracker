@@ -154,7 +154,7 @@
 /* Jour actif (= jour visible lors du scroll) : fond plein */
 .dayActive {
   background-color: var(--foreground);
-  color: var(--background-primary);
+  color: var(--background-secondary);
   opacity: 1;
 }
 
@@ -187,5 +187,5 @@
 .dayActive .extra,
 .dayActive .plus,
 .dayActive .extraCount {
-  color: var(--background-primary);
+  color: var(--background-secondary);
 }
