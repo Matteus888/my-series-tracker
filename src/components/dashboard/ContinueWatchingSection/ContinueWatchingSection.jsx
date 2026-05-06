@@ -28,7 +28,7 @@ export default function ContinueWatchingSection({ initialSkeletonCount = 0 }) {
         hasContent={items.length > 0}
       >
         <div className={styles.carouselWrapper}>
-          {!loading ? (
+          {loading ? (
             initialSkeletonCount === 0 ? null : (
               <div className={styles.carousel} ref={scrollerRef}>
                 {Array.from({ length: Math.min(initialSkeletonCount, 10) }).map((_, i) => (
