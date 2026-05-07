@@ -3,6 +3,7 @@ import { Series } from "@/models/series.model";
 import { UserList } from "@/models/userList.model";
 import { EpisodeProgress } from "@/models/episodeProgress.model";
 import { User } from "@/models/user.model";
+import { getEpisodeDetails } from "./tmdb.api";
 
 const dbConnect = require("@/lib/db/db.connect").default;
 
@@ -277,7 +278,7 @@ export const getCalendar = async (UserModel, userId) => {
     airDate: { $gte: startOfToday },
   })
     .sort({ airDate: 1 })
-    .select("_id seriesId seasonNumber episodeNumber title airDate overview duration ratings")
+    .select("_id tmdbEpisodeId seriesId seasonNumber episodeNumber title airDate overview duration ratings")
     .lean();
   if (upcomingEpisodes.length === 0) return [];
 
@@ -296,6 +297,7 @@ export const getCalendar = async (UserModel, userId) => {
 
     grouped[dateKey].push({
       episodeId: ep._id.toString(),
+      tmdbEpisodeId: ep.tmdbEpisodeId,
       seriesId: ep.seriesId.toString(),
       tmdbId: series.tmdbId,
       seriesTitle: series.title,
@@ -383,6 +385,168 @@ export const rateEpisode = async (userId, episodeId, rating) => {
   return { rating: updated.rating ?? null };
 };
 
+const buildEpisodeCastFromTmdb = (credits, limit = 20) => {
+  if (!credits) return [];
+  const regular = (credits.cast ?? []).map((c) => ({
+    tmdbId: c.id,
+    name: c.name,
+    character: c.character || null,
+    profilePath: c.profile_path ?? null,
+    order: c.order,
+    isGuest: false,
+  }));
+  const guests = (credits.guest_stars ?? []).map((c) => ({
+    tmdbId: c.id,
+    name: c.name,
+    character: c.character || null,
+    profilePath: c.profile_path ?? null,
+    order: c.order,
+    isGuest: true,
+  }));
+  return [...regular, ...guests].sort((a, b) => (a.order ?? 999) - (b.order ?? 999)).slice(0, limit);
+};
+
+const buildEpisodeCrewFromTmdb = (credits, limit = 10) => {
+  if (!credits?.crew) return [];
+  const priorityJobs = ["Director", "Writer", "Screenplay", "Story"];
+  return credits.crew
+    .filter((c) => priorityJobs.includes(c.job))
+    .slice(0, limit)
+    .map((c) => ({
+      tmdbId: c.id,
+      name: c.name,
+      job: c.job,
+      department: c.department,
+      profilePath: c.profile_path ?? null,
+    }));
+};
+
+const buildEpisodeVideosFromTmdb = (videosResponse) => {
+  if (!videosResponse?.results) return [];
+  return videosResponse.results
+    .filter((v) => v.official && v.site === "YouTube")
+    .map((v) => ({
+      key: v.key,
+      name: v.name,
+      type: v.type,
+      publishedAt: v.published_at ? new Date(v.published_at) : null,
+    }));
+};
+
+/**
+ * Sync le cast/crew/videos d'un épisode depuis TMDB si stale (>7j).
+ */
+const syncEpisodeIfStale = async (episode) => {
+  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+  const isStale = !episode.lastSyncedAt || Date.now() - new Date(episode.lastSyncedAt) > SEVEN_DAYS;
+  if (!isStale) return episode;
+
+  const tmdbData = await getEpisodeDetails(episode.tmdbSeriesId, episode.seasonNumber, episode.episodeNumber);
+  if (!tmdbData) return episode;
+
+  const updated = await Episode.findByIdAndUpdate(
+    episode._id,
+    {
+      $set: {
+        cast: buildEpisodeCastFromTmdb(tmdbData.credits),
+        crew: buildEpisodeCrewFromTmdb(tmdbData.credits),
+        videos: buildEpisodeVideosFromTmdb(tmdbData.videos),
+        lastSyncedAt: new Date(),
+      },
+    },
+    { returnDocument: "after", runValidators: true },
+  ).lean();
+
+  return updated ?? episode;
+};
+
+/**
+ * Récupère toutes les données nécessaires à la page épisode.
+ * Renvoie l'épisode (avec cast/crew/videos), la série parente, les épisodes de la saison
+ * avec leur progress utilisateur, et le progress de l'épisode courant.
+ */
+export const getEpisodeFullData = async (userId, tmdbEpisodeId) => {
+  await dbConnect();
+
+  let episode = await Episode.findOne({ tmdbEpisodeId: Number(tmdbEpisodeId) }).lean();
+  if (!episode) throw new Error("Episode not found");
+
+  episode = await syncEpisodeIfStale(episode);
+
+  const series = await Series.findById(episode.seriesId).lean();
+  if (!series) throw new Error("Series not found");
+
+  // Tous les épisodes de la même saison
+  const seasonEpisodes = await Episode.find({
+    seriesId: episode.seriesId,
+    seasonNumber: episode.seasonNumber,
+  })
+    .sort({ episodeNumber: 1 })
+    .select("_id tmdbEpisodeId seasonNumber episodeNumber title stillPath airDate duration ratings")
+    .lean();
+
+  // Progress utilisateur sur ces épisodes
+  let progressBySeasonEpisode = new Map();
+  let currentProgress = null;
+
+  if (userId) {
+    const seasonEpisodeIds = seasonEpisodes.map((e) => e._id);
+    const progressList = await EpisodeProgress.find({
+      userId,
+      episodeId: { $in: seasonEpisodeIds },
+    })
+      .select("episodeId watched watchedAt rating")
+      .lean();
+
+    progressBySeasonEpisode = new Map(progressList.map((p) => [p.episodeId.toString(), p]));
+    const cp = progressBySeasonEpisode.get(episode._id.toString());
+    if (cp) {
+      currentProgress = {
+        watched: cp.watched ?? false,
+        watchedAt: cp.watchedAt ? cp.watchedAt.toISOString() : null,
+        rating: cp.rating ?? null,
+      };
+    }
+  }
+
+  return {
+    episode: {
+      ...episode,
+      _id: episode._id.toString(),
+      seriesId: episode.seriesId.toString(),
+      airDate: episode.airDate ? episode.airDate.toISOString() : null,
+    },
+    series: {
+      _id: series._id.toString(),
+      tmdbId: series.tmdbId,
+      title: series.title,
+      posterPath: series.posterPath,
+      backdropPath: series.backdropPath,
+      seasons: (series.seasons ?? []).map((s) => ({
+        seasonNumber: s.seasonNumber,
+        episodeCount: s.episodeCount,
+        tmdbSeasonId: s.tmdbSeasonId,
+        name: s.name,
+        posterPath: s.posterPath,
+        airDate: s.airDate ? s.airDate.toISOString() : null,
+      })),
+    },
+    seasonEpisodes: seasonEpisodes.map((ep) => {
+      const p = progressBySeasonEpisode.get(ep._id.toString());
+      return {
+        ...ep,
+        _id: ep._id.toString(),
+        seriesId: episode.seriesId.toString(),
+        airDate: ep.airDate ? ep.airDate.toISOString() : null,
+        watched: p?.watched ?? false,
+        watchedAt: p?.watchedAt ? p.watchedAt.toISOString() : null,
+        rating: p?.rating ?? null,
+      };
+    }),
+    currentProgress,
+  };
+};
+
 // Fonction privée partagée — fetch + join + tri
 const _fetchWatchedEpisodes = async (userId, since = null) => {
   const query = { userId, watched: true };
@@ -394,7 +558,7 @@ const _fetchWatchedEpisodes = async (userId, since = null) => {
 
   const episodeIds = progressList.map((p) => p.episodeId);
   const episodes = await Episode.find({ _id: { $in: episodeIds } })
-    .select("_id seriesId seasonNumber episodeNumber title stillPath airDate duration ratings")
+    .select("_id tmdbEpisodeId seriesId seasonNumber episodeNumber title stillPath airDate duration ratings")
     .lean();
 
   const seriesIds = [...new Set(episodes.map((e) => e.seriesId.toString()))];
@@ -413,6 +577,7 @@ const _fetchWatchedEpisodes = async (userId, since = null) => {
       if (!series) return null;
       return {
         _id: ep._id.toString(),
+        tmdbEpisodeId: ep.tmdbEpisodeId,
         seriesId: ep.seriesId.toString(),
         tmdbId: series.tmdbId,
         seriesTitle: series.title,

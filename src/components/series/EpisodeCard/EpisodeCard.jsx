@@ -2,6 +2,7 @@
 
 import styles from "./EpisodeCard.module.css";
 import Image from "next/image";
+import Link from "next/link";
 import Icon from "@mdi/react";
 import { mdiCheck } from "@mdi/js";
 import HeartRating from "@/components/ui/HeartRating/HeartRating";
@@ -24,7 +25,11 @@ export default function EpisodeCard({ ep, onToggle, onRate }) {
     <div className={`${styles.row} ${!isAired ? styles.notAired : ""}`}>
       {/* Image still à gauche, dans son propre wrapper */}
       <div className={styles.imageWrapper}>
-        <div className={styles.imageClip}>
+        <Link
+          href={`/episode/${ep.tmdbEpisodeId}`}
+          className={styles.imageClip}
+          aria-label={`View details for ${ep.title ?? episodeCode}`}
+        >
           {ep.stillPath ? (
             <Image
               src={`https://image.tmdb.org/t/p/w300${ep.stillPath}`}
@@ -38,7 +43,7 @@ export default function EpisodeCard({ ep, onToggle, onRate }) {
               <span>{episodeCode}</span>
             </div>
           )}
-        </div>
+        </Link>
 
         {ratingsPopover.isOpen && (
           <RatingsPopover

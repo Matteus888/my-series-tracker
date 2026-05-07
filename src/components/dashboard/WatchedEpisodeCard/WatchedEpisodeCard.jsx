@@ -2,6 +2,7 @@
 
 import styles from "./WatchedEpisodeCard.module.css";
 import Image from "next/image";
+import Link from "next/link";
 import Icon from "@mdi/react";
 import { mdiCheck } from "@mdi/js";
 import HeartRating from "@/components/ui/HeartRating/HeartRating";
@@ -49,7 +50,11 @@ export default function WatchedEpisodeCard({
       )}
       <div className={`card ${styles.card} ${!isAired ? styles.notAired : ""}`}>
         {/* Still 16:9 */}
-        <div className={styles.imageContainer}>
+        <Link
+          href={`/episode/${ep.tmdbEpisodeId}`}
+          className={styles.imageContainer}
+          aria-label={`View details for ${ep.title ?? episodeCode}`}
+        >
           {ep.stillPath ? (
             <Image
               src={`https://image.tmdb.org/t/p/w185${ep.stillPath}`}
@@ -64,7 +69,7 @@ export default function WatchedEpisodeCard({
               <span>{episodeCode}</span>
             </div>
           )}
-        </div>
+        </Link>
 
         {/* Footer */}
         <div className={`card-footer ${styles.footer}`}>

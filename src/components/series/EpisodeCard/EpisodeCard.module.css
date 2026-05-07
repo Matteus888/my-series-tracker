@@ -24,10 +24,17 @@
   border: 1px solid var(--border);
   overflow: hidden;
   background-color: var(--background-secondary);
+  display: block;
+  cursor: pointer;
 }
 
 .image {
   object-fit: cover;
+}
+
+.imageClip:hover .image {
+  transform: scale(1.04);
+  transition: transform 0.25s ease;
 }
 
 .placeholder {

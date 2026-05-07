@@ -152,3 +152,17 @@ export async function getSeasonVideos(tmdbId, seasonNumber) {
   const data = await res.json();
   return data.results ?? [];
 }
+
+export const getEpisodeDetails = async (seriesId, seasonNumber, episodeNumber) => {
+  try {
+    const response = await fetch(
+      `${TMDB_BASE_URL}/tv/${seriesId}/season/${seasonNumber}/episode/${episodeNumber}` +
+        `?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,external_ids,images`,
+    );
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (err) {
+    console.error("Error fetching episode details:", err);
+    return null;
+  }
+};

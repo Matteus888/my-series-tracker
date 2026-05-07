@@ -72,6 +72,37 @@ const episodeSchema = new mongoose.Schema(
         type: Date,
       },
     },
+    cast: [
+      {
+        tmdbId: { type: Number, required: true },
+        name: { type: String, trim: true },
+        character: { type: String, trim: true },
+        profilePath: { type: String, trim: true },
+        order: { type: Number },
+        isGuest: { type: Boolean, default: false },
+      },
+    ],
+    crew: [
+      {
+        tmdbId: { type: Number, required: true },
+        name: { type: String, trim: true },
+        job: { type: String, trim: true },
+        department: { type: String, trim: true },
+        profilePath: { type: String, trim: true },
+      },
+    ],
+    videos: [
+      {
+        key: { type: String, required: true },
+        name: { type: String, trim: true },
+        type: { type: String, trim: true },
+        publishedAt: { type: Date },
+      },
+    ],
+    lastSyncedAt: {
+      type: Date,
+      default: null,
+    },
     imdbId: {
       type: String,
       trim: true,
