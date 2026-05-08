@@ -106,7 +106,7 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
                     <Link href={`/person/${person.tmdbId}`} className={styles.createdByName}>
                       {person.name}
                     </Link>
-                    {i < createdBy.length - 1 && <span className={styles.createdBySeparator}>, </span>}
+                    {i < createdBy.length - 1 && <span className={styles.createdBySeparator}> · </span>}
                   </span>
                 ))}
               </div>

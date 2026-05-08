@@ -19,7 +19,7 @@
 
 .cardSlot {
   flex: 0 0 auto;
-  width: 220px;
+  width: 260px;
 }
 
 .cardSlot:last-child :global(.card) {
@@ -44,16 +44,15 @@
 .current :global(.card)::before {
   content: "Now viewing";
   position: absolute;
-  top: 0.4rem;
-  left: 0.4rem;
-  padding: 0.2rem 0.5rem;
-  font-size: 0.65rem;
-  font-weight: 600;
+  bottom: calc(0.5rem + 35px);
+  left: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
   letter-spacing: 0.05rem;
   text-transform: uppercase;
-  background: var(--background-primary);
+  background: var(--border);
   color: var(--foreground);
-  border: 1px solid var(--border);
   z-index: 2;
   pointer-events: none;
 }

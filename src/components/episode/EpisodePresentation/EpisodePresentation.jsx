@@ -66,16 +66,6 @@ export default function EpisodePresentation({ episode, series, currentProgress }
         {/* Bloc infos */}
         <div className={styles.infoWrapper}>
           <div className={styles.info}>
-            <div className={styles.breadcrumb}>
-              <Link href={`/series/${series.tmdbId}`} className={styles.seriesLink}>
-                {series.title}
-              </Link>
-              <span className={styles.separator}>·</span>
-              <span className={styles.code}>{code}</span>
-            </div>
-
-            <h1 className={styles.title}>{episode.title ?? "—"}</h1>
-
             <div className={styles.metaRow}>
               {episode.airDate && <span className={styles.metaItem}>{formatDate(episode.airDate)}</span>}
               {episode.duration && <span className={styles.metaItem}>{episode.duration} min</span>}
