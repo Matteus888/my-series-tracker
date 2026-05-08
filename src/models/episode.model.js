@@ -80,6 +80,7 @@ const episodeSchema = new mongoose.Schema(
         profilePath: { type: String, trim: true },
         order: { type: Number },
         isGuest: { type: Boolean, default: false },
+        _id: false,
       },
     ],
     crew: [

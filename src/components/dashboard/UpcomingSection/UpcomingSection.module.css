@@ -15,6 +15,7 @@
   scrollbar-gutter: stable;
   align-items: stretch;
   scroll-behavior: smooth;
+  scrollbar-width: none;
   scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;

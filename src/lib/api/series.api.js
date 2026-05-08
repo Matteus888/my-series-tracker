@@ -236,7 +236,10 @@ export const updateTrackedSeries = async (UserModel, userId, tmdbId, updates) =>
 export const getEpisodeProgressForSeries = async (userId, seriesId) => {
   await dbConnect();
 
-  const episodes = await Episode.find({ seriesId }).sort({ seasonNumber: 1, episodeNumber: 1 }).lean();
+  const episodes = await Episode.find({ seriesId })
+    .select("_id tmdbEpisodeId seriesId seasonNumber episodeNumber title stillPath airDate duration ratings overview")
+    .sort({ seasonNumber: 1, episodeNumber: 1 })
+    .lean();
 
   if (episodes.length === 0) return [];
 

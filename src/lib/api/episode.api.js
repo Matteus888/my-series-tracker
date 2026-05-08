@@ -515,6 +515,12 @@ export const getEpisodeFullData = async (userId, tmdbEpisodeId) => {
       _id: episode._id.toString(),
       seriesId: episode.seriesId.toString(),
       airDate: episode.airDate ? episode.airDate.toISOString() : null,
+      cast: (episode.cast ?? []).map(({ _id, ...rest }) => rest),
+      crew: (episode.crew ?? []).map(({ _id, ...rest }) => rest),
+      videos: (episode.videos ?? []).map(({ _id, ...rest }) => ({
+        ...rest,
+        publishedAt: rest.publishedAt ? rest.publishedAt.toISOString() : null,
+      })),
     },
     series: {
       _id: series._id.toString(),

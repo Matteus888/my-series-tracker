@@ -5,11 +5,12 @@
 
 .track {
   display: flex;
-  gap: 0.6rem;
   overflow-x: auto;
   scroll-behavior: smooth;
   scrollbar-width: none;
-  padding: 0.25rem 0;
+  align-items: flex-start;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
 .track::-webkit-scrollbar {
@@ -17,17 +18,48 @@
 }
 
 .cardSlot {
-  flex: 0 0 220px;
-  display: flex;
+  flex: 0 0 auto;
+  width: 220px;
 }
 
-.current {
-  outline: 2px solid var(--blue);
-  outline-offset: 2px;
+.cardSlot:last-child :global(.card) {
+  border-right: none;
+}
+
+/* Atténue les autres cards */
+.cardSlot:not(.current) :global(.card) {
+  opacity: 0.55;
+  transition: opacity 0.2s ease;
+}
+
+.cardSlot:not(.current):hover :global(.card) {
+  opacity: 1;
+}
+
+/* Badge "Now viewing" */
+.current :global(.card) {
+  position: relative;
+}
+
+.current :global(.card)::before {
+  content: "Now viewing";
+  position: absolute;
+  top: 0.4rem;
+  left: 0.4rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
+  background: var(--background-primary);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  z-index: 2;
+  pointer-events: none;
 }
 
 @media (max-width: 640px) {
   .cardSlot {
-    flex: 0 0 160px;
+    width: 160px;
   }
 }
