@@ -120,21 +120,16 @@ export const getSeasonDetails = async (seriesId, seasonNumber) => {
 };
 
 export const getAllSeasonsWithEpisodes = async (seriesId) => {
-  try {
-    const seriesDetails = await getSeriesDetails(seriesId);
-    if (!seriesDetails) throw new Error("Serie not found");
+  const seriesDetails = await getSeriesDetails(seriesId);
+  if (!seriesDetails) return null;
 
-    // Filte les saisons spéciales (notées 0 sur TMDB)
-    const regularSeasons = seriesDetails.seasons.filter((s) => s.season_number > 0);
+  const regularSeasons = (seriesDetails.seasons ?? []).filter((s) => s.season_number > 0);
 
-    const seasonsWithEpisodes = await Promise.all(
-      regularSeasons.map((season) => getSeasonDetails(seriesId, season.season_number)),
-    );
-    return { seriesDetails, seasons: seasonsWithEpisodes.filter(Boolean) };
-  } catch (err) {
-    console.error("Error fetching all seasons:", err);
-    return null;
-  }
+  const seasonsWithEpisodes = await Promise.all(
+    regularSeasons.map((season) => getSeasonDetails(seriesId, season.season_number)),
+  );
+
+  return { seriesDetails, seasons: seasonsWithEpisodes.filter(Boolean) };
 };
 
 export async function getSeriesVideos(tmdbId) {

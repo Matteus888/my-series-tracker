@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { ensureSeriesInDb, getEpisodeProgressForSeries } from "@/lib/api/series.api";
+import { getSeriesDetails } from "@/lib/api/tmdb.api";
 import { Series } from "@/models/series.model";
 import { Episode } from "@/models/episode.model";
 import dbConnect from "@/lib/db/db.connect";
@@ -74,18 +75,47 @@ export default async function SeriesPage({ params }) {
   const seriesRatings = seriesDoc.ratings ?? null;
 
   // 3. Cast et createdBy depuis la base
-  const cast = (seriesDoc.cast ?? []).map((c) => ({
+  let cast = (seriesDoc.cast ?? []).map((c) => ({
     tmdbId: c.tmdbId,
     name: c.name,
     character: c.character,
     profilePath: c.profilePath,
   }));
 
-  const createdBy = (seriesDoc.createdBy ?? []).map((c) => ({
+  let createdBy = (seriesDoc.createdBy ?? []).map((c) => ({
     tmdbId: c.tmdbId,
     name: c.name,
     profilePath: c.profilePath,
   }));
+
+  // Fallback TMDB si la base n'a pas (encore) cast ou createdBy
+  if (cast.length === 0 || createdBy.length === 0) {
+    const tmdbSerie = await getSeriesDetails(id);
+    if (tmdbSerie) {
+      if (cast.length === 0 && tmdbSerie.aggregate_credits?.cast?.length > 0) {
+        cast = tmdbSerie.aggregate_credits.cast
+          .sort((a, b) => (b.total_episode_count ?? 0) - (a.total_episode_count ?? 0))
+          .slice(0, 20)
+          .map((c) => ({
+            tmdbId: c.id,
+            name: c.name,
+            character:
+              (c.roles ?? [])
+                .map((r) => r.character)
+                .filter(Boolean)
+                .join(" / ") || null,
+            profilePath: c.profile_path ?? null,
+          }));
+      }
+      if (createdBy.length === 0 && tmdbSerie.created_by?.length > 0) {
+        createdBy = tmdbSerie.created_by.map((c) => ({
+          tmdbId: c.id,
+          name: c.name,
+          profilePath: c.profile_path ?? null,
+        }));
+      }
+    }
+  }
 
   // 4. Episodes : avec progress si user connecté, sans sinon
   const session = await getServerSession(authOptions);
