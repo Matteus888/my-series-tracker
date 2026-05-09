@@ -7,11 +7,13 @@ import Icon from "@mdi/react";
 import { mdiCheck } from "@mdi/js";
 import HeartRating from "@/components/ui/HeartRating/HeartRating";
 import RatingsPopover from "@/components/ui/RatingsPopover/RatingsPopover";
+import RatingBadges from "@/components/series/RatingBadges/RatingBadges";
 import { formatDate } from "@/lib/utils/date.utils";
 import { computeAverageScore } from "@/lib/utils/ratings.utils";
 import { usePopover } from "@/hooks/usePopover";
 import { useEpisodeRating } from "@/hooks/useEpisodeRating";
 import { useEpisodeWatchToggle } from "@/hooks/useEpisodeWatchToggle";
+import { useTraktEpisodeRating } from "@/hooks/useTraktEpisodeRating";
 
 export default function EpisodePresentation({ episode, series, currentProgress }) {
   const now = new Date();
@@ -33,7 +35,15 @@ export default function EpisodePresentation({ episode, series, currentProgress }
   });
   const { rating, updateRating } = useEpisodeRating(episode._id, currentProgress?.rating ?? null);
 
-  const score = watched ? computeAverageScore(episode.ratings) : null;
+  // Lazy-load Trakt episode rating (déclenché seulement si épisode aired)
+  const { data: traktData } = useTraktEpisodeRating(isAired ? episode._id : null);
+
+  // Combine les notes TMDB (déjà en base) avec Trakt (lazy)
+  const combinedRatings = traktData?.score
+    ? { ...episode.ratings, trakt: { score: traktData.score, voteCount: traktData.voteCount } }
+    : episode.ratings;
+
+  const score = watched ? computeAverageScore(combinedRatings) : null;
 
   return (
     <div className={styles.presentation}>
@@ -109,6 +119,13 @@ export default function EpisodePresentation({ episode, series, currentProgress }
                   <HeartRating percentage={score ?? 0} />
                   {score > 0 && <span className={styles.rating}>{score}%</span>}
                 </button>
+              )}
+
+              {/* Badges détaillés par source, visibles dès que l'épisode est aired */}
+              {isAired && (
+                <div className={styles.badgesWrapper}>
+                  <RatingBadges ratings={combinedRatings} />
+                </div>
               )}
             </div>
           </div>

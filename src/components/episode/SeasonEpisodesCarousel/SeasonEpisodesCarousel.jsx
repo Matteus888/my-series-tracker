@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { mdiPlaylistPlay } from "@mdi/js";
 import styles from "./SeasonEpisodesCarousel.module.css";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
@@ -52,7 +51,6 @@ export default function SeasonEpisodesCarousel({
 
   return (
     <SectionHeader
-      icon={mdiPlaylistPlay}
       title={`Season ${seasonNumber}`}
       subtitle={`${episodes.length} episode${episodes.length > 1 ? "s" : ""}`}
       storageKey={`episode-season-${seriesTmdbId}-${seasonNumber}-open`}

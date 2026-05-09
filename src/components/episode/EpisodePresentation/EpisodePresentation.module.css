@@ -179,3 +179,18 @@
     width: 100%;
   }
 }
+
+.badgesWrapper {
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  border-left: 1px solid var(--border);
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.badgesWrapper::-webkit-scrollbar {
+  display: none;
+}

@@ -57,6 +57,11 @@ const episodeSchema = new mongoose.Schema(
           default: 0,
         },
       },
+      trakt: {
+        score: { type: Number, min: 0, max: 10 },
+        voteCount: { type: Number, default: 0 },
+        fetchedAt: { type: Date },
+      },
       imdb: {
         score: {
           type: Number,
