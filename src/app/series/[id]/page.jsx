@@ -1,20 +1,23 @@
 import styles from "@/app/series/[id]/page.module.css";
 import Image from "next/image";
-import { getSeriesDetails, getAllSeasonsWithEpisodes } from "@/lib/api/tmdb.api";
-import EpisodeList from "@/components/series/EpisodeList/EpisodeList";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getEpisodeProgressForSeries, syncSeriesIfStale } from "@/lib/api/series.api";
+import { ensureSeriesInDb, getEpisodeProgressForSeries } from "@/lib/api/series.api";
 import { Series } from "@/models/series.model";
+import { Episode } from "@/models/episode.model";
 import dbConnect from "@/lib/db/db.connect";
 import { APP_NAME } from "@/lib/constants/app.constants";
+import EpisodeList from "@/components/series/EpisodeList/EpisodeList";
 import SeriePresentation from "@/components/series/SeriePresentation/SeriePresentation";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const serie = await getSeriesDetails(id);
+  await dbConnect();
+  const series = await Series.findOne({ tmdbId: Number(id) })
+    .select("title")
+    .lean();
   return {
-    title: serie?.name ? `${serie.name} - ${APP_NAME}` : `Series - ${APP_NAME}`,
+    title: series?.title ? `${series.title} - ${APP_NAME}` : `Series - ${APP_NAME}`,
   };
 }
 
@@ -23,98 +26,40 @@ export const dynamic = "force-dynamic";
 export default async function SeriesPage({ params }) {
   const { id } = await params;
 
-  const serie = await getSeriesDetails(id);
-  if (!serie) return <p className={styles.notFoundMessage}>Series not found</p>;
-
-  syncSeriesIfStale(Series, id).catch((err) => console.error("syncSeriesIfStale failed:", err.message));
-
-  const session = await getServerSession(authOptions);
-  let episodeProgress = [];
-  let seriesRatings = null;
-
   await dbConnect();
-  const seriesDoc = await Series.findOne({ tmdbId: Number(id) }).lean();
-  seriesRatings = seriesDoc?.ratings ?? null;
 
-  if (session && seriesDoc) {
-    const raw = await getEpisodeProgressForSeries(session.user.id, seriesDoc._id);
-    episodeProgress = raw.map((ep) => ({
-      ...ep,
-      _id: ep._id.toString(),
-      seriesId: ep.seriesId.toString(),
-      watchedAt: ep.watchedAt ? ep.watchedAt.toISOString() : null,
-      airDate: ep.airDate ? ep.airDate.toISOString() : null,
-      createdAt: ep.createdAt ? ep.createdAt.toISOString() : null,
-      updatedAt: ep.updatedAt ? ep.updatedAt.toISOString() : null,
-    }));
+  // 1. S'assure que la série est en base avec toutes ses données et notes
+  let seriesDoc = null;
+  try {
+    seriesDoc = await ensureSeriesInDb(Series, id);
+  } catch (err) {
+    console.error("ensureSeriesInDb failed:", err.message);
+    seriesDoc = await Series.findOne({ tmdbId: Number(id) }).lean();
   }
 
-  if (episodeProgress.length === 0) {
-    const data = await getAllSeasonsWithEpisodes(id);
-    if (data?.seasons) {
-      episodeProgress = data.seasons.flatMap((season) =>
-        season.episodes.map((ep) => ({
-          _id: null,
-          seriesId: null,
-          tmdbEpisodeId: ep.id,
-          seasonNumber: season.season_number,
-          episodeNumber: ep.episode_number,
-          title: ep.name ?? null,
-          overview: ep.overview ?? null,
-          stillPath: ep.still_path ?? null,
-          airDate: ep.air_date ? new Date(ep.air_date).toISOString() : null,
-          duration: ep.runtime ?? null,
-          ratings: ep.vote_average ? { tmdb: { score: ep.vote_average, voteCount: ep.vote_count ?? 0 } } : null,
-          watched: false,
-          watchedAt: null,
-          rating: null,
-          createdAt: null,
-          updatedAt: null,
-        })),
-      );
-    }
-  }
+  if (!seriesDoc) return <p className={styles.notFoundMessage}>Series not found</p>;
 
-  // ─── Cast ─────────────────────────────────────────
-  let cast = [];
-  if (seriesDoc?.cast?.length > 0) {
-    cast = seriesDoc.cast.map((c) => ({
-      tmdbId: c.tmdbId,
-      name: c.name,
-      character: c.character,
-      profilePath: c.profilePath,
-    }));
-  } else if (serie.aggregate_credits?.cast?.length > 0) {
-    cast = serie.aggregate_credits.cast
-      .sort((a, b) => (b.total_episode_count ?? 0) - (a.total_episode_count ?? 0))
-      .slice(0, 20)
-      .map((c) => ({
-        tmdbId: c.id,
-        name: c.name,
-        character:
-          (c.roles ?? [])
-            .map((r) => r.character)
-            .filter(Boolean)
-            .join(" / ") || null,
-        profilePath: c.profile_path ?? null,
-      }));
-  }
-
-  // ─── Created by ────────────────────────────────────
-  let createdBy = [];
-  if (seriesDoc?.createdBy?.length > 0) {
-    createdBy = seriesDoc.createdBy.map((c) => ({
-      tmdbId: c.tmdbId,
-      name: c.name,
-      profilePath: c.profilePath,
-    }));
-  } else if (serie.created_by?.length > 0) {
-    createdBy = serie.created_by.map((c) => ({
-      tmdbId: c.id,
-      name: c.name,
-      profilePath: c.profile_path ?? null,
-    }));
-  }
+  // 2. Construit l'objet serie pour SeriePresentation depuis le doc en base
+  const serie = {
+    id: seriesDoc.tmdbId,
+    name: seriesDoc.title,
+    poster_path: seriesDoc.posterPath,
+    backdrop_path: seriesDoc.backdropPath,
+    overview: seriesDoc.overview,
+    tagline: seriesDoc.tagline,
+    first_air_date: seriesDoc.firstAirDate,
+    status: seriesDoc.status,
+    number_of_seasons: seriesDoc.numberOfSeasons,
+    number_of_episodes: seriesDoc.numberOfEpisodes,
+    genres: (seriesDoc.genres ?? []).map((name, i) => ({ id: i, name })),
+    networks: (seriesDoc.networks ?? []).map((n) => ({
+      id: n.id,
+      name: n.name,
+      logo_path: n.logoPath,
+    })),
+    vote_average: seriesDoc.ratings?.tmdb?.score,
+    vote_count: seriesDoc.ratings?.tmdb?.voteCount,
+  };
 
   const serieData = {
     name: serie.name,
@@ -125,6 +70,54 @@ export default async function SeriesPage({ params }) {
     vote_average: serie.vote_average,
     vote_count: serie.vote_count,
   };
+
+  const seriesRatings = seriesDoc.ratings ?? null;
+
+  // 3. Cast et createdBy depuis la base
+  const cast = (seriesDoc.cast ?? []).map((c) => ({
+    tmdbId: c.tmdbId,
+    name: c.name,
+    character: c.character,
+    profilePath: c.profilePath,
+  }));
+
+  const createdBy = (seriesDoc.createdBy ?? []).map((c) => ({
+    tmdbId: c.tmdbId,
+    name: c.name,
+    profilePath: c.profilePath,
+  }));
+
+  // 4. Episodes : avec progress si user connecté, sans sinon
+  const session = await getServerSession(authOptions);
+  let episodeProgress = [];
+
+  if (session) {
+    const raw = await getEpisodeProgressForSeries(session.user.id, seriesDoc._id);
+    episodeProgress = raw.map((ep) => ({
+      ...ep,
+      _id: ep._id.toString(),
+      seriesId: ep.seriesId.toString(),
+      watchedAt: ep.watchedAt ? ep.watchedAt.toISOString() : null,
+      airDate: ep.airDate ? ep.airDate.toISOString() : null,
+      createdAt: ep.createdAt ? ep.createdAt.toISOString() : null,
+      updatedAt: ep.updatedAt ? ep.updatedAt.toISOString() : null,
+    }));
+  } else {
+    const episodes = await Episode.find({ seriesId: seriesDoc._id })
+      .sort({ seasonNumber: 1, episodeNumber: 1 })
+      .select("_id tmdbEpisodeId seriesId seasonNumber episodeNumber title stillPath airDate duration ratings overview")
+      .lean();
+
+    episodeProgress = episodes.map((ep) => ({
+      ...ep,
+      _id: ep._id.toString(),
+      seriesId: ep.seriesId.toString(),
+      airDate: ep.airDate ? ep.airDate.toISOString() : null,
+      watched: false,
+      watchedAt: null,
+      rating: null,
+    }));
+  }
 
   return (
     <div className={styles.container}>
@@ -143,7 +136,6 @@ export default async function SeriesPage({ params }) {
         <div className={styles.heroOverlay} />
       </div>
 
-      {/* Spacer pour réserver la place du hero dans le flux */}
       <div className={styles.heroSpacer} aria-hidden="true">
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>{serie.name}</h1>
@@ -151,7 +143,6 @@ export default async function SeriesPage({ params }) {
         </div>
       </div>
 
-      {/* Carte de présentation */}
       <SeriePresentation
         serie={serie}
         serieData={serieData}
@@ -160,7 +151,6 @@ export default async function SeriesPage({ params }) {
         createdBy={createdBy}
       />
 
-      {/* Liste épisodes */}
       {episodeProgress.length > 0 && (
         <div className={styles.episodesSection}>
           <EpisodeList initialProgress={episodeProgress} tmdbId={Number(id)} serieData={serieData} />

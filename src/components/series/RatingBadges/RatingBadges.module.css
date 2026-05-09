@@ -1,0 +1,47 @@
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  background: var(--background-third);
+  border: 1px solid var(--border);
+  line-height: 1;
+}
+
+.label {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+}
+
+.value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+/* Couleurs distinctives par source — discrètes mais reconnaissables */
+.tmdb .label {
+  color: #01b4e4;
+}
+.imdb .label {
+  color: var(--yellow);
+}
+.rt .label {
+  color: #fa320a;
+}
+.mc .label {
+  color: #66cc33;
+}
+.trakt .label {
+  color: var(--red);
+}

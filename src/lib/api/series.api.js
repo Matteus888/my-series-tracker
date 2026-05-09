@@ -5,6 +5,7 @@ import { UserList } from "@/models/userList.model";
 import { EpisodeProgress } from "@/models/episodeProgress.model";
 import { getAllSeasonsWithEpisodes, getSeriesDetails, getSeriesVideos, getSeasonVideos } from "./tmdb.api";
 import { getOmdbRatings } from "./omdb.api";
+import { getTraktRatings } from "./trakt.api";
 import { upsertEpisodes } from "@/lib/db/upsertEpisodes";
 import dbConnect from "@/lib/db/db.connect";
 
@@ -42,10 +43,36 @@ const buildCreatedByFromTmdb = (createdBy = []) => {
   }));
 };
 
-export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, serieData, options = {}) => {
+/**
+ * Crée ou met à jour la série en base avec toutes ses metadata + notes,
+ * sans la lier à un user. Met aussi à jour les épisodes via upsertEpisodes.
+ *
+ * Utilisable pour cacher la fiche série dès qu'elle est consultée,
+ * même par un visiteur non connecté ou non trackeur.
+ *
+ * Cache 7 jours : si la série a été sync récemment, retourne le doc existant.
+ *
+ * @returns {Promise<Object|null>} le document Series (lean), ou null si TMDB échoue
+ */
+export const ensureSeriesInDb = async (SeriesModel, tmdbId) => {
   await dbConnect();
 
-  const { seriesDetails, seasons } = await getAllSeasonsWithEpisodes(tmdbId);
+  const numericId = Number(tmdbId);
+  const existing = await SeriesModel.findOne({ tmdbId: numericId }).lean();
+
+  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+  const isFresh = existing?.lastSyncedAt && Date.now() - new Date(existing.lastSyncedAt) < SEVEN_DAYS;
+  if (isFresh) return existing;
+
+  const data = await getAllSeasonsWithEpisodes(numericId);
+  if (!data?.seriesDetails || !data?.seasons) return existing ?? null;
+
+  const { seriesDetails, seasons } = data;
+
+  const imdbId = seriesDetails.external_ids?.imdb_id ?? null;
+  const [omdbRatings, traktRating] = imdbId
+    ? await Promise.all([getOmdbRatings(imdbId), getTraktRatings(imdbId)])
+    : [null, null];
 
   const seasonsData = seasons.map((season) => ({
     seasonNumber: season.season_number,
@@ -56,20 +83,21 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
     airDate: season.air_date ? new Date(season.air_date) : null,
   }));
 
-  const imdbId = seriesDetails.external_ids?.imdb_id || null;
-  const omdbRatings = imdbId ? await getOmdbRatings(imdbId) : null;
-
-  const series = await SeriesModel.findOneAndUpdate(
-    { tmdbId },
+  const updated = await SeriesModel.findOneAndUpdate(
+    { tmdbId: numericId },
     {
       $set: {
-        tmdbId,
-        title: serieData.name,
-        posterPath: serieData.poster_path,
-        backdropPath: serieData.backdrop_path,
-        overview: serieData.overview,
-        genres: seriesDetails.genres?.map((g) => g.name) || [],
-        firstAirDate: serieData.first_air_date ? new Date(serieData.first_air_date) : null,
+        tmdbId: numericId,
+        title: seriesDetails.name,
+        originalTitle: seriesDetails.original_name,
+        overview: seriesDetails.overview,
+        tagline: seriesDetails.tagline ?? null,
+        posterPath: seriesDetails.poster_path,
+        backdropPath: seriesDetails.backdrop_path,
+        firstAirDate: seriesDetails.first_air_date ? new Date(seriesDetails.first_air_date) : null,
+        lastAirDate: seriesDetails.last_air_date ? new Date(seriesDetails.last_air_date) : null,
+        status: seriesDetails.status,
+        genres: seriesDetails.genres?.map((g) => g.name) ?? [],
         numberOfSeasons: seriesDetails.number_of_seasons,
         numberOfEpisodes: seriesDetails.number_of_episodes,
         seasons: seasonsData,
@@ -82,18 +110,51 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
         cast: buildCastFromTmdb(seriesDetails.aggregate_credits),
         createdBy: buildCreatedByFromTmdb(seriesDetails.created_by),
         imdbId,
-        "ratings.tmdb.score": serieData.vote_average,
-        "ratings.tmdb.voteCount": serieData.vote_count,
-        "ratings.imdb.score": omdbRatings?.imdb?.score || null,
-        "ratings.imdb.voteCount": omdbRatings?.imdb?.voteCount || null,
+        lastSyncedAt: new Date(),
+        "ratings.tmdb.score": seriesDetails.vote_average,
+        "ratings.tmdb.voteCount": seriesDetails.vote_count,
+        "ratings.imdb.score": omdbRatings?.imdb?.score ?? null,
+        "ratings.imdb.voteCount": omdbRatings?.imdb?.voteCount ?? null,
+        "ratings.rottenTomatoes.score": omdbRatings?.rottenTomatoes?.score ?? null,
+        "ratings.metacritic.score": omdbRatings?.metacritic?.score ?? null,
+        "ratings.trakt.score": traktRating?.score ?? null,
+        "ratings.trakt.voteCount": traktRating?.voteCount ?? null,
         "ratings.lastFetched": new Date(),
       },
     },
     { upsert: true, returnDocument: "after", runValidators: true },
+  ).lean();
+
+  await upsertEpisodes(
+    updated._id,
+    numericId,
+    seasons,
+    seriesDetails.networks ?? [],
+    updated.releaseTimeOverride ?? null,
   );
 
-  const episodeIdMap = await upsertEpisodes(series._id, Number(tmdbId), seasons, seriesDetails.networks ?? [], null);
+  return updated;
+};
 
+export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, serieData, options = {}) => {
+  await dbConnect();
+
+  // 1. S'assure que la série est en base (avec toutes ses notes et épisodes)
+  const series = await ensureSeriesInDb(SeriesModel, tmdbId);
+  if (!series) throw new Error("Could not fetch series details");
+
+  // 2. Récupère la map des episode IDs pour le markAllWatched / markFirstWatched
+  const episodes = await Episode.find({ seriesId: series._id })
+    .select("_id tmdbEpisodeId seasonNumber episodeNumber airDate")
+    .lean();
+
+  const episodeIdMap = new Map();
+  for (const ep of episodes) {
+    if (ep.tmdbEpisodeId) episodeIdMap.set(ep.tmdbEpisodeId, ep._id);
+    episodeIdMap.set(`${ep.seasonNumber}-${ep.episodeNumber}`, ep._id);
+  }
+
+  // 3. Lie la série au user
   const user = await UserModel.findById(userId);
   if (!user) throw new Error("User not found");
 
@@ -112,26 +173,17 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
 
   await user.save();
 
+  // 4. markAllWatched
   if (options.markAllWatched) {
     const now = new Date();
-
-    const progressDocs = seasons.flatMap((season) =>
-      season.episodes
-        .filter((ep) => ep.air_date && new Date(ep.air_date) <= now)
-        .map((ep) => {
-          const episodeId = episodeIdMap.get(ep.id) ?? episodeIdMap.get(`${season.season_number}-${ep.episode_number}`);
-
-          if (!episodeId) return null;
-
-          return {
-            userId,
-            episodeId,
-            watched: true,
-            watchedAt: new Date(),
-          };
-        })
-        .filter(Boolean),
-    );
+    const progressDocs = episodes
+      .filter((ep) => ep.airDate && ep.airDate <= now)
+      .map((ep) => ({
+        userId,
+        episodeId: ep._id,
+        watched: true,
+        watchedAt: new Date(),
+      }));
 
     if (progressDocs.length > 0) {
       await EpisodeProgress.insertMany(progressDocs, { ordered: false }).catch((err) => {
@@ -141,29 +193,21 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
 
     const watchlist = await UserList.findOne({ userId, isDefault: true });
     if (watchlist) {
-      await UserList.findByIdAndUpdate(watchlist._id, {
-        $pull: { series: series._id },
-      });
+      await UserList.findByIdAndUpdate(watchlist._id, { $pull: { series: series._id } });
     }
   }
 
+  // 5. markFirstWatched
   if (options.markFirstWatched) {
     const now = new Date();
+    const sortedEpisodes = [...episodes].sort(
+      (a, b) => a.seasonNumber - b.seasonNumber || a.episodeNumber - b.episodeNumber,
+    );
+    const firstAired = sortedEpisodes.find((ep) => ep.airDate && ep.airDate <= now);
 
-    let firstEpisodeId = null;
-    outer: for (const season of seasons) {
-      const sorted = [...season.episodes].sort((a, b) => a.episode_number - b.episode_number);
-      for (const ep of sorted) {
-        if (ep.air_date && new Date(ep.air_date) <= now) {
-          firstEpisodeId = episodeIdMap.get(ep.id) ?? episodeIdMap.get(`${season.season_number}-${ep.episode_number}`);
-          if (firstEpisodeId) break outer;
-        }
-      }
-    }
-
-    if (firstEpisodeId) {
+    if (firstAired) {
       await EpisodeProgress.findOneAndUpdate(
-        { userId, episodeId: firstEpisodeId },
+        { userId, episodeId: firstAired._id },
         { $set: { watched: true, watchedAt: new Date() } },
         { upsert: true, runValidators: true },
       );
@@ -265,72 +309,78 @@ export const getEpisodeProgressForSeries = async (userId, seriesId) => {
   });
 };
 
-export const syncSeriesIfStale = async (SeriesModel, tmdbId) => {
-  await dbConnect();
+// export const syncSeriesIfStale = async (SeriesModel, tmdbId) => {
+//   await dbConnect();
 
-  const series = await SeriesModel.findOne({ tmdbId: Number(tmdbId) }).lean();
-  if (!series) return;
+//   const series = await SeriesModel.findOne({ tmdbId: Number(tmdbId) }).lean();
+//   if (!series) return;
 
-  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
-  const isStale = !series.lastSyncedAt || Date.now() - new Date(series.lastSyncedAt) > SEVEN_DAYS;
-  if (!isStale) return;
+//   const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+//   const isStale = !series.lastSyncedAt || Date.now() - new Date(series.lastSyncedAt) > SEVEN_DAYS;
+//   if (!isStale) return;
 
-  const { seriesDetails, seasons } = await getAllSeasonsWithEpisodes(tmdbId);
-  if (!seriesDetails || !seasons) return;
+//   const { seriesDetails, seasons } = await getAllSeasonsWithEpisodes(tmdbId);
+//   if (!seriesDetails || !seasons) return;
 
-  const imdbId = seriesDetails.external_ids?.imdb_id ?? null;
-  const omdbRatings = imdbId ? await getOmdbRatings(imdbId) : null;
+//   const imdbId = seriesDetails.external_ids?.imdb_id || null;
+//   const [omdbRatings, traktRating] = imdbId
+//     ? await Promise.all([getOmdbRatings(imdbId), getTraktRatings(imdbId)])
+//     : [null, null];
 
-  const seasonsData = seasons.map((season) => ({
-    seasonNumber: season.season_number,
-    episodeCount: season.episodes.length,
-    tmdbSeasonId: season.id,
-    name: season.name,
-    posterPath: season.poster_path,
-    airDate: season.air_date ? new Date(season.air_date) : null,
-  }));
+//   const seasonsData = seasons.map((season) => ({
+//     seasonNumber: season.season_number,
+//     episodeCount: season.episodes.length,
+//     tmdbSeasonId: season.id,
+//     name: season.name,
+//     posterPath: season.poster_path,
+//     airDate: season.air_date ? new Date(season.air_date) : null,
+//   }));
 
-  await SeriesModel.findOneAndUpdate(
-    { tmdbId: Number(tmdbId) },
-    {
-      $set: {
-        title: seriesDetails.name,
-        overview: seriesDetails.overview,
-        posterPath: seriesDetails.poster_path,
-        backdropPath: seriesDetails.backdrop_path,
-        genres: seriesDetails.genres?.map((g) => g.name) ?? [],
-        numberOfSeasons: seriesDetails.number_of_seasons,
-        numberOfEpisodes: seriesDetails.number_of_episodes,
-        status: seriesDetails.status,
-        seasons: seasonsData,
-        networks:
-          seriesDetails.networks?.map((n) => ({
-            id: n.id,
-            name: n.name,
-            logoPath: n.logo_path ?? null,
-          })) ?? [],
-        cast: buildCastFromTmdb(seriesDetails.aggregate_credits),
-        createdBy: buildCreatedByFromTmdb(seriesDetails.created_by),
-        lastSyncedAt: new Date(),
-        imdbId,
-        "ratings.tmdb.score": seriesDetails.vote_average,
-        "ratings.tmdb.voteCount": seriesDetails.vote_count,
-        "ratings.imdb.score": omdbRatings?.imdb?.score ?? null,
-        "ratings.imdb.voteCount": omdbRatings?.imdb?.voteCount ?? null,
-        "ratings.lastFetched": new Date(),
-      },
-    },
-    { runValidators: true },
-  );
+//   await SeriesModel.findOneAndUpdate(
+//     { tmdbId: Number(tmdbId) },
+//     {
+//       $set: {
+//         title: seriesDetails.name,
+//         overview: seriesDetails.overview,
+//         posterPath: seriesDetails.poster_path,
+//         backdropPath: seriesDetails.backdrop_path,
+//         genres: seriesDetails.genres?.map((g) => g.name) ?? [],
+//         numberOfSeasons: seriesDetails.number_of_seasons,
+//         numberOfEpisodes: seriesDetails.number_of_episodes,
+//         status: seriesDetails.status,
+//         seasons: seasonsData,
+//         networks:
+//           seriesDetails.networks?.map((n) => ({
+//             id: n.id,
+//             name: n.name,
+//             logoPath: n.logo_path ?? null,
+//           })) ?? [],
+//         cast: buildCastFromTmdb(seriesDetails.aggregate_credits),
+//         createdBy: buildCreatedByFromTmdb(seriesDetails.created_by),
+//         lastSyncedAt: new Date(),
+//         imdbId,
+//         "ratings.tmdb.score": seriesDetails.vote_average,
+//         "ratings.tmdb.voteCount": seriesDetails.vote_count,
+//         "ratings.imdb.score": omdbRatings?.imdb?.score ?? null,
+//         "ratings.imdb.voteCount": omdbRatings?.imdb?.voteCount ?? null,
+//         "ratings.rottenTomatoes.score": omdbRatings?.rottenTomatoes?.score ?? null,
+//         "ratings.metacritic.score": omdbRatings?.metacritic?.score ?? null,
+//         "ratings.trakt.score": traktRating?.score ?? null,
+//         "ratings.trakt.voteCount": traktRating?.voteCount ?? null,
+//         "ratings.lastFetched": new Date(),
+//       },
+//     },
+//     { runValidators: true },
+//   );
 
-  await upsertEpisodes(
-    series._id,
-    Number(tmdbId),
-    seasons,
-    seriesDetails.networks ?? [],
-    series.releaseTimeOverride ?? null,
-  );
-};
+//   await upsertEpisodes(
+//     series._id,
+//     Number(tmdbId),
+//     seasons,
+//     seriesDetails.networks ?? [],
+//     series.releaseTimeOverride ?? null,
+//   );
+// };
 
 export const getSeriesProgress = async (userId, UserModel) => {
   await dbConnect();

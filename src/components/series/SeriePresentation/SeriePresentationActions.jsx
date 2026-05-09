@@ -4,6 +4,7 @@ import styles from "./SeriePresentationActions.module.css";
 import Icon from "@mdi/react";
 import { mdiCheck, mdiBookmarkPlusOutline, mdiPlaylistPlus } from "@mdi/js";
 import HeartRating from "@/components/ui/HeartRating/HeartRating";
+import RatingBadges from "../RatingBadges/RatingBadges";
 
 export default function SeriePresentationActions({
   isTracked,
@@ -11,6 +12,7 @@ export default function SeriePresentationActions({
   inAnyList,
   score,
   tracked,
+  ratings,
   confirmPopover,
   watchlistPopover,
   ratingsPopover,
@@ -57,6 +59,11 @@ export default function SeriePresentationActions({
         <HeartRating percentage={score ?? 0} />
         {score > 0 && <span className={styles.rating}>{score}%</span>}
       </button>
+
+      {/* Badges détaillés par source */}
+      <div className={styles.badgesWrapper}>
+        <RatingBadges ratings={ratings} />
+      </div>
     </div>
   );
 }

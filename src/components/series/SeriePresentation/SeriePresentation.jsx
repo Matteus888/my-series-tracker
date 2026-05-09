@@ -143,6 +143,7 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
               inAnyList={inAnyList}
               score={score}
               tracked={tracked}
+              ratings={ratings}
               confirmPopover={confirmPopover}
               watchlistPopover={watchlistPopover}
               ratingsPopover={ratingsPopover}

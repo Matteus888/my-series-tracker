@@ -21,6 +21,10 @@ const seriesSchema = new mongoose.Schema(
       trim: true,
       maxlength: [1000, "Overview must not exceed 1000 characters."],
     },
+    tagline: {
+      type: String,
+      trim: true,
+    },
     posterPath: {
       type: String,
       trim: true,
@@ -82,6 +86,16 @@ const seriesSchema = new mongoose.Schema(
           type: Number,
           default: 0,
         },
+      },
+      rottenTomatoes: {
+        score: { type: Number, min: 0, max: 100 },
+      },
+      metacritic: {
+        score: { type: Number, min: 0, max: 100 },
+      },
+      trakt: {
+        score: { type: Number, min: 0, max: 10 },
+        voteCount: { type: Number, default: 0 },
       },
       lastFetched: {
         type: Date,

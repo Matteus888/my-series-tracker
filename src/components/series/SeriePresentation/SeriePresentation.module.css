@@ -111,7 +111,6 @@
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.04rem;
-  margin-right: 0.2rem;
 }
 
 .createdByName {
@@ -128,6 +127,7 @@
 
 .createdBySeparator {
   opacity: 0.5;
+  padding-left: 0.2rem;
 }
 
 /* ─── Footer collé en bas à gauche ─── */
