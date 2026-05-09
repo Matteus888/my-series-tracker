@@ -8,10 +8,10 @@ import { useList } from "@/context/ListContext";
 import { usePopover } from "./usePopover";
 import { computeAverageScore } from "@/lib/utils/ratings.utils";
 
-export function useSerieCard(serie, onCheckExternal) {
+export function useSerieCard(serie, onCheckExternal, externalRatings = null) {
   const { isTracked, isFavorite, toggle, toggleFavorite } = useSeries(serie.id, serie);
 
-  const { trackedSeries } = useTrackedSeries();
+  const { trackedSeries, progressMap } = useTrackedSeries();
   const { requireAuth } = useAuthGuard();
   const { showToast } = useToast();
   const { lists } = useList();
@@ -21,8 +21,9 @@ export function useSerieCard(serie, onCheckExternal) {
   const ratingsPopover = usePopover();
 
   const tracked = trackedSeries.find((s) => s.tmdbId === serie.id);
-  const ratings = tracked?.seriesId?.ratings ?? null;
-  const score = isTracked && ratings ? computeAverageScore(ratings) : Math.round((serie.vote_average ?? 0) * 10);
+  const progressEntry = progressMap?.[String(serie.id)];
+  const ratings = externalRatings ?? progressEntry?.ratings ?? tracked?.seriesId?.ratings ?? null;
+  const score = ratings ? computeAverageScore(ratings) : Math.round((serie.vote_average ?? 0) * 10);
   const inAnyList = lists.some((l) => l.series.some((s) => s.tmdbId === serie.id));
 
   const handleCheck = () => {

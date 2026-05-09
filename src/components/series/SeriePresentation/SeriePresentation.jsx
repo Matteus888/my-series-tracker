@@ -38,7 +38,7 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
     handleFavorite,
     handleWatchlist,
     handleRatings,
-  } = useSerieCard(tmdbSerie);
+  } = useSerieCard(tmdbSerie, undefined, ratings);
 
   const { progressMap } = useTrackedSeries();
   const progress = progressMap[String(serie.id)];

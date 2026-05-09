@@ -385,15 +385,27 @@ export const getEpisodeProgressForSeries = async (userId, seriesId) => {
 export const getSeriesProgress = async (userId, UserModel) => {
   await dbConnect();
 
-  const user = await UserModel.findById(userId).lean();
+  const user = await UserModel.findById(userId)
+    .populate({
+      path: "trackedSeries.seriesId",
+      model: "Series",
+      select: "ratings",
+    })
+    .lean();
   if (!user) throw new Error("User not found");
 
   const results = await Promise.all(
     user.trackedSeries.map(async ({ tmdbId, seriesId }) => {
-      const episodes = await getEpisodeProgressForSeries(userId, seriesId);
+      const seriesDocId = seriesId?._id ?? seriesId;
+      const episodes = await getEpisodeProgressForSeries(userId, seriesDocId);
       const watchedCount = episodes.filter((ep) => ep.watched).length;
       const totalCount = episodes.length;
-      return { tmdbId, watchedCount, totalCount };
+      return {
+        tmdbId,
+        watchedCount,
+        totalCount,
+        ratings: seriesId?.ratings ?? null,
+      };
     }),
   );
 
