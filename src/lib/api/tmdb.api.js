@@ -166,3 +166,17 @@ export const getEpisodeDetails = async (seriesId, seasonNumber, episodeNumber) =
     return null;
   }
 };
+
+export const getPersonDetails = async (personId) => {
+  try {
+    const response = await fetch(
+      `${TMDB_BASE_URL}/person/${personId}?api_key=${TMDB_API_KEY}` +
+        `&append_to_response=tv_credits,external_ids,images`,
+    );
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching person details:", error);
+    return null;
+  }
+};

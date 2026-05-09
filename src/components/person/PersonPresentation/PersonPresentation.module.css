@@ -1,0 +1,227 @@
+.presentation {
+  position: relative;
+  margin: -5rem auto 0.5rem;
+  max-width: 1400px;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ─── Ligne du haut : photo + infos côte à côte ─── */
+.topRow {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* ─── Photo de profil ─── */
+.profileWrapper {
+  flex: 0 0 220px;
+  position: relative;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  aspect-ratio: 2 / 3;
+  background: var(--background-third);
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.profilePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--foreground);
+  opacity: 0.3;
+}
+
+/* ─── Bloc infos ─── */
+.infoWrapper {
+  border: 1px solid var(--border);
+  flex: 1;
+  min-width: 0;
+  background-color: var(--background-secondary);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.info {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ─── Département (métier principal) ─── */
+.department {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08rem;
+  opacity: 0.55;
+  color: var(--foreground);
+}
+
+/* ─── Stats row (séparateurs •) ─── */
+.statsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--foreground);
+  opacity: 0.7;
+}
+
+.statItem {
+  display: inline-flex;
+  align-items: center;
+}
+
+.statItem::after {
+  content: "•";
+  margin-left: 1rem;
+  opacity: 0.5;
+}
+
+.statItem:last-child::after {
+  content: "";
+  margin-left: 0;
+}
+
+.statItem strong {
+  font-weight: 700;
+  margin-right: 0.3rem;
+  opacity: 1;
+}
+
+/* ─── Bio info (naissance, décès, lieu) ─── */
+.bioInfoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--foreground);
+  opacity: 0.85;
+}
+
+.bioInfoLine {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ageSuffix {
+  opacity: 0.7;
+}
+
+/* ─── Aliases ─── */
+.aliases {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--foreground);
+}
+
+.aliasesLabel {
+  opacity: 0.55;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04rem;
+}
+
+.aliasesValue {
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* ─── Biography ─── */
+.biography {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--foreground);
+}
+
+.biography p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.readMore {
+  margin-top: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--foreground);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.04rem;
+  transition: opacity 0.15s ease;
+}
+
+.readMore:hover {
+  opacity: 1;
+}
+
+/* ─── External links ─── */
+.externalLinks {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.externalLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border);
+  background: var(--background-third);
+  color: var(--foreground);
+  opacity: 0.75;
+  transition: opacity 0.15s ease;
+}
+
+.externalLink:hover {
+  opacity: 1;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .presentation {
+    margin-top: -4rem;
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .topRow {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .profileWrapper {
+    flex: 0 0 auto;
+    width: 160px;
+  }
+
+  .infoWrapper {
+    width: 100%;
+  }
+}

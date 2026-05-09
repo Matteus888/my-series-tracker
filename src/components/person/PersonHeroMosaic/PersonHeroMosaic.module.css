@@ -1,0 +1,78 @@
+.hero {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  min-height: 320px;
+  max-height: 480px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.mosaic {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 0;
+}
+
+.tile {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+}
+
+.tileImage {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ─── Mode flouté ─── */
+.blurred .mosaic {
+  filter: blur(30px) saturate(1.1) brightness(0.85);
+  transform: scale(1.05);
+}
+
+/* ─── Fallback si pas de posters ─── */
+.fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--background-secondary) 0%, var(--background-primary) 100%);
+}
+
+/* ─── Overlay (gradient sombre vers le bas) ─── */
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--background-primary-rgb), 0.3) 0%,
+    rgba(var(--background-primary-rgb), 0.55) 50%,
+    rgba(var(--background-primary-rgb), 0.95) 100%
+  );
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 1200px) {
+  .mosaic {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .mosaic {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    height: 35vh;
+    min-height: 240px;
+  }
+
+  .mosaic {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
