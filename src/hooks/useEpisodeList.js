@@ -8,13 +8,47 @@ import { useToast } from "@/context/ToastContext";
 export function useEpisodeList(initialProgress, tmdbId, serieData) {
   const [episodes, setEpisodes] = useState(initialProgress);
   const [isTracking, setIsTracking] = useState(false);
-  const { refresh, removeSeries, addSeriesOptimistic, isTracked } = useTrackedSeries();
+  const { refresh, removeSeries, addSeriesOptimistic, isTracked, progressMap } = useTrackedSeries();
   const { requireAuth } = useAuthGuard();
   const { showToast } = useToast();
 
   useEffect(() => {
     setEpisodes(initialProgress);
   }, [initialProgress]);
+
+  const tracked = isTracked(tmdbId);
+  const progressEntry = progressMap?.[String(tmdbId)];
+  const watchedSignature = progressEntry ? `${progressEntry.watchedCount}/${progressEntry.totalCount}` : "untracked";
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let cancelled = false;
+    const fetchFreshEpisodes = async () => {
+      try {
+        if (!tracked) {
+          // Série untracked depuis ailleurs : décocher tous les épisodes localement
+          if (!cancelled) {
+            setEpisodes((prev) => prev.map((ep) => ({ ...ep, watched: false, watchedAt: null })));
+          }
+          return;
+        }
+
+        const res = await fetch(`/api/series/${tmdbId}/progress`);
+        if (!res.ok) return;
+        const { episodes: fresh } = await res.json();
+        if (!cancelled && Array.isArray(fresh)) setEpisodes(fresh);
+      } catch (err) {
+        console.error("Failed to refetch episodes:", err.message);
+      }
+    };
+
+    fetchFreshEpisodes();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tracked, watchedSignature, tmdbId]);
 
   const toggleEpisode = useCallback(
     async (episodeId, currentWatched, seasonNumber, episodeNumber) => {
