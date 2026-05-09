@@ -1,0 +1,29 @@
+.carouselContainer {
+  position: relative;
+  width: 100%;
+}
+
+.track {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  align-items: stretch;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.cardSlot {
+  flex: 0 0 auto;
+  width: 180px;
+}
+
+@media (max-width: 640px) {
+  .cardSlot {
+    width: 140px;
+  }
+}
