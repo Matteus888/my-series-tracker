@@ -97,6 +97,12 @@ export default async function EpisodePage({ params }) {
             currentEpisodeId={episode._id}
             seasonNumber={episode.seasonNumber}
             seriesTmdbId={series.tmdbId}
+            seriesData={{
+              id: series.tmdbId,
+              name: series.title,
+              poster_path: series.posterPath,
+              backdrop_path: series.backdropPath,
+            }}
           />
         </div>
       )}

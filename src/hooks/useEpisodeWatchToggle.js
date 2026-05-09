@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import { useToast } from "@/context/ToastContext";
 import { useAuthGuard } from "./useAuthGuard";
@@ -8,9 +8,46 @@ import { useAuthGuard } from "./useAuthGuard";
 export function useEpisodeWatchToggle({ episodeId, initialWatched, seriesTmdbId, seriesTitle, seriesData }) {
   const [watched, setWatched] = useState(initialWatched);
   const [isPending, setIsPending] = useState(false);
-  const { isTracked, addSeriesOptimistic, refresh, removeSeries, incrementWatched } = useTrackedSeries();
+  const { isTracked, addSeriesOptimistic, refresh, incrementWatched, progressMap } = useTrackedSeries();
   const { showToast } = useToast();
   const { requireAuth } = useAuthGuard();
+
+  // Synchronise l'état watched avec la base quand le context signale un changement
+  // (par exemple un toggle déclenché depuis le carousel, EpisodeList, etc.)
+  const tracked = isTracked(seriesTmdbId);
+  const progressEntry = progressMap?.[String(seriesTmdbId)];
+  const watchedSignature = progressEntry ? `${progressEntry.watchedCount}/${progressEntry.totalCount}` : "untracked";
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !episodeId) return;
+    if (isPending) return;
+
+    let cancelled = false;
+    const fetchFresh = async () => {
+      try {
+        if (!tracked) {
+          if (!cancelled) setWatched(false);
+          return;
+        }
+        const res = await fetch(`/api/series/${seriesTmdbId}/progress`);
+        if (!res.ok) return;
+
+        const { episodes: fresh } = await res.json();
+        if (cancelled || !Array.isArray(fresh)) return;
+
+        const target = fresh.find((ep) => ep._id?.toString() === episodeId.toString());
+        if (target) setWatched(target.watched ?? false);
+      } catch (err) {
+        console.error("Failed to sync episode watched state:", err.message);
+      }
+    };
+
+    fetchFresh();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tracked, watchedSignature, seriesTmdbId, episodeId]);
 
   const toggle = useCallback(async () => {
     if (isPending) return;
@@ -18,18 +55,13 @@ export function useEpisodeWatchToggle({ episodeId, initialWatched, seriesTmdbId,
     const willWatch = !watched;
     const serieIsTracked = isTracked(seriesTmdbId);
 
-    // Cas 1 : série pas trackée et on veut cocher → confirmation implicite
-    // (on track + on coche dans la foulée, comme useEpisodeList)
     if (!serieIsTracked && willWatch) {
       const authed = requireAuth(() => {});
       if (!authed) return;
 
-      const confirmed = window.confirm(
-        `${seriesTitle} is not in your tracked shows. Add it and mark this episode as watched?`,
-      );
-      if (!confirmed) return;
-
       setIsPending(true);
+      setWatched(true);
+
       try {
         const trackRes = await fetch("/api/series/tracked", {
           method: "POST",
@@ -54,10 +86,10 @@ export function useEpisodeWatchToggle({ episodeId, initialWatched, seriesTmdbId,
         });
         if (!watchRes.ok) throw new Error("Failed to mark episode");
 
-        setWatched(true);
         incrementWatched();
         await refresh();
       } catch (err) {
+        setWatched(false);
         showToast("Could not mark episode as watched", "error");
       } finally {
         setIsPending(false);
@@ -65,7 +97,6 @@ export function useEpisodeWatchToggle({ episodeId, initialWatched, seriesTmdbId,
       return;
     }
 
-    // Cas 2 : série trackée OU on décoche → toggle direct
     setIsPending(true);
     setWatched(willWatch);
 
