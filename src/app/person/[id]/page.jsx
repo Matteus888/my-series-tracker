@@ -1,12 +1,15 @@
 import styles from "./page.module.css";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getPersonFullData } from "@/lib/api/person.api";
 import { APP_NAME } from "@/lib/constants/app.constants";
 import PersonHeroMosaic from "@/components/person/PersonHeroMosaic/PersonHeroMosaic";
 import PersonPresentation from "@/components/person/PersonPresentation/PersonPresentation";
 import PersonCreditCarousel from "@/components/person/PersonCreditCarousel/PersonCreditCarousel";
+import PersonEpisodesByShow from "@/components/person/PersonEpisodesByShow/PersonEpisodesByShow";
+import PersonGallery from "@/components/person/PersonGallery/PersonGallery";
 
-// Mets à true pour avoir la version floutée
 const HERO_BLUR = false;
 
 export async function generateMetadata({ params }) {
@@ -23,10 +26,11 @@ export const dynamic = "force-dynamic";
 
 export default async function PersonPage({ params }) {
   const { id } = await params;
+  const session = await getServerSession(authOptions);
 
   let data;
   try {
-    data = await getPersonFullData(id);
+    data = await getPersonFullData(id, session?.user?.id ?? null);
   } catch {
     notFound();
   }
@@ -35,7 +39,7 @@ export default async function PersonPage({ params }) {
 
   return (
     <div className={styles.container}>
-      {/* Hero fixed en background */}
+      {/* Hero fixed */}
       <PersonHeroMosaic posters={heroPosterPaths} blurred={HERO_BLUR} />
 
       {/* Spacer + nom */}
@@ -72,6 +76,24 @@ export default async function PersonPage({ params }) {
           />
         </div>
       ))}
+
+      {/* Episodes featuring [name] (séries en base seulement) */}
+      {episodesInTrackedShows.length > 0 && (
+        <div className={styles.section}>
+          <PersonEpisodesByShow groups={episodesInTrackedShows} personName={person.name} personTmdbId={id} />
+        </div>
+      )}
+
+      {/* Galerie photos */}
+      {person.profileImages?.length > 0 && (
+        <div className={styles.section}>
+          <PersonGallery
+            images={person.profileImages}
+            personName={person.name}
+            storageKey={`person-${id}-gallery-open`}
+          />
+        </div>
+      )}
     </div>
   );
 }

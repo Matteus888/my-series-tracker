@@ -83,7 +83,7 @@ const scoreKnownFor = (credit) => {
   return pop * Math.sqrt(eps);
 };
 
-export const getPersonFullData = async (personId) => {
+export const getPersonFullData = async (personId, userId = null) => {
   const person = await getPersonDetails(personId);
   if (!person) throw new Error("Person not found");
 
@@ -159,24 +159,73 @@ export const getPersonFullData = async (personId) => {
     .filter(Boolean);
   const yearsSpan = allYears.length > 0 ? `${Math.min(...allYears)} – ${Math.max(...allYears)}` : null;
 
+  // ─── Posters mosaïque pour le hero ────────────────
+  const heroPosterPaths = [];
+  const seenIds = new Set();
+  for (const credit of knownFor) {
+    if (credit.posterPath && !seenIds.has(credit.tmdbId)) {
+      heroPosterPaths.push(credit.posterPath);
+      seenIds.add(credit.tmdbId);
+    }
+  }
+  if (heroPosterPaths.length < 8) {
+    for (const dept of filmography) {
+      for (const credit of dept.credits) {
+        if (heroPosterPaths.length >= 16) break;
+        if (credit.posterPath && !seenIds.has(credit.tmdbId)) {
+          heroPosterPaths.push(credit.posterPath);
+          seenIds.add(credit.tmdbId);
+        }
+      }
+      if (heroPosterPaths.length >= 16) break;
+    }
+  }
+
   // ─── Episodes en base de données ──────────────────
-  // Récupère uniquement les épisodes de séries déjà sync en base où la personne apparaît.
   await dbConnect();
   const personIdNum = Number(personId);
   const episodesInDb = await Episode.find({
     $or: [{ "cast.tmdbId": personIdNum }, { "crew.tmdbId": personIdNum }],
   })
-    .select("_id tmdbEpisodeId seriesId seasonNumber episodeNumber title stillPath airDate cast crew")
+    .select("_id tmdbEpisodeId seriesId seasonNumber episodeNumber title stillPath airDate duration ratings cast crew")
     .lean();
+
+  // Récupère les titres des séries concernées (en une seule requête)
+  const seriesIds = [...new Set(episodesInDb.map((e) => e.seriesId.toString()))];
+  const seriesDocs =
+    seriesIds.length > 0
+      ? await (
+          await import("@/models/series.model")
+        ).Series.find({ _id: { $in: seriesIds } })
+          .select("_id tmdbId title")
+          .lean()
+      : [];
+  const seriesById = new Map(seriesDocs.map((s) => [s._id.toString(), s]));
+
+  // Charge les progress de l'utilisateur (si connecté) sur ces épisodes
+  const { EpisodeProgress } = await import("@/models/episodeProgress.model");
+  let progressByEpisodeId = new Map();
+  if (userId && episodesInDb.length > 0) {
+    const episodeIds = episodesInDb.map((e) => e._id);
+    const progressList = await EpisodeProgress.find({
+      userId,
+      episodeId: { $in: episodeIds },
+    })
+      .select("episodeId watched watchedAt rating")
+      .lean();
+    progressByEpisodeId = new Map(progressList.map((p) => [p.episodeId.toString(), p]));
+  }
 
   // Regroupe par série
   const episodesByseries = new Map();
   for (const ep of episodesInDb) {
     const key = ep.seriesId.toString();
     if (!episodesByseries.has(key)) episodesByseries.set(key, []);
-    // Détermine le rôle/job dans cet épisode
+
     const castEntry = ep.cast?.find((c) => c.tmdbId === personIdNum);
     const crewEntries = ep.crew?.filter((c) => c.tmdbId === personIdNum) ?? [];
+    const prog = progressByEpisodeId.get(ep._id.toString());
+
     episodesByseries.get(key).push({
       _id: ep._id.toString(),
       tmdbEpisodeId: ep.tmdbEpisodeId,
@@ -186,43 +235,31 @@ export const getPersonFullData = async (personId) => {
       title: ep.title,
       stillPath: ep.stillPath,
       airDate: ep.airDate ? ep.airDate.toISOString() : null,
+      duration: ep.duration ?? null,
+      ratings: ep.ratings ?? null,
       character: castEntry?.character ?? null,
       isGuest: castEntry?.isGuest ?? false,
       jobs: crewEntries.map((c) => c.job).filter(Boolean),
+      watched: prog?.watched ?? false,
+      watchedAt: prog?.watchedAt ? prog.watchedAt.toISOString() : null,
+      rating: prog?.rating ?? null,
     });
   }
 
-  // Format final : array de { seriesId, episodes[] }
-  const episodesInTrackedShows = Array.from(episodesByseries.entries()).map(([seriesId, eps]) => ({
-    seriesId,
-    episodes: eps.sort((a, b) => {
-      if (a.seasonNumber !== b.seasonNumber) return a.seasonNumber - b.seasonNumber;
-      return a.episodeNumber - b.episodeNumber;
-    }),
-  }));
-
-  // ─── Posters mosaïque pour le hero ──────────────────
-  const heroPosterPaths = [];
-  const seenIds = new Set();
-  for (const credit of knownFor) {
-    if (credit.posterPath && !seenIds.has(credit.tmdbId)) {
-      heroPosterPaths.push(credit.posterPath);
-      seenIds.add(credit.tmdbId);
-    }
-  }
-  // Si on a moins de 8 posters, on complète avec le reste de la filmography
-  if (heroPosterPaths.length < 8) {
-    for (const dept of filmography) {
-      for (const credit of dept.credits) {
-        if (heroPosterPaths.length >= 8) break;
-        if (credit.posterPath && !seenIds.has(credit.tmdbId)) {
-          heroPosterPaths.push(credit.posterPath);
-          seenIds.add(credit.tmdbId);
-        }
-      }
-      if (heroPosterPaths.length >= 8) break;
-    }
-  }
+  const episodesInTrackedShows = Array.from(episodesByseries.entries())
+    .map(([seriesId, eps]) => {
+      const seriesDoc = seriesById.get(seriesId);
+      return {
+        seriesId,
+        seriesTitle: seriesDoc?.title ?? "Unknown",
+        tmdbSeriesId: seriesDoc?.tmdbId ?? null,
+        episodes: eps.sort((a, b) => {
+          if (a.seasonNumber !== b.seasonNumber) return a.seasonNumber - b.seasonNumber;
+          return a.episodeNumber - b.episodeNumber;
+        }),
+      };
+    })
+    .sort((a, b) => a.seriesTitle.localeCompare(b.seriesTitle));
 
   // ─── Person formaté ───────────────────────────────
   return {
