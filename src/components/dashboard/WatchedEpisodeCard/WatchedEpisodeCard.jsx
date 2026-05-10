@@ -19,6 +19,7 @@ export default function WatchedEpisodeCard({
   showSeason,
   showDate,
   disableTooltip,
+  readOnly = false,
 }) {
   const now = new Date();
   const isAired = ep.airDate ? new Date(ep.airDate) <= now : false;
@@ -75,9 +76,21 @@ export default function WatchedEpisodeCard({
         <div className={`card-footer ${styles.footer}`}>
           <button
             className={`btn check ${styles.checkButton} ${ep.watched ? "active" : ""}`}
-            onClick={() => isAired && onToggle(ep._id, ep.watched, ep.seasonNumber, ep.episodeNumber)}
-            disabled={!isAired}
-            title={!isAired ? "Not aired yet" : ep.watched ? "Mark as unwatched" : "Mark as watched"}
+            onClick={
+              readOnly ? undefined : () => isAired && onToggle(ep._id, ep.watched, ep.seasonNumber, ep.episodeNumber)
+            }
+            disabled={readOnly || !isAired}
+            title={
+              readOnly
+                ? ep.watched
+                  ? "Watched"
+                  : "Not watched"
+                : !isAired
+                  ? "Not aired yet"
+                  : ep.watched
+                    ? "Mark as unwatched"
+                    : "Mark as watched"
+            }
           >
             <Icon path={mdiCheck} size={0.9} />
           </button>
@@ -88,8 +101,17 @@ export default function WatchedEpisodeCard({
           {ep.watched && (
             <div
               className={`btn heartWrapper ${styles.heartWrapper} ${ratingsPopover.isOpen ? "active" : ""}`}
-              onClick={ratingsPopover.toggle}
-              title={rating ? `Your rating: ${rating}/10` : "Rate this episode"}
+              onClick={readOnly ? undefined : ratingsPopover.toggle}
+              title={
+                readOnly
+                  ? rating
+                    ? `Rated ${rating}/10`
+                    : null
+                  : rating
+                    ? `Your rating: ${rating}/10`
+                    : "Rate this episode"
+              }
+              style={readOnly ? { cursor: "default" } : undefined}
             >
               {score > 0 ? (
                 <>
@@ -102,7 +124,7 @@ export default function WatchedEpisodeCard({
             </div>
           )}
         </div>
-        {ratingsPopover.isOpen && (
+        {!readOnly && ratingsPopover.isOpen && (
           <RatingsPopover
             episode={ep}
             currentRating={rating}

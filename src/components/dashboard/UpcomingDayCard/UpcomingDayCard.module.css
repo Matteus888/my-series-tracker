@@ -38,7 +38,7 @@
 
 .contentSection {
   width: 10.95rem;
-  padding: 0.4rem;
+  padding: 0.4rem 0;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -51,16 +51,16 @@
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--foreground);
-  border-bottom: 1px solid rgba(237, 237, 237, 0.5);
-  padding: 0.2rem 0 0.4rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.2rem 0.1rem 0.4rem 0.75rem;
   margin: 0;
   letter-spacing: 0.05rem;
-  text-align: center;
+  text-align: start;
 }
 
 .episodeList {
   list-style: none;
-  padding: 0 0.2rem;
+  padding: 0 0.5rem;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -128,7 +128,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  padding: 0.35rem 0.3rem 0.15rem;
+  padding: 0.35rem 0.6rem 0.1rem;
   border-top: 1px solid rgba(237, 237, 237, 0.15);
   margin-top: auto;
   min-height: 2rem;
