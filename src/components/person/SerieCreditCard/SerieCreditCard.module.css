@@ -44,49 +44,44 @@
   opacity: 0.3;
 }
 
+.yearBadge {
+  position: absolute;
+  padding: 0.25rem;
+  font-weight: 700;
+  background: var(--border);
+  color: var(--foreground);
+  font-size: 0.75rem;
+  line-height: 1;
+  left: 0.5rem;
+  bottom: 0.5rem;
+}
+
 .info {
-  padding: 0.5rem 0.6rem;
+  padding: 0.4rem 0.6rem;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 0.15rem;
   min-width: 0;
-}
-
-.title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--foreground);
-  text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  transition: opacity 0.15s ease;
-}
-
-.title:hover {
-  opacity: 0.8;
+  min-height: 2.8rem;
 }
 
 .role {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
   color: var(--foreground);
-  opacity: 0.75;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1;
 }
 
-.meta {
-  display: flex;
-  gap: 0.3rem;
-  align-items: center;
+.episodes {
   font-size: 0.7rem;
   color: var(--foreground);
-  opacity: 0.55;
-  margin-top: 0.1rem;
-}
-
-.metaSep {
-  opacity: 0.5;
+  opacity: 0.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
 }

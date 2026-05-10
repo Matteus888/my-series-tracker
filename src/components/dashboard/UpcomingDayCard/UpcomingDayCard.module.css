@@ -85,7 +85,7 @@
 }
 
 .epTitle {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--foreground);
   white-space: nowrap;
   overflow: hidden;
@@ -99,7 +99,7 @@
 }
 
 .epCode {
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   color: var(--foreground);
   opacity: 0.5;
   flex-shrink: 0;
