@@ -1,6 +1,9 @@
+"use client";
+
 import styles from "./ListsHeader.module.css";
 import Icon from "@mdi/react";
 import { mdiLoading } from "@mdi/js";
+import CreateListButton from "../CreateListButton/CreateListButton";
 
 export default function ListsHeader({ lists, isLoading = false }) {
   const watchlist = lists.find((l) => l.isDefault);
@@ -29,6 +32,8 @@ export default function ListsHeader({ lists, isLoading = false }) {
         <Stat label="Watchlist" value={watchlistCount} isLoading={isLoading} />
         <Stat label="Total series" value={totalSeries} isLoading={isLoading} />
       </div>
+
+      <CreateListButton variant="primary" popoverAlign="right" />
     </section>
   );
 }

@@ -12,6 +12,7 @@ import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import ListsHeader from "@/components/lists/ListsHeader/ListsHeader";
 import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
 import ListActions from "@/components/lists/ListActions/ListActions";
+import CreateListButton from "@/components/lists/CreateListButton/CreateListButton";
 import { mdiPlaylistPlus, mdiPlaylistRemove, mdiBookmarkOutline } from "@mdi/js";
 
 export default function ListsPage() {
@@ -54,6 +55,7 @@ export default function ListsPage() {
                   icon={mdiBookmarkOutline}
                   label="Your watchlist is empty"
                   subtitle="Bookmark shows you want to watch later"
+                  inCarousel
                 />
               ) : (
                 watchlistSeries.map((serie) => {
@@ -92,6 +94,7 @@ export default function ListsPage() {
                     icon={mdiPlaylistRemove}
                     label="This list is empty"
                     subtitle="Add series from the search or browse pages"
+                    inCarousel
                   />
                 ) : (
                   list.series.map((serie) => {
@@ -121,11 +124,14 @@ export default function ListsPage() {
       ))}
 
       {customLists.length === 0 && (
-        <EmptyStateCard
-          icon={mdiPlaylistPlus}
-          label="No custom lists yet"
-          subtitle="Create your first list to organize your shows by theme or mood"
-        />
+        <div className={styles.noListsEmpty}>
+          <EmptyStateCard
+            icon={mdiPlaylistPlus}
+            label="No custom lists yet"
+            subtitle="Create your first list to organize your shows by theme or mood"
+            action={<CreateListButton variant="ghost" popoverAlign="left" popoverPosition="top" />}
+          />
+        </div>
       )}
     </div>
   );

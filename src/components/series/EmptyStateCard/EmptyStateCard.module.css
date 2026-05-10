@@ -26,9 +26,10 @@
 .content {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 0.25rem;
   min-width: 0;
-  flex: 1;
+  /* flex: 1; */
 }
 
 .label {
@@ -47,4 +48,20 @@
 
 .action {
   margin-top: 0.5rem;
+}
+
+/* Variante pour usage dans un carousel — matche la hauteur d'une StartWatchingCard */
+.card.inCarousel {
+  min-height: 303px;
+  max-width: 175px;
+  width: 175px;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  padding: 1.5rem 1.25rem;
+}
+
+.card.inCarousel .iconWrapper {
+  width: 72px;
+  height: 72px;
 }
