@@ -2,6 +2,8 @@
   max-width: 100%;
 }
 
+/* === Carousel === */
+
 .carouselWrapper {
   position: relative;
 }
@@ -26,15 +28,46 @@
 .carousel::-webkit-scrollbar {
   height: 4px;
 }
+
 .carousel::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .carousel::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 2px;
 }
+
 .carousel::-webkit-scrollbar-button {
   display: none;
   width: 0;
   height: 0;
+}
+
+/* === Custom list section === */
+.listCount {
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+  opacity: 0.55;
+  margin-left: 0.15rem;
+  position: relative;
+  top: -0.1rem;
+}
+
+.listSection {
+  position: relative;
+}
+
+.listDescription {
+  position: absolute;
+  top: 1.6rem;
+  left: 4.6rem;
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--foreground);
+  opacity: 0.55;
+  line-height: 1;
+  max-width: 70%;
+  pointer-events: none;
 }

@@ -22,7 +22,7 @@ export default function ListsPage() {
   const customLists = lists.filter((l) => !l.isDefault);
   const watchlistSeries = watchlist?.series ?? [];
 
-  if (listsLoading)
+  if (listsLoading) {
     return (
       <div className={styles.page}>
         <PageTitle title="Lists" icon={mdiPlaylistPlus} />
@@ -30,91 +30,96 @@ export default function ListsPage() {
         <PageLoader />
       </div>
     );
+  }
 
   return (
     <div className={styles.page}>
       <PageTitle title="Lists" icon={mdiPlaylistPlus} />
       <ListsHeader lists={lists} isLoading={listsLoading} />
-      {/* Plan to Watch */}
-      <SectionHeader title="Plan to watch" storageKey="section-list-plan-to-watch">
-        <div className={styles.carouselWrapper}>
-          <div className={styles.carousel} ref={scrollerRef}>
-            {listsLoading ? (
-              Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className={styles.skeletonContainer}>
-                  <div className={`card ${styles.skeletonCard}`}>
-                    <div className={styles.skeletonImage}>
-                      <div className={styles.skeletonPulse} />
-                    </div>
-                    <div className={`card-footer ${styles.skeletonFooter}`}>
-                      <div className={styles.skeletonButton} />
-                      <div className={styles.skeletonButton} />
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : watchlistSeries.length === 0 ? (
-              <EmptyStateCard
-                icon={mdiBookmarkOutline}
-                label="Your watchlist is empty"
-                subtitle="Bookmark shows you want to watch later"
-              />
-            ) : (
-              watchlistSeries.map((serie) => {
-                const item = {
-                  seriesId: serie._id?.toString(),
-                  tmdbId: serie.tmdbId,
-                  title: serie.title,
-                  posterPath: serie.posterPath ?? null,
-                };
-                return <StartWatchingCard key={item.seriesId} item={item} showCheck={false} />;
-              })
-            )}
-          </div>
-          <CarouselArrows canScrollLeft={canScrollLeft} canScrollRight={canScrollRight} onScroll={scrollBy} />
-        </div>
-      </SectionHeader>
 
-      {/* Listes custom */}
-      {customLists.map((list) => (
+      {/* Plan to Watch */}
+      <div className={styles.listSection}>
         <SectionHeader
-          key={list._id}
-          title={`${list.name} (${list.series.length})`}
-          storageKey={`section-list-${list._id}`}
-          actions={<ListActions list={list} />}
+          title={
+            <>
+              Plan to watch <span className={styles.listCount}>({watchlistSeries.length})</span>
+            </>
+          }
+          storageKey="section-list-plan-to-watch"
         >
           <div className={styles.carouselWrapper}>
             <div className={styles.carousel} ref={scrollerRef}>
-              {list.series.length === 0 ? (
+              {watchlistSeries.length === 0 ? (
                 <EmptyStateCard
-                  icon={mdiPlaylistRemove}
-                  label="This list is empty"
-                  subtitle="Add series from the search or browse pages"
+                  icon={mdiBookmarkOutline}
+                  label="Your watchlist is empty"
+                  subtitle="Bookmark shows you want to watch later"
                 />
               ) : (
-                list.series.map((serie) => {
+                watchlistSeries.map((serie) => {
                   const item = {
                     seriesId: serie._id?.toString(),
                     tmdbId: serie.tmdbId,
                     title: serie.title,
                     posterPath: serie.posterPath ?? null,
                   };
-                  return (
-                    <StartWatchingCard
-                      key={item.seriesId}
-                      item={item}
-                      showCheck={true}
-                      onCheck={checkFirstEpisode}
-                      isChecking={checkingId === item.seriesId}
-                    />
-                  );
+                  return <StartWatchingCard key={item.seriesId} item={item} showCheck={false} />;
                 })
               )}
             </div>
             <CarouselArrows canScrollLeft={canScrollLeft} canScrollRight={canScrollRight} onScroll={scrollBy} />
           </div>
         </SectionHeader>
+        <p className={styles.listDescription}>Default</p>
+      </div>
+
+      {/* Listes custom */}
+      {customLists.map((list) => (
+        <div key={list._id} className={styles.listSection}>
+          <SectionHeader
+            title={
+              <>
+                {list.name} <span className={styles.listCount}>({list.series.length})</span>
+              </>
+            }
+            storageKey={`section-list-${list._id}`}
+            actions={<ListActions list={list} />}
+          >
+            <div className={styles.carouselWrapper}>
+              <div className={styles.carousel} ref={scrollerRef}>
+                {list.series.length === 0 ? (
+                  <EmptyStateCard
+                    icon={mdiPlaylistRemove}
+                    label="This list is empty"
+                    subtitle="Add series from the search or browse pages"
+                  />
+                ) : (
+                  list.series.map((serie) => {
+                    const item = {
+                      seriesId: serie._id?.toString(),
+                      tmdbId: serie.tmdbId,
+                      title: serie.title,
+                      posterPath: serie.posterPath ?? null,
+                    };
+                    return (
+                      <StartWatchingCard
+                        key={item.seriesId}
+                        item={item}
+                        showCheck={true}
+                        onCheck={checkFirstEpisode}
+                        isChecking={checkingId === item.seriesId}
+                      />
+                    );
+                  })
+                )}
+              </div>
+              <CarouselArrows canScrollLeft={canScrollLeft} canScrollRight={canScrollRight} onScroll={scrollBy} />
+            </div>
+          </SectionHeader>
+          {list.description && <p className={styles.listDescription}>{list.description}</p>}
+        </div>
       ))}
+
       {customLists.length === 0 && (
         <EmptyStateCard
           icon={mdiPlaylistPlus}
