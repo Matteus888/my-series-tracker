@@ -11,6 +11,7 @@ import ContinueWatchingSection from "@/components/dashboard/ContinueWatchingSect
 import UpcomingSection from "@/components/dashboard/UpcomingSection/UpcomingSection";
 import StartWatchingSection from "@/components/dashboard/StartWatchingSection/StartWatchingSection";
 import RecentlyWatchedSection from "@/components/dashboard/RecentlyWatchedSection/RecentlyWatchedSection";
+import SuggestionsSection from "@/components/dashboard/SuggestionsSection/SuggestionsSection";
 import { mdiViewDashboardEditOutline } from "@mdi/js";
 
 export const metadata = {
@@ -43,6 +44,7 @@ export default async function DashboardPage() {
       <UpcomingSection />
       <RecentlyWatchedSection />
       <StartWatchingSection initialSkeletonCount={swCount} />
+      <SuggestionsSection />
     </div>
   );
 }

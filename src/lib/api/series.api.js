@@ -6,6 +6,7 @@ import { EpisodeProgress } from "@/models/episodeProgress.model";
 import { getAllSeasonsWithEpisodes, getSeriesDetails, getSeriesVideos, getSeasonVideos } from "./tmdb.api";
 import { getOmdbRatings } from "./omdb.api";
 import { getTraktRatings } from "./trakt.api";
+import { invalidateSuggestionsCache } from "./suggestions.api";
 import { upsertEpisodes } from "@/lib/db/upsertEpisodes";
 import dbConnect from "@/lib/db/db.connect";
 
@@ -219,6 +220,9 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
     }
   }
 
+  // 6. Invalide le cache des suggestions (les goûts ont changé)
+  invalidateSuggestionsCache(UserModel, userId).catch(() => {});
+
   return user.trackedSeries;
 };
 
@@ -256,6 +260,9 @@ export const removeTrackedSeries = async (UserModel, userId, tmdbId) => {
     }
   }
 
+  // Invalide le cache des suggestions (les goûts ont changé)
+  invalidateSuggestionsCache(UserModel, userId).catch(() => {});
+
   return user.trackedSeries;
 };
 
@@ -268,12 +275,20 @@ export const updateTrackedSeries = async (UserModel, userId, tmdbId, updates) =>
   if (existingSerieIndex === -1) throw new Error("Serie not tracked");
 
   const allowedFields = ["isFavorite", "status", "rating"];
+  let tasteChanged = false;
   allowedFields.forEach((field) => {
     if (updates[field] !== undefined) {
       user.trackedSeries[existingSerieIndex][field] = updates[field];
+      tasteChanged = true;
     }
   });
   await user.save();
+
+  // Invalide le cache si un signal de goût a été modifié
+  if (tasteChanged) {
+    invalidateSuggestionsCache(UserModel, userId).catch(() => {});
+  }
+
   return user.trackedSeries;
 };
 

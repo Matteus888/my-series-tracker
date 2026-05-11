@@ -8,7 +8,7 @@ import { useTrackedSeries } from "@/context/TrackedSeriesContext";
 import SerieCardPopovers from "./SerieCardPopovers";
 import SerieCardActions from "./SerieCardActions";
 
-export default function SerieCard({ serie, onCheck }) {
+export default function SerieCard({ serie, onCheck, width = null }) {
   const {
     isTracked,
     isFavorite,
@@ -29,7 +29,10 @@ export default function SerieCard({ serie, onCheck }) {
   const progress = progressMap?.[String(serie.id)];
 
   return (
-    <div className={`tooltip-wrapper ${styles.container}`}>
+    <div
+      className={`tooltip-wrapper ${styles.container}`}
+      style={width ? { width, minWidth: width, flex: `0 0 ${width}px` } : undefined}
+    >
       {/* Tooltip */}
       <div className="tooltip">{serie.name}</div>
       <div className={`card ${styles.card}`}>

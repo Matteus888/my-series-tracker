@@ -113,6 +113,10 @@ const userSchema = new mongoose.Schema(
     lastLogin: {
       type: Date,
     },
+    suggestionsCache: {
+      items: { type: mongoose.Schema.Types.Mixed, default: null }, // array TMDB-shaped
+      generatedAt: { type: Date, default: null },
+    },
     role: {
       type: String,
       enum: {

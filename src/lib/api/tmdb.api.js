@@ -189,3 +189,15 @@ export const getPersonDetails = async (personId) => {
     return null;
   }
 };
+
+export const getRecommendations = async (tmdbId, page = 1) => {
+  try {
+    const response = await fetch(`${TMDB_BASE_URL}/tv/${tmdbId}/recommendations?api_key=${TMDB_API_KEY}&page=${page}`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    return (data.results ?? []).filter((s) => !s.genre_ids?.some((id) => EXCLUDED_GENRE_IDS.includes(id)));
+  } catch (error) {
+    console.error(`Error fetching recommendations for ${tmdbId}:`, error);
+    return [];
+  }
+};
