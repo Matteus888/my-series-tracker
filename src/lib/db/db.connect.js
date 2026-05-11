@@ -20,6 +20,11 @@ async function dbConnect() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      maxPoolSize: 20, // pool plus large pour les rafales du dashboard
+      minPoolSize: 5, // garde des connexions chaudes en permanence
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      family: 4, // force IPv4 (évite des hiccups DNS sur Windows)
     };
 
     if (process.env.NODE_ENV === "test") {

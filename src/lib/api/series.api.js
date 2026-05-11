@@ -313,6 +313,7 @@ export const getSeriesProgress = async (userId, UserModel) => {
   await dbConnect();
 
   const user = await UserModel.findById(userId)
+    .select("trackedSeries")
     .populate({
       path: "trackedSeries.seriesId",
       model: "Series",
@@ -321,22 +322,52 @@ export const getSeriesProgress = async (userId, UserModel) => {
     .lean();
   if (!user) throw new Error("User not found");
 
-  const results = await Promise.all(
-    user.trackedSeries.map(async ({ tmdbId, seriesId }) => {
-      const seriesDocId = seriesId?._id ?? seriesId;
-      const episodes = await getEpisodeProgressForSeries(userId, seriesDocId);
-      const watchedCount = episodes.filter((ep) => ep.watched).length;
-      const totalCount = episodes.length;
-      return {
-        tmdbId,
-        watchedCount,
-        totalCount,
-        ratings: seriesId?.ratings ?? null,
-      };
-    }),
-  );
+  if (user.trackedSeries.length === 0) return [];
 
-  return results;
+  const seriesIds = user.trackedSeries.map((t) => t.seriesId?._id ?? t.seriesId).filter(Boolean);
+
+  // ─── 1 SEULE requête pour tous les épisodes ───
+  const allEpisodes = await Episode.find({ seriesId: { $in: seriesIds } })
+    .select("_id seriesId")
+    .lean();
+
+  // Comptage des épisodes par série
+  const totalBySeries = new Map();
+  const episodeIdToSeriesId = new Map();
+  for (const ep of allEpisodes) {
+    const seriesKey = ep.seriesId.toString();
+    totalBySeries.set(seriesKey, (totalBySeries.get(seriesKey) ?? 0) + 1);
+    episodeIdToSeriesId.set(ep._id.toString(), seriesKey);
+  }
+
+  // ─── 1 SEULE requête pour tous les progress watched ───
+  const allEpisodeIds = allEpisodes.map((e) => e._id);
+  const watchedList = await EpisodeProgress.find({
+    userId,
+    episodeId: { $in: allEpisodeIds },
+    watched: true,
+  })
+    .select("episodeId")
+    .lean();
+
+  // Comptage des watched par série
+  const watchedBySeries = new Map();
+  for (const p of watchedList) {
+    const seriesKey = episodeIdToSeriesId.get(p.episodeId.toString());
+    if (!seriesKey) continue;
+    watchedBySeries.set(seriesKey, (watchedBySeries.get(seriesKey) ?? 0) + 1);
+  }
+
+  // ─── Construction du résultat (synchrone, instantané) ───
+  return user.trackedSeries.map(({ tmdbId, seriesId }) => {
+    const seriesKey = (seriesId?._id ?? seriesId)?.toString();
+    return {
+      tmdbId,
+      watchedCount: watchedBySeries.get(seriesKey) ?? 0,
+      totalCount: totalBySeries.get(seriesKey) ?? 0,
+      ratings: seriesId?.ratings ?? null,
+    };
+  });
 };
 
 export async function fetchSeriesVideos(tmdbId) {

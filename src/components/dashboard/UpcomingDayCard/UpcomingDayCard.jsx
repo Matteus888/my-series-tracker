@@ -89,8 +89,8 @@ export default function UpcomingDayCard({ day }) {
             <Image
               src={`https://image.tmdb.org/t/p/w92${network.logoPath}`}
               alt={network.name}
-              width={32}
-              height={32}
+              width={92}
+              height={92}
               loading="eager"
               className={`${styles.footerNetworkLogo} ${shouldInvertLogo(network.id) ? styles.footerNetworkLogoInverted : ""}`}
             />

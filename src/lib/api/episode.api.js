@@ -10,39 +10,70 @@ const dbConnect = require("@/lib/db/db.connect").default;
 export const getContinueWatching = async (UserModel, userId) => {
   await dbConnect();
 
-  const user = await UserModel.findById(userId).populate({ path: "trackedSeries.seriesId", model: "Series" }).lean();
+  const user = await UserModel.findById(userId)
+    .select("trackedSeries")
+    .populate({
+      path: "trackedSeries.seriesId",
+      model: "Series",
+      select: "tmdbId title seasons posterPath",
+    })
+    .lean();
   if (!user) throw new Error("User not found");
 
   const watchingSeries = user.trackedSeries.filter((t) => t.seriesId && t.status !== "dropped");
   if (watchingSeries.length === 0) return [];
 
-  const results = await Promise.all(
-    watchingSeries.map(async (tracked) => {
-      const seriesId = tracked.seriesId._id;
+  const seriesIds = watchingSeries.map((t) => t.seriesId._id);
+  const now = new Date();
 
-      const allEpisodes = await Episode.find({ seriesId })
-        .sort({ seasonNumber: 1, episodeNumber: 1 })
-        .select("_id seasonNumber episodeNumber title airDate duration")
-        .lean();
-      if (allEpisodes.length === 0) return null;
+  // ─── 1 SEULE requête pour tous les épisodes de toutes les séries suivies ───
+  const allEpisodes = await Episode.find({ seriesId: { $in: seriesIds }, airDate: { $lte: now } })
+    .sort({ seasonNumber: 1, episodeNumber: 1 })
+    .select("_id seriesId seasonNumber episodeNumber title airDate duration")
+    .lean();
 
-      const episodeIds = allEpisodes.map((e) => e._id);
+  // Groupe les épisodes par seriesId (en mémoire, ultra-rapide)
+  const episodesBySeries = new Map();
+  for (const ep of allEpisodes) {
+    const key = ep.seriesId.toString();
+    if (!episodesBySeries.has(key)) episodesBySeries.set(key, []);
+    episodesBySeries.get(key).push(ep);
+  }
 
-      const progressList = await EpisodeProgress.find({
-        userId,
-        episodeId: { $in: episodeIds },
-        watched: true,
-      })
-        .select("episodeId watchedAt")
-        .lean();
+  // ─── 1 SEULE requête pour tous les progress de tous les épisodes ───
+  const allEpisodeIds = allEpisodes.map((e) => e._id);
+  const allProgress = await EpisodeProgress.find({
+    userId,
+    episodeId: { $in: allEpisodeIds },
+    watched: true,
+  })
+    .select("episodeId watchedAt")
+    .lean();
 
+  // Groupe les progress par seriesId (via lookup épisode → série)
+  const episodeIdToSeriesId = new Map(allEpisodes.map((e) => [e._id.toString(), e.seriesId.toString()]));
+  const progressBySeries = new Map();
+  for (const p of allProgress) {
+    const seriesKey = episodeIdToSeriesId.get(p.episodeId.toString());
+    if (!seriesKey) continue;
+    if (!progressBySeries.has(seriesKey)) progressBySeries.set(seriesKey, []);
+    progressBySeries.get(seriesKey).push(p);
+  }
+
+  // ─── Construction des résultats en mémoire (synchrone, instantané) ───
+  const results = watchingSeries
+    .map((tracked) => {
+      const seriesIdStr = tracked.seriesId._id.toString();
+      const episodes = episodesBySeries.get(seriesIdStr) ?? [];
+      if (episodes.length === 0) return null;
+
+      const progressList = progressBySeries.get(seriesIdStr) ?? [];
       const watchedIds = new Set(progressList.map((p) => p.episodeId.toString()));
+
       if (watchedIds.size === 0) return null;
-      if (watchedIds.size === allEpisodes.length) return null;
+      if (watchedIds.size === episodes.length) return null;
 
-      const now = new Date();
-
-      const nextEpisode = allEpisodes.find((e) => !watchedIds.has(e._id.toString()) && e.airDate && e.airDate <= now);
+      const nextEpisode = episodes.find((e) => !watchedIds.has(e._id.toString()) && e.airDate && e.airDate <= now);
       if (!nextEpisode) return null;
 
       const lastWatchedAt = progressList.reduce(
@@ -50,24 +81,22 @@ export const getContinueWatching = async (UserModel, userId) => {
         null,
       );
 
-      const remainingEpisodes = allEpisodes.filter(
+      const remainingEpisodes = episodes.filter(
         (e) => !watchedIds.has(e._id.toString()) && e.airDate && e.airDate <= now,
       );
-
       const remainingCount = remainingEpisodes.length;
       const totalRemainingDuration = remainingEpisodes.reduce((sum, e) => sum + (e.duration ?? 0), 0);
 
       const series = tracked.seriesId;
-
       const seasonData = series.seasons?.find((s) => s.seasonNumber === nextEpisode.seasonNumber);
 
       return {
-        seriesId: seriesId.toString(),
+        seriesId: seriesIdStr,
         tmdbId: tracked.tmdbId,
         title: series.title,
         posterPath: seasonData?.posterPath ?? series.posterPath ?? null,
         watchedCount: watchedIds.size,
-        totalCount: allEpisodes.length,
+        totalCount: episodes.length,
         lastWatchedAt,
         remainingCount,
         totalRemainingDuration,
@@ -81,10 +110,10 @@ export const getContinueWatching = async (UserModel, userId) => {
           seasonEpisodeCount: seasonData?.episodeCount ?? null,
         },
       };
-    }),
-  );
+    })
+    .filter(Boolean);
 
-  return results.filter(Boolean).sort((a, b) => new Date(b.lastWatchedAt) - new Date(a.lastWatchedAt));
+  return results.sort((a, b) => new Date(b.lastWatchedAt) - new Date(a.lastWatchedAt));
 };
 
 export const getContinueWatchingCount = async (UserModel, userId) => {
@@ -248,12 +277,23 @@ export const getRecentlyWatched = async (userId) => {
 export const getCalendar = async (UserModel, userId) => {
   await dbConnect();
 
-  const user = await UserModel.findById(userId).populate({ path: "trackedSeries.seriesId", model: "Series" }).lean();
+  const user = await UserModel.findById(userId)
+    .select("trackedSeries")
+    .populate({
+      path: "trackedSeries.seriesId",
+      model: "Series",
+      select: "tmdbId title seasons networks posterPath",
+    })
+    .lean();
   if (!user) throw new Error("User not found");
 
   const watchingSeries = user.trackedSeries.filter((t) => t.seriesId && t.status !== "dropped");
   const watchlist = await UserList.findOne({ userId, isDefault: true })
-    .populate({ path: "series", model: "Series" })
+    .populate({
+      path: "series",
+      model: "Series",
+      select: "tmdbId title seasons networks posterPath",
+    })
     .lean();
   const watchlistSeries = watchlist?.series ?? [];
 
