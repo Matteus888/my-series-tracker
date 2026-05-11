@@ -13,7 +13,8 @@ import ListsHeader from "@/components/lists/ListsHeader/ListsHeader";
 import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
 import ListActions from "@/components/lists/ListActions/ListActions";
 import CreateListButton from "@/components/lists/CreateListButton/CreateListButton";
-import { mdiPlaylistPlus, mdiPlaylistRemove, mdiBookmarkOutline } from "@mdi/js";
+import Icon from "@mdi/react";
+import { mdiPlaylistPlus, mdiPlaylistRemove, mdiBookmarkOutline, mdiEarth, mdiLockOutline } from "@mdi/js";
 
 export default function ListsPage() {
   const { lists, watchlist, isLoading: listsLoading } = useList();
@@ -81,7 +82,13 @@ export default function ListsPage() {
           <SectionHeader
             title={
               <>
-                {list.name} <span className={styles.listCount}>({list.series.length})</span>
+                {list.name}
+                <Icon
+                  path={list.isPublic ? mdiEarth : mdiLockOutline}
+                  size={0.6}
+                  className={`${styles.visibilityIcon} ${list.isPublic ? styles.visibilityPublic : ""}`}
+                />
+                <span className={styles.listCount}>({list.series.length})</span>
               </>
             }
             storageKey={`section-list-${list._id}`}

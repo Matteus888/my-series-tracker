@@ -77,3 +77,21 @@
   margin-top: 2rem;
   margin-left: 2.25rem;
 }
+
+/* === Visibility icon === */
+.visibilityIcon {
+  opacity: 0.4;
+  margin-left: 0.45rem;
+  vertical-align: middle;
+  position: relative;
+  top: -0.15rem;
+  color: var(--foreground);
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease;
+}
+
+.visibilityPublic {
+  opacity: 0.85;
+  color: var(--blue);
+}

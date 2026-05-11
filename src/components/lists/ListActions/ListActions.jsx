@@ -121,6 +121,15 @@ export default function ListActions({ list }) {
           <div className={styles.confirmActions}>
             <button
               type="button"
+              className={styles.saveBtn}
+              onClick={handleSaveEdit}
+              title="Save"
+              disabled={!name.trim()}
+            >
+              <Icon path={mdiCheck} size={0.7} />
+            </button>
+            <button
+              type="button"
               className={styles.cancelBtn}
               onClick={(e) => {
                 e.stopPropagation();
@@ -129,15 +138,6 @@ export default function ListActions({ list }) {
               title="Cancel"
             >
               <Icon path={mdiCancel} size={0.7} />
-            </button>
-            <button
-              type="button"
-              className={styles.saveBtn}
-              onClick={handleSaveEdit}
-              title="Save"
-              disabled={!name.trim()}
-            >
-              <Icon path={mdiCheck} size={0.7} />
             </button>
           </div>
         </div>
@@ -152,6 +152,9 @@ export default function ListActions({ list }) {
             This list will be permanently removed. The series themselves stay tracked.
           </p>
           <div className={styles.confirmActions}>
+            <button type="button" className={styles.deleteBtn} onClick={handleConfirmDelete} title="Delete">
+              <Icon path={mdiTrashCanOutline} size={0.7} />
+            </button>
             <button
               type="button"
               className={styles.cancelDeleteBtn}
@@ -162,9 +165,6 @@ export default function ListActions({ list }) {
               title="Cancel"
             >
               <Icon path={mdiCancel} size={0.7} />
-            </button>
-            <button type="button" className={styles.deleteBtn} onClick={handleConfirmDelete} title="Delete">
-              <Icon path={mdiTrashCanOutline} size={0.7} />
             </button>
           </div>
         </div>
