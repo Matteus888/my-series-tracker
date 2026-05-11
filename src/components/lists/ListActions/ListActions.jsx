@@ -154,7 +154,7 @@ export default function ListActions({ list }) {
           <div className={styles.confirmActions}>
             <button
               type="button"
-              className={styles.cancelBtn}
+              className={styles.cancelDeleteBtn}
               onClick={(e) => {
                 e.stopPropagation();
                 closeConfirm();

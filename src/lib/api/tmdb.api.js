@@ -4,6 +4,18 @@ const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const EXCLUDED_GENRE_IDS = [10763, 10764, 10767, 10766]; // news, reality, talk, soap
 const EXCLUDED_GENRES_STRING = EXCLUDED_GENRE_IDS.join(",");
 
+const EXCLUDED_KEYWORD_IDS = [
+  13141, // hentai
+  5732, // ecchi
+  190370, // erotic movie
+  11402, // softcore
+  158718, // erotica
+  267449, // nudity
+  7344, // sexual content
+  18321, // pornography
+];
+const EXCLUDED_KEYWORDS_STRING = EXCLUDED_KEYWORD_IDS.join("|");
+
 export const getAllSeries = async (page = 1, filters = {}) => {
   try {
     const params = new URLSearchParams({
@@ -11,6 +23,8 @@ export const getAllSeries = async (page = 1, filters = {}) => {
       page,
       sort_by: "popularity.desc",
       without_genres: EXCLUDED_GENRES_STRING,
+      without_keywords: EXCLUDED_KEYWORDS_STRING,
+      include_adult: false,
       ...filters,
     });
 

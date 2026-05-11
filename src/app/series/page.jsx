@@ -38,6 +38,13 @@ export default function AllSeriesPage() {
         const twoYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 2)).toISOString().slice(0, 10);
 
         const fetchFn = (page) => {
+          if (selectedGenre) {
+            return getAllSeries(page, {
+              sort_by: "popularity.desc",
+              with_genres: selectedGenre,
+            });
+          }
+
           if (sortBy === "trending") return getTrending(page);
 
           const sortMap = {
@@ -61,7 +68,6 @@ export default function AllSeriesPage() {
               "first_air_date.gte": today, // pas encore sorti
               "vote_count.gte": 0,
             }),
-            ...(selectedGenre && { with_genres: selectedGenre }),
           });
         };
 
@@ -93,12 +99,14 @@ export default function AllSeriesPage() {
 
   const handleSortChange = (value) => {
     setSortBy(value);
+    setSelectedGenre(null);
     setCurrentPage(1);
     router.push("/series?page=1");
   };
 
   const handleGenreChange = (genreId) => {
     setSelectedGenre(genreId);
+    setSortBy("popular");
     setCurrentPage(1);
     router.push("/series?page=1");
   };

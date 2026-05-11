@@ -19,10 +19,7 @@ export default function SortFilter({ sortBy, selectedGenre, onSortChange, onGenr
           <li
             key={option.value}
             className={`${styles.item} ${sortBy === option.value && !selectedGenre ? styles.active : ""}`}
-            onClick={() => {
-              onSortChange(option.value);
-              onGenreChange(null);
-            }}
+            onClick={() => onSortChange(option.value)}
           >
             <span className={styles.itemText}>{option.label}</span>
           </li>

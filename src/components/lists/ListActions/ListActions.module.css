@@ -139,7 +139,7 @@
 
 .confirm {
   position: absolute;
-  top: calc(100% + 4px);
+  bottom: calc(100% + 4px);
   left: 0;
   width: 260px;
   background-color: var(--background-secondary);
@@ -174,6 +174,7 @@
 }
 
 .cancelBtn,
+.cancelDeleteBtn,
 .saveBtn,
 .deleteBtn {
   padding: 0.4rem 0.5rem;
@@ -194,6 +195,16 @@
 .cancelBtn:hover {
   background-color: var(--red);
   color: var(--foreground);
+}
+
+.cancelDeleteBtn {
+  border: 1px solid var(--foreground);
+  color: var(--foreground);
+}
+
+.cancelDeleteBtn:hover {
+  background-color: var(--foreground);
+  color: var(--background-primary);
 }
 
 .saveBtn {
@@ -222,6 +233,7 @@
 }
 
 .cancelBtn:active,
+.cancelDeleteBtn:active,
 .saveBtn:active:not(:disabled),
 .deleteBtn:active {
   transform: scale(0.95);
