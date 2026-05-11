@@ -8,7 +8,7 @@ import SectionHeader from "../../ui/SectionHeader/SectionHeader";
 import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
 import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
-import { mdiPlaylistPlus, mdiBookmarkPlusOutline, mdiTelevision, mdiMagnify } from "@mdi/js";
+import { mdiPlaylistPlus, mdiTelevision, mdiMagnify } from "@mdi/js";
 
 const FILL_THRESHOLD = 4;
 
@@ -70,7 +70,7 @@ export default function StartWatchingSection({ initialSkeletonCount = 0 }) {
               ))}
               {showFillerCard && (
                 <EmptyStateCard
-                  icon={mdiBookmarkPlusOutline}
+                  icon={mdiPlaylistPlus}
                   label="Add more shows"
                   subtitle="Grow your watchlist"
                   links={[

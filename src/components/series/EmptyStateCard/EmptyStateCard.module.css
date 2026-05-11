@@ -17,10 +17,10 @@
   width: 60px;
   height: 60px;
   flex-shrink: 0;
-  border-radius: 50%;
+  /* border-radius: 50%; */
   background-color: rgba(var(--foreground-rgb), 0.06);
   color: var(--foreground);
-  opacity: 0.6;
+  /* opacity: 0.6; */
 }
 
 .content {
@@ -57,13 +57,18 @@
   width: 175px;
   flex-direction: column;
   text-align: center;
-  justify-content: center;
-  padding: 1.5rem 1.25rem;
+  justify-content: flex-start;
+  padding: 2.5rem 1.25rem 1.5rem;
+  gap: 1.5rem;
 }
 
 .card.inCarousel .iconWrapper {
-  width: 72px;
-  height: 72px;
+  width: 66px;
+  height: 66px;
+  opacity: 1;
+  background-color: var(--background-primary);
+  color: var(--foreground);
+  border: 1px solid var(--foreground);
 }
 
 /* === Chips de navigation === */
@@ -109,4 +114,19 @@
 .card.inCarousel .chip {
   width: 100%;
   justify-content: center;
+}
+
+.card.inCarousel .iconWrapper :global(svg) {
+  width: 44px;
+  height: 44px;
+}
+
+.actionSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  /* Aligne sur la même empreinte que l'iconWrapper pour éviter les sauts visuels */
+  min-width: 60px;
+  min-height: 60px;
 }

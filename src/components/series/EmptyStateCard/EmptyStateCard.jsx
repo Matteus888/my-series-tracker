@@ -3,13 +3,19 @@ import Link from "next/link";
 import styles from "./EmptyStateCard.module.css";
 
 export default function EmptyStateCard({ icon, label, subtitle, action, links, inCarousel = false }) {
+  // En mode inline, l'action remplace l'icône à gauche
+  const showActionAsLeftSlot = !inCarousel && action;
+  const showIcon = icon && !showActionAsLeftSlot;
+
   return (
     <div className={`${styles.card} ${inCarousel ? styles.inCarousel : ""}`}>
-      {icon && (
+      {showIcon && (
         <div className={styles.iconWrapper}>
           <Icon path={icon} size={1.4} />
         </div>
       )}
+      {showActionAsLeftSlot && <div className={styles.actionSlot}>{action}</div>}
+
       <div className={styles.content}>
         <span className={styles.label}>{label}</span>
         {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
@@ -25,7 +31,8 @@ export default function EmptyStateCard({ icon, label, subtitle, action, links, i
           </div>
         )}
 
-        {action && <div className={styles.action}>{action}</div>}
+        {/* En mode inCarousel, action reste sous le contenu comme avant */}
+        {inCarousel && action && <div className={styles.action}>{action}</div>}
       </div>
     </div>
   );

@@ -53,8 +53,8 @@ export default function CreateListButton({ variant = "primary", popoverAlign = "
         onClick={handleOpen}
         aria-label="Create new list"
       >
-        <Icon path={mdiPlaylistPlus} size={0.9} />
-        <span>New list</span>
+        <Icon path={mdiPlaylistPlus} size={1} />
+        {/* <span>New list</span> */}
       </button>
 
       {isOpen && (
