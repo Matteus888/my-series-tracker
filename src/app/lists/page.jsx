@@ -14,7 +14,15 @@ import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
 import ListActions from "@/components/lists/ListActions/ListActions";
 import CreateListButton from "@/components/lists/CreateListButton/CreateListButton";
 import Icon from "@mdi/react";
-import { mdiPlaylistPlus, mdiPlaylistRemove, mdiBookmarkOutline, mdiEarth, mdiLockOutline } from "@mdi/js";
+import {
+  mdiPlaylistPlus,
+  mdiPlaylistRemove,
+  mdiBookmarkOutline,
+  mdiEarth,
+  mdiLockOutline,
+  mdiTelevision,
+  mdiMagnify,
+} from "@mdi/js";
 
 export default function ListsPage() {
   const { lists, watchlist, isLoading: listsLoading } = useList();
@@ -55,7 +63,11 @@ export default function ListsPage() {
                 <EmptyStateCard
                   icon={mdiBookmarkOutline}
                   label="Your watchlist is empty"
-                  subtitle="Bookmark shows you want to watch later"
+                  subtitle="Bookmark shows to watch later"
+                  links={[
+                    { href: "/series", label: "Browse", icon: mdiTelevision },
+                    { href: "/search", label: "Search", icon: mdiMagnify },
+                  ]}
                   inCarousel
                 />
               ) : (
@@ -100,7 +112,11 @@ export default function ListsPage() {
                   <EmptyStateCard
                     icon={mdiPlaylistRemove}
                     label="This list is empty"
-                    subtitle="Add series from the search or browse pages"
+                    subtitle="Find series to add"
+                    links={[
+                      { href: "/series", label: "Browse", icon: mdiTelevision },
+                      { href: "/search", label: "Search", icon: mdiMagnify },
+                    ]}
                     inCarousel
                   />
                 ) : (

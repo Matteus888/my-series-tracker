@@ -65,3 +65,48 @@
   width: 72px;
   height: 72px;
 }
+
+/* === Chips de navigation === */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--foreground);
+  background-color: var(--background-primary);
+  border: 1px solid var(--foreground);
+  text-decoration: none;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.chip:hover {
+  background-color: var(--foreground);
+  color: var(--background-secondary);
+}
+
+.chip:active {
+  transform: scale(0.97);
+}
+
+/* Variante carousel : chips empilés verticalement pour tenir dans 175px */
+.card.inCarousel .links {
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.card.inCarousel .chip {
+  width: 100%;
+  justify-content: center;
+}
