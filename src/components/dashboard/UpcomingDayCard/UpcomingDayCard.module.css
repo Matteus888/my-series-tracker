@@ -123,6 +123,10 @@
   background-color: var(--red);
 }
 
+.badgeFullSeason {
+  background-color: var(--violet);
+}
+
 .cardFooter {
   display: flex;
   align-items: center;

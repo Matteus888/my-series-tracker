@@ -19,10 +19,10 @@ export default function ContinueWatchingCard({ item, onCheck }) {
   const isFinale =
     nextEpisode?.seasonEpisodeCount != null && nextEpisode.episodeNumber === nextEpisode.seasonEpisodeCount;
 
-  const badge = isPremiere
-    ? { label: "Premiere", className: styles.badgePremiere }
-    : isFinale
-      ? { label: "Finale", className: styles.badgeFinal }
+  const badge = isFinale
+    ? { label: "Finale", className: styles.badgeFinal }
+    : isPremiere
+      ? { label: "Premiere", className: styles.badgePremiere }
       : null;
 
   return (

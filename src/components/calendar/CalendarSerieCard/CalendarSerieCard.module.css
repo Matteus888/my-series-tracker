@@ -80,6 +80,10 @@
   background: var(--red);
 }
 
+.badgeFullSeason {
+  background: var(--violet);
+}
+
 .titleLink {
   min-width: 0;
   text-decoration: none;

@@ -26,8 +26,10 @@ export default function CalendarSerieCard({ episode }) {
   const includesFinale = seasonEpisodeCount != null && episodeNumbers.includes(seasonEpisodeCount);
 
   let badge = null;
-  if (isFullSeason) {
-    badge = { label: "Full season", className: styles.badgePremiere };
+  if (isFullSeason && seasonEpisodeCount === 1) {
+    badge = { label: "Finale", className: styles.badgeFinale };
+  } else if (isFullSeason) {
+    badge = { label: "Full season", className: styles.badgeFullSeason };
   } else if (includesPremiere) {
     badge = { label: "Premiere", className: styles.badgePremiere };
   } else if (includesFinale) {
