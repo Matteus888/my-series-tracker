@@ -1,8 +1,19 @@
 :root {
-  --background-primary: #0a0a0a;
+  --surface-0: #0a0a0c;
+  --surface-1: #131316;
+  --surface-2: #1c1c20;
+  --surface-3: #26262b;
+  --surface-4: #303036;
+  --surface-5: #3a3a42;
+
+  /* --background-primary: #0a0a0a; */
+  --background-primary: var(--surface-0);
   --background-primary-rgb: 10, 10, 10;
-  --background-secondary: #1a1a1a;
-  --background-third: #2a2a2a;
+  /* --background-secondary: #1a1a1a; */
+  --background-secondary: var(--surface-2);
+  /* --background-third: #2a2a2a; */
+  --background-third: var(--surface-3);
+
   --foreground: #ededed;
   --foreground-rgb: 237, 237, 237;
   --blue: #0082ce;
@@ -14,6 +25,7 @@
   --card-bg: #2a2a2a;
   --card-bg-rgb: 26, 26, 26;
   --hover-bg: #2a2a2a;
+
   --z-tooltip: 100;
   --z-popover: 200;
   --z-menu: 300;
@@ -22,9 +34,20 @@
   --z-header: 1020;
   --z-backbutton: 1025;
   --z-modal: 1030;
+
   --header-height: 45px;
   --pagetitle-height: 50px;
   --card-width: 175px;
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border: var(--border-strong);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6), 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-glow-blue: 0 0 24px rgba(0, 130, 206, 0.25);
 }
 
 html {

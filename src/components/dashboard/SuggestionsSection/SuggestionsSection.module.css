@@ -11,6 +11,7 @@
 
 .carouselWrapper {
   position: relative;
+  border-top: 1px solid var(--border);
 }
 
 .carousel {
