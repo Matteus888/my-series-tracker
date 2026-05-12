@@ -1,0 +1,122 @@
+.section {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto 2rem;
+  padding: 0 2rem;
+  max-width: 1400px;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 1rem;
+}
+
+.carouselWrapper {
+  position: relative;
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  scrollbar-gutter: stable;
+  align-items: flex-start;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  align-items: stretch;
+}
+
+.carousel > * {
+  scroll-snap-align: start;
+  height: 300px;
+}
+
+.carousel::-webkit-scrollbar {
+  height: 4px;
+}
+.carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+.carousel::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.carousel::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.error {
+  font-size: 0.875rem;
+  color: var(--red);
+}
+
+.skeletonContainer {
+  flex: 0 0 175px;
+  width: 175px;
+  min-width: 175px;
+  height: 300px;
+  display: flex;
+}
+
+.skeletonCard {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.skeletonImage {
+  flex: 1;
+  width: 100%;
+  /* aspect-ratio: 2/3; */
+  overflow: hidden;
+}
+
+.skeletonPulse {
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-secondary);
+  border: 1px solid transparent;
+  animation: pulseBorder 1.5s infinite ease-in-out;
+}
+
+.skeletonFooter {
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  background-color: var(--background-primary);
+}
+
+.skeletonButton {
+  width: 30px;
+  height: 100%;
+  background-color: var(--background-secondary);
+  border: 1px solid transparent;
+  animation: pulseBorder 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseBorder {
+  0% {
+    border-color: transparent;
+    opacity: 0.7;
+  }
+  50% {
+    border-color: rgba(255, 255, 255, 0.3);
+    opacity: 1;
+  }
+  100% {
+    border-color: transparent;
+    opacity: 0.7;
+  }
+}

@@ -10,6 +10,7 @@ import dbConnect from "@/lib/db/db.connect";
 import { APP_NAME } from "@/lib/constants/app.constants";
 import EpisodeList from "@/components/series/EpisodeList/EpisodeList";
 import SeriePresentation from "@/components/series/SeriePresentation/SeriePresentation";
+import SimilarSeriesSection from "@/components/series/SimilarSeriesSection/SimilarSeriesSection";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -186,6 +187,7 @@ export default async function SeriesPage({ params }) {
           <EpisodeList initialProgress={episodeProgress} tmdbId={Number(id)} serieData={serieData} />
         </div>
       )}
+      <SimilarSeriesSection tmdbId={Number(id)} />
     </div>
   );
 }

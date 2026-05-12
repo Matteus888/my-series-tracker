@@ -11,7 +11,7 @@ export default function EmptyStateCard({ icon, label, subtitle, action, links, i
     <div className={`${styles.card} ${inCarousel ? styles.inCarousel : ""}`}>
       {showIcon && (
         <div className={styles.iconWrapper}>
-          <Icon path={icon} size={1.4} />
+          <Icon path={icon} size={1.6} />
         </div>
       )}
       {showActionAsLeftSlot && <div className={styles.actionSlot}>{action}</div>}
