@@ -1,5 +1,5 @@
 export const metadata = { title: "Profile" };
 
-export default function HistoryLayout({ children }) {
+export default function ProfileLayout({ children }) {
   return children;
 }
