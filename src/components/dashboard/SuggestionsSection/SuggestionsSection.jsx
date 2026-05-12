@@ -7,7 +7,7 @@ import SerieCard from "@/components/series/SerieCard/SerieCard";
 import SectionHeader from "../../ui/SectionHeader/SectionHeader";
 import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
-import { mdiLightbulbOutline } from "@mdi/js";
+import { mdiLightbulbOnOutline } from "@mdi/js";
 
 export default function SuggestionsSection() {
   const { items, loading, error } = useSuggestions();
@@ -21,7 +21,7 @@ export default function SuggestionsSection() {
     <section className={styles.section}>
       <SectionHeader
         title="Suggested for you"
-        icon={mdiLightbulbOutline}
+        icon={mdiLightbulbOnOutline}
         storageKey="section-suggestions"
         defaultOpen={true}
         hasContent={items.length > 0}

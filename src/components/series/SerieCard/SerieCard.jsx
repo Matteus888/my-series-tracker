@@ -13,6 +13,7 @@ export default function SerieCard({ serie, onCheck, width = null }) {
     isTracked,
     isFavorite,
     tracked,
+    isDropped,
     score,
     inAnyList,
     confirmPopover,
@@ -42,6 +43,7 @@ export default function SerieCard({ serie, onCheck, width = null }) {
           <SerieCardPopovers
             serie={serie}
             isTracked={isTracked}
+            isDropped={isDropped}
             confirmPopover={confirmPopover}
             watchlistPopover={watchlistPopover}
             ratingsPopover={ratingsPopover}
@@ -61,6 +63,7 @@ export default function SerieCard({ serie, onCheck, width = null }) {
               <div className={styles.placeholderContainer}>{serie.name}</div>
             )}
           </Link>
+
           {/* Barre de progression */}
           {progress?.totalCount > 0 && (
             <div className={styles.progressBar}>
@@ -72,6 +75,8 @@ export default function SerieCard({ serie, onCheck, width = null }) {
           )}
           {/* Badge année */}
           {serie.first_air_date && <span className={styles.yearBadge}>{serie.first_air_date.slice(0, 4)}</span>}
+          {/* Badge stop */}
+          {tracked?.status === "dropped" && <span className={styles.stoppedBadge}>Stopped</span>}
         </div>
         {/* Footer */}
         <div className={`card-footer ${styles.footer}`}>

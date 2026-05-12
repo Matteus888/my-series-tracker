@@ -134,3 +134,16 @@
   font-size: 0.75rem;
   color: var(--foreground);
 }
+
+.stoppedBadge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  font-size: 0.75rem;
+  background-color: var(--border);
+  color: var(--foreground);
+  padding: 0.25rem 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+}

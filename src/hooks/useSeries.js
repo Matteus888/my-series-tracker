@@ -18,5 +18,24 @@ export const useSeries = (seriesId, serieData) => {
     updateSeries(seriesId, { isFavorite: !favorited });
   };
 
-  return { isTracked: tracked, isFavorite: favorited, toggle, toggleFavorite, addSeries, removeSeries };
+  const markDropped = () => {
+    if (!tracked) return;
+    updateSeries(seriesId, { status: "dropped" });
+  };
+
+  const markWatching = () => {
+    if (!tracked) return;
+    updateSeries(seriesId, { status: "watching" });
+  };
+
+  return {
+    isTracked: tracked,
+    isFavorite: favorited,
+    toggle,
+    toggleFavorite,
+    markDropped,
+    markWatching,
+    addSeries,
+    removeSeries,
+  };
 };

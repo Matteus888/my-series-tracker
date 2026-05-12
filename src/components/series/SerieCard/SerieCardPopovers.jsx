@@ -7,6 +7,7 @@ import RatingsPopover from "@/components/ui/RatingsPopover/RatingsPopover";
 export default function SerieCardPopovers({
   serie,
   isTracked,
+  isDropped,
   confirmPopover,
   watchlistPopover,
   ratingsPopover,
@@ -19,6 +20,7 @@ export default function SerieCardPopovers({
         <ConfirmPopover
           serieName={serie.name}
           isTracked={isTracked}
+          isDropped={isDropped}
           onConfirm={onConfirm}
           popoverRef={confirmPopover.popoverRef}
         />

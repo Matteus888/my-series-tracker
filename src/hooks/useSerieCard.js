@@ -9,8 +9,7 @@ import { usePopover } from "./usePopover";
 import { computeAverageScore } from "@/lib/utils/ratings.utils";
 
 export function useSerieCard(serie, onCheckExternal, externalRatings = null) {
-  const { isTracked, isFavorite, toggle, toggleFavorite } = useSeries(serie.id, serie);
-
+  const { isTracked, isFavorite, toggle, toggleFavorite, markDropped, markWatching } = useSeries(serie.id, serie);
   const { trackedSeries, progressMap } = useTrackedSeries();
   const { requireAuth } = useAuthGuard();
   const { showToast } = useToast();
@@ -21,6 +20,7 @@ export function useSerieCard(serie, onCheckExternal, externalRatings = null) {
   const ratingsPopover = usePopover();
 
   const tracked = trackedSeries.find((s) => s.tmdbId === serie.id);
+  const isDropped = tracked?.status === "dropped";
   const progressEntry = progressMap?.[String(serie.id)];
   const ratings = externalRatings ?? progressEntry?.ratings ?? tracked?.seriesId?.ratings ?? null;
   const score = ratings ? computeAverageScore(ratings) : Math.round((serie.vote_average ?? 0) * 10);
@@ -38,7 +38,13 @@ export function useSerieCard(serie, onCheckExternal, externalRatings = null) {
 
   const handleConfirm = (confirm) => {
     if (isTracked) {
-      if (confirm) toggle();
+      if (isDropped) {
+        if (confirm === "resume") markWatching();
+        else if (confirm === "remove") toggle();
+      } else {
+        if (confirm === "stop") markDropped();
+        else if (confirm === "remove") toggle();
+      }
     } else {
       if (confirm === "first") toggle({ markFirstWatched: true, status: "watching" });
       if (confirm === "all") toggle({ markAllWatched: true, status: "completed" });
@@ -75,6 +81,7 @@ export function useSerieCard(serie, onCheckExternal, externalRatings = null) {
     isTracked,
     isFavorite,
     tracked,
+    isDropped,
     score,
     inAnyList,
 

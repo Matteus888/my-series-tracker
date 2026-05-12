@@ -22,30 +22,36 @@ export default function StartWatchingCard({ item, onCheck, isChecking, showCheck
   const ratingsPopover = usePopover();
   const { lists } = useList();
   const { isTracked, trackedSeries } = useTrackedSeries();
+  const { toggle, markDropped, markWatching } = useSeries(tmdbId, serie);
+
   const tracked = isTracked(tmdbId);
 
   // Objet serie compatible avec WatchlistPopover
   const serie = { id: tmdbId, name: title, poster_path: posterPath };
 
-  const { toggle } = useSeries(tmdbId, serie);
-
   const inAnyList = lists.some((l) => l.series.some((s) => s.tmdbId === tmdbId));
 
   // Note moyenne TMDB+IMDB de la série trackée (pour afficher le score à droite)
   const trackedEntry = trackedSeries.find((s) => s.tmdbId === tmdbId);
+  const isDropped = trackedEntry?.status === "dropped";
   const ratings = trackedEntry?.seriesId?.ratings ?? null;
   const score = ratings ? computeAverageScore(ratings) : null;
 
   const handleConfirm = (confirm) => {
     if (tracked) {
-      if (confirm) toggle();
+      if (isDropped) {
+        if (confirm === "resume") markWatching();
+        else if (confirm === "remove") toggle();
+      } else {
+        if (confirm === "stop") markDropped();
+        else if (confirm === "remove") toggle();
+      }
     } else {
       if (confirm === "first") onCheck?.(item, "first");
       if (confirm === "all") onCheck?.(item, "all");
     }
     confirmPopover.close();
   };
-
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
       <div className="tooltip">{title}</div>
@@ -60,6 +66,7 @@ export default function StartWatchingCard({ item, onCheck, isChecking, showCheck
             <ConfirmPopover
               serieName={title}
               isTracked={tracked}
+              isDropped={isDropped}
               onConfirm={handleConfirm}
               popoverRef={confirmPopover.popoverRef}
             />

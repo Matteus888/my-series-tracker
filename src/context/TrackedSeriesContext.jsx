@@ -112,10 +112,10 @@ export const TrackedSeriesProvider = ({ children }) => {
           showToast(updates.isFavorite ? "Added to favorites ✓" : "Removed from favorites");
         } else if ("status" in updates) {
           const statusLabels = {
-            watching: "Marked as watching ✓",
+            watching: "Resumed watching ✓",
             completed: "Marked as completed ✓",
             on_hold: "Marked as on hold",
-            dropped: "Marked as dropped",
+            dropped: "Stopped following ✓",
             plan_to_watch: "Moved to watchlist ✓",
           };
           showToast(statusLabels[updates.status] ?? "Series updated ✓");
