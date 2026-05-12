@@ -22,12 +22,12 @@ export default function StartWatchingCard({ item, onCheck, isChecking, showCheck
   const ratingsPopover = usePopover();
   const { lists } = useList();
   const { isTracked, trackedSeries } = useTrackedSeries();
-  const { toggle, markDropped, markWatching } = useSeries(tmdbId, serie);
 
   const tracked = isTracked(tmdbId);
 
   // Objet serie compatible avec WatchlistPopover
   const serie = { id: tmdbId, name: title, poster_path: posterPath };
+  const { toggle, markDropped, markWatching } = useSeries(tmdbId, serie);
 
   const inAnyList = lists.some((l) => l.series.some((s) => s.tmdbId === tmdbId));
 
