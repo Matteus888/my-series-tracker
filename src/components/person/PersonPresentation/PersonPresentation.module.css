@@ -2,6 +2,7 @@
   position: relative;
   margin: -5rem auto 0.5rem;
   max-width: 1400px;
+  width: 100%;
   padding: 0 2rem;
   display: flex;
   flex-direction: column;
@@ -22,8 +23,6 @@
   border: 1px solid var(--border);
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-  aspect-ratio: 2 / 3;
-  background: var(--background-third);
 }
 
 .profileImage {
