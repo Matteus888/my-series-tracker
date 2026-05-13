@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/db/db.connect";
 import { Episode } from "@/models/episode.model";
 import { getPersonDetails } from "./tmdb.api";
+import { shouldExcludeSerie } from "../utils/serie.utils";
 
 const PRIORITY_DEPARTMENTS = ["Acting", "Directing", "Writing", "Production", "Creator"];
 
@@ -14,10 +15,8 @@ const computeAge = (birthday, deathday) => {
   return age;
 };
 
-const EXCLUDED_GENRE_IDS = [10763, 10764, 10767, 10766];
-
 const filterAndCleanCredits = (credits = []) => {
-  return credits.filter((c) => !c.genre_ids?.some((id) => EXCLUDED_GENRE_IDS.includes(id)));
+  return credits.filter((c) => !shouldExcludeSerie(c));
 };
 
 const dedupeCastCredits = (cast = []) => {

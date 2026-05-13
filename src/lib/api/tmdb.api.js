@@ -1,7 +1,8 @@
+import { EXCLUDED_GENRE_IDS, shouldExcludeSerie } from "../utils/serie.utils";
+
 const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
-const EXCLUDED_GENRE_IDS = [10763, 10764, 10767, 10766]; // news, reality, talk, soap
 const EXCLUDED_GENRES_STRING = EXCLUDED_GENRE_IDS.join(",");
 
 const EXCLUDED_KEYWORD_IDS = [
@@ -13,6 +14,8 @@ const EXCLUDED_KEYWORD_IDS = [
   267449, // nudity
   7344, // sexual content
   18321, // pornography
+  209721, // award ceremony
+  6075, // awards
 ];
 const EXCLUDED_KEYWORDS_STRING = EXCLUDED_KEYWORD_IDS.join("|");
 
@@ -42,7 +45,7 @@ export const getAllSeries = async (page = 1, filters = {}) => {
     }
     const data = await response.json();
     return {
-      results: data.results,
+      results: data.results.filter((serie) => !shouldExcludeSerie(serie)),
       totalResults: data.total_results,
       totalPages: data.total_pages,
       currentPage: data.page,
@@ -61,10 +64,7 @@ export const searchSeries = async (query, page = 1) => {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
 
-    // Filtrer les genres exclus
-    const filteredResults = data.results.filter(
-      (serie) => !serie.genre_ids.some((id) => EXCLUDED_GENRE_IDS.includes(id)),
-    );
+    const filteredResults = data.results.filter((serie) => !shouldExcludeSerie(serie));
 
     return {
       results: filteredResults,
@@ -96,7 +96,7 @@ export const getTrending = async (page = 1, timeWindow = "week") => {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
     return {
-      results: data.results.filter((s) => !s.genre_ids.some((id) => EXCLUDED_GENRE_IDS.includes(id))),
+      results: data.results.filter((s) => !shouldExcludeSerie(s)),
       totalResults: data.total_results,
       totalPages: data.total_pages,
       currentPage: data.page,
