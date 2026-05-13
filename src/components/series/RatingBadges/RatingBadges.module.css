@@ -23,18 +23,18 @@
 .linked {
   cursor: pointer;
   transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    transform 0.15s ease;
+    /* background 0.15s ease, */
+    /* border-color 0.15s ease, */ transform 0.15s ease;
 }
 
 .linked:hover {
-  background: var(--background-second, var(--background-third));
-  border-color: var(--foreground);
+  /* background: var(--background-second, var(--background-third)); */
+  /* border-color: var(--foreground); */
+  transform: scale(1.08);
 }
 
 .linked:active {
-  transform: translateY(1px);
+  transform: scale(0.95);
 }
 
 .label {
@@ -51,7 +51,7 @@
 
 /* Couleurs distinctives par source */
 .tmdb .label {
-  color: #01b4e4;
+  color: #02b4e4;
 }
 .imdb .label {
   color: var(--yellow);

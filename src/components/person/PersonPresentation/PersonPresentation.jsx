@@ -4,15 +4,15 @@ import { useState } from "react";
 import Image from "next/image";
 import Icon from "@mdi/react";
 import {
-  mdiCake,
+  mdiCakeVariantOutline,
   mdiMapMarker,
   mdiCross,
   mdiOpenInNew,
   mdiInstagram,
-  mdiTwitter,
   mdiFacebook,
   mdiYoutube,
   mdiWeb,
+  mdiWikipedia,
 } from "@mdi/js";
 import { formatDate } from "@/lib/utils/date.utils";
 import styles from "./PersonPresentation.module.css";
@@ -39,11 +39,6 @@ export default function PersonPresentation({ person, stats }) {
       icon: mdiInstagram,
       label: "Instagram",
     },
-    person.externalIds.twitter && {
-      href: `https://twitter.com/${person.externalIds.twitter}`,
-      icon: mdiTwitter,
-      label: "Twitter",
-    },
     person.externalIds.facebook && {
       href: `https://facebook.com/${person.externalIds.facebook}`,
       icon: mdiFacebook,
@@ -53,6 +48,11 @@ export default function PersonPresentation({ person, stats }) {
       href: `https://youtube.com/${person.externalIds.youtube}`,
       icon: mdiYoutube,
       label: "YouTube",
+    },
+    person.name && {
+      href: `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(person.name)}&go=Go`,
+      icon: mdiWikipedia,
+      label: "Wikipedia",
     },
     person.homepage && {
       href: person.homepage,
@@ -107,7 +107,7 @@ export default function PersonPresentation({ person, stats }) {
             <div className={styles.bioInfoBlock}>
               {person.birthday && (
                 <div className={styles.bioInfoLine}>
-                  <Icon path={mdiCake} size={0.8} />
+                  <Icon path={mdiCakeVariantOutline} size={0.8} />
                   <span>
                     {formatDate(person.birthday)}
                     {person.age != null && !person.deathday && (
@@ -152,26 +152,26 @@ export default function PersonPresentation({ person, stats }) {
                 )}
               </div>
             )}
-
-            {/* External links */}
-            {externalLinks.length > 0 && (
-              <div className={styles.externalLinks}>
-                {externalLinks.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.externalLink}
-                    title={link.label}
-                    aria-label={link.label}
-                  >
-                    <Icon path={link.icon} size={0.9} />
-                  </a>
-                ))}
-              </div>
-            )}
           </div>
+
+          {/* External links */}
+          {externalLinks.length > 0 && (
+            <div className={styles.actionsBar}>
+              {externalLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.actionLink}
+                  title={link.label}
+                  aria-label={link.label}
+                >
+                  <Icon path={link.icon} size={0.9} />
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
