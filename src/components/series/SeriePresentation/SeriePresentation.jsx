@@ -6,7 +6,6 @@ import Link from "next/link";
 import { formatDate } from "@/lib/utils/date.utils";
 import { useSerieCard } from "@/hooks/useSerieCard";
 import { useTrackedSeries } from "@/context/TrackedSeriesContext";
-import { shouldInvertLogo } from "@/lib/utils/network.utils";
 import SerieCardPopovers from "@/components/series/SerieCard/SerieCardPopovers";
 import SeriePresentationActions from "./SeriePresentationActions";
 import CastCarousel from "../CastCarousel/CastCarousel";
@@ -111,29 +110,6 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
                 ))}
               </div>
             )}
-
-            {serie.networks?.length > 0 && (
-              <div className={styles.networks}>
-                <span className={styles.networkLabel}>Available on:</span>
-                {serie.networks.map((n) =>
-                  n.logo_path ? (
-                    <Image
-                      key={n.id}
-                      src={`https://image.tmdb.org/t/p/w92${n.logo_path}`}
-                      alt={n.name}
-                      width={92}
-                      height={92}
-                      className={shouldInvertLogo(n.id) ? styles.networkLogoInverted : ""}
-                      style={{ height: 24, width: "auto", opacity: 0.8 }}
-                    />
-                  ) : (
-                    <span key={n.id} className={styles.networkLabel}>
-                      {n.name}
-                    </span>
-                  ),
-                )}
-              </div>
-            )}
           </div>
 
           <div className={`card-footer ${styles.footer}`}>
@@ -144,6 +120,7 @@ export default function SeriePresentation({ serie, serieData, ratings, cast = []
               score={score}
               tracked={tracked}
               ratings={ratings}
+              networks={serie.networks}
               confirmPopover={confirmPopover}
               watchlistPopover={watchlistPopover}
               ratingsPopover={ratingsPopover}

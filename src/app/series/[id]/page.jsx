@@ -58,6 +58,7 @@ export default async function SeriesPage({ params }) {
       id: n.id,
       name: n.name,
       logo_path: n.logoPath,
+      homepage: n.homepage,
     })),
     vote_average: seriesDoc.ratings?.tmdb?.score,
     vote_count: seriesDoc.ratings?.tmdb?.voteCount,

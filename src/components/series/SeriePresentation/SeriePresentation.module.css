@@ -143,23 +143,6 @@
   border-top: 1px solid var(--border);
 }
 
-/* ─── Networks ─── */
-.networks {
-  display: flex;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.networkLabel {
-  font-size: 0.75rem;
-  opacity: 0.6;
-}
-
-.networkLogoInverted {
-  filter: brightness(0) invert(1);
-}
-
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
   .presentation {

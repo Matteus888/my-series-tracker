@@ -1,0 +1,4 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["**/*.js", "../src/**/*.js", "../src/**/*.jsx", "migrate-network-homepages.mjs"]
+}

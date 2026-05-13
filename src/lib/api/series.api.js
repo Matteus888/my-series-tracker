@@ -3,7 +3,13 @@ import { User } from "@/models/user.model";
 import { Episode } from "@/models/episode.model";
 import { UserList } from "@/models/userList.model";
 import { EpisodeProgress } from "@/models/episodeProgress.model";
-import { getAllSeasonsWithEpisodes, getSeriesDetails, getSeriesVideos, getSeasonVideos } from "./tmdb.api";
+import {
+  getNetworkDetails,
+  getAllSeasonsWithEpisodes,
+  getSeriesDetails,
+  getSeriesVideos,
+  getSeasonVideos,
+} from "./tmdb.api";
 import { getOmdbRatings } from "./omdb.api";
 import { getTraktRatings } from "./trakt.api";
 import { invalidateSuggestionsCache } from "./suggestions.api";
@@ -42,6 +48,55 @@ const buildCreatedByFromTmdb = (createdBy = []) => {
     name: c.name,
     profilePath: c.profile_path ?? null,
   }));
+};
+
+/**
+ * Enrichit les networks bruts de TMDB avec la homepage du diffuseur.
+ *
+ * Optimisation : si un autre Series document a déjà la homepage pour un network donné,
+ * on la réutilise pour éviter un appel TMDB redondant.
+ *
+ * @param {Array} rawNetworks - networks tels que retournés par getSeriesDetails
+ * @returns {Promise<Array>} networks au format du schéma Mongoose
+ */
+const buildNetworksFromTmdb = async (rawNetworks = []) => {
+  if (rawNetworks.length === 0) return [];
+
+  const ids = rawNetworks.map((n) => n.id);
+
+  // Cherche en base les homepages déjà connues pour ces networks
+  const cached = await Series.aggregate([
+    { $match: { "networks.id": { $in: ids } } },
+    { $unwind: "$networks" },
+    {
+      $match: {
+        "networks.id": { $in: ids },
+        "networks.homepage": { $exists: true, $nin: [null, ""] },
+      },
+    },
+    { $group: { _id: "$networks.id", homepage: { $first: "$networks.homepage" } } },
+  ]);
+
+  const homepageCache = new Map(cached.map((c) => [c._id, c.homepage]));
+
+  // Pour les networks pas encore en cache, fetch TMDB en parallèle
+  return Promise.all(
+    rawNetworks.map(async (n) => {
+      let homepage = homepageCache.get(n.id) ?? null;
+
+      if (!homepage) {
+        const details = await getNetworkDetails(n.id);
+        homepage = details?.homepage?.trim() || null;
+      }
+
+      return {
+        id: n.id,
+        name: n.name,
+        logoPath: n.logo_path ?? null,
+        homepage,
+      };
+    }),
+  );
 };
 
 /**
@@ -84,6 +139,8 @@ export const ensureSeriesInDb = async (SeriesModel, tmdbId) => {
     airDate: season.air_date ? new Date(season.air_date) : null,
   }));
 
+  const networksData = await buildNetworksFromTmdb(seriesDetails.networks);
+
   const updated = await SeriesModel.findOneAndUpdate(
     { tmdbId: numericId },
     {
@@ -102,12 +159,7 @@ export const ensureSeriesInDb = async (SeriesModel, tmdbId) => {
         numberOfSeasons: seriesDetails.number_of_seasons,
         numberOfEpisodes: seriesDetails.number_of_episodes,
         seasons: seasonsData,
-        networks:
-          seriesDetails.networks?.map((n) => ({
-            id: n.id,
-            name: n.name,
-            logoPath: n.logo_path ?? null,
-          })) ?? [],
+        networks: networksData,
         cast: buildCastFromTmdb(seriesDetails.aggregate_credits),
         createdBy: buildCreatedByFromTmdb(seriesDetails.created_by),
         imdbId,

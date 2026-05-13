@@ -133,6 +133,7 @@ const seriesSchema = new mongoose.Schema(
         id: { type: Number },
         name: { type: String, trim: true },
         logoPath: { type: String, trim: true },
+        homepage: { type: String, trim: true },
       },
     ],
     cast: [

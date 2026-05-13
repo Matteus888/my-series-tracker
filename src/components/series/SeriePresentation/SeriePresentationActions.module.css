@@ -44,3 +44,40 @@
 .badgesWrapper::-webkit-scrollbar {
   display: none;
 }
+
+/* Networks – collés à droite de la barre */
+.networks {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.75rem;
+  margin-left: auto;
+  border-left: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.networkLink,
+.networkLinkText {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.8;
+  transition: opacity 0.15s ease;
+  text-decoration: none;
+  color: var(--foreground);
+  font-size: 0.85rem;
+}
+
+.networkLink:hover,
+.networkLinkText:hover {
+  opacity: 1;
+}
+
+.networkLink img {
+  height: 16px;
+  width: auto;
+  display: block;
+}
+
+.networkLogoInverted {
+  filter: brightness(0) invert(1);
+}

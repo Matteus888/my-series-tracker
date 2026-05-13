@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "cross-env NODE_ENV=test jest",
-    "test:watch": "cross-env NODE_ENV=test jest --watch"
+    "test:watch": "cross-env NODE_ENV=test jest --watch",
+    "migrate:networks": "tsx --tsconfig scripts/tsconfig.json scripts/migrate-network-homepages.mjs"
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",

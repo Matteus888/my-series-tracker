@@ -201,3 +201,14 @@ export const getRecommendations = async (tmdbId, page = 1) => {
     return [];
   }
 };
+
+export const getNetworkDetails = async (networkId) => {
+  try {
+    const response = await fetch(`${TMDB_BASE_URL}/network/${networkId}?api_key=${TMDB_API_KEY}`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching network ${networkId} details:`, error);
+    return null;
+  }
+};

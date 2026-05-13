@@ -1,10 +1,12 @@
 "use client";
 
 import styles from "./SeriePresentationActions.module.css";
+import Image from "next/image";
 import Icon from "@mdi/react";
 import { mdiCheck, mdiBookmarkPlusOutline, mdiPlaylistPlus } from "@mdi/js";
 import HeartRating from "@/components/ui/HeartRating/HeartRating";
 import RatingBadges from "../RatingBadges/RatingBadges";
+import { shouldInvertLogo } from "@/lib/utils/network.utils";
 
 export default function SeriePresentationActions({
   isTracked,
@@ -13,6 +15,7 @@ export default function SeriePresentationActions({
   score,
   tracked,
   ratings,
+  networks = [],
   confirmPopover,
   watchlistPopover,
   ratingsPopover,
@@ -21,6 +24,8 @@ export default function SeriePresentationActions({
   onWatchlist,
   onRatings,
 }) {
+  const getNetworkUrl = (n) => n.homepage || `https://www.themoviedb.org/network/${n.id}`;
+
   return (
     <div className={styles.actions}>
       {/* Check */}
@@ -64,6 +69,43 @@ export default function SeriePresentationActions({
       <div className={styles.badgesWrapper}>
         <RatingBadges ratings={ratings} />
       </div>
+
+      {/* Networks – collés à droite */}
+      {networks.length > 0 && (
+        <div className={styles.networks}>
+          {networks.map((n) =>
+            n.logo_path ? (
+              <a
+                key={n.id}
+                href={getNetworkUrl(n)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.networkLink}
+                title={`Watch on ${n.name}`}
+              >
+                <Image
+                  src={`https://image.tmdb.org/t/p/w92${n.logo_path}`}
+                  alt={n.name}
+                  width={92}
+                  height={92}
+                  className={shouldInvertLogo(n.id) ? styles.networkLogoInverted : ""}
+                />
+              </a>
+            ) : (
+              <a
+                key={n.id}
+                href={`https://www.themoviedb.org/network/${n.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.networkLinkText}
+                title={`Watch on ${n.name}`}
+              >
+                {n.name}
+              </a>
+            ),
+          )}
+        </div>
+      )}
     </div>
   );
 }
