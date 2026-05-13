@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { isProtectedRoute, isPublicRoute, isAdminRoute } from "./lib/constants/routes.constants";
+import { isProtectedRoute, isPublicRoute, isAdminRoute, AUTH_ROUTES } from "./lib/constants/routes.constants";
 
 export async function proxy(request) {
   const { pathname } = request.nextUrl;
+  const token = await getToken({ req: request });
+
+  if (AUTH_ROUTES.includes(pathname) && token) {
+    const from = request.nextUrl.searchParams.get("from");
+    return NextResponse.redirect(new URL(from || "/", request.url));
+  }
 
   if (isPublicRoute(pathname)) {
     return NextResponse.next();
@@ -13,7 +19,6 @@ export async function proxy(request) {
     return NextResponse.next();
   }
 
-  const token = await getToken({ req: request });
   if (!token) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("from", pathname);
@@ -28,5 +33,5 @@ export async function proxy(request) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|login|signup|verify-email).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|verify-email).*)"],
 };
