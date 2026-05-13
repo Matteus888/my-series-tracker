@@ -53,6 +53,7 @@
   justify-content: flex-start;
   padding: 2.5rem 1.25rem 1.5rem;
   gap: 1.5rem;
+  border-left: none;
 }
 
 .card.inCarousel .iconWrapper {

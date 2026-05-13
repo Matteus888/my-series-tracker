@@ -138,13 +138,17 @@ export default function SearchPage() {
             )}
           </>
         ) : query ? (
-          <EmptyStateCard icon={mdiMagnify} label="No result found" subtitle="Try another title or keyword" />
+          <div className={styles.empty}>
+            <EmptyStateCard icon={mdiMagnify} label="No result found" subtitle="Try another title or keyword" />
+          </div>
         ) : (
-          <EmptyStateCard
-            icon={mdiMagnify}
-            label="Start your search"
-            subtitle="Type a series title in the search bar"
-          />
+          <div className={styles.empty}>
+            <EmptyStateCard
+              icon={mdiMagnify}
+              label="Start your search"
+              subtitle="Type a series title in the search bar"
+            />
+          </div>
         )}
       </div>
     </div>

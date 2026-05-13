@@ -76,7 +76,14 @@
   padding: 0;
 }
 
-.emptyState {
-  padding: 1rem;
-  max-width: 400px;
+.empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 45px - 4rem);
+}
+
+.empty > * {
+  width: 100%;
+  max-width: 420px;
 }
