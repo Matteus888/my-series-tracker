@@ -35,7 +35,7 @@ function ShowGroup({ group }) {
         </Link>
         <div className={styles.showMeta}>
           <span>
-            {group.episodes.length} ep{group.episodes.length > 1 ? "s" : ""}
+            {group.episodes.length} episode{group.episodes.length > 1 ? "s" : ""}
           </span>
           {roleSummary && (
             <>
@@ -74,7 +74,7 @@ export default function PersonEpisodesByShow({ groups, personName, personTmdbId 
     >
       <div className={styles.groups}>
         {groups.map((group) => (
-          <ShowGroup key={group.tmdbSeriesId} group={group} personName={personName} />
+          <ShowGroup key={group.seriesId} group={group} personName={personName} />
         ))}
       </div>
     </SectionHeader>

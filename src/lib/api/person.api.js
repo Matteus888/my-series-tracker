@@ -122,10 +122,27 @@ export const getPersonFullData = async (personId, userId = null) => {
 
   // ─── Known for : top 10 toutes catégories confondues ──
   const allCredits = [
-    ...cast.map((c) => ({ ...c, _kind: "cast" })),
+    ...cast.map((c) => ({ ...c, _kind: "cast", _department: "Acting" })),
     ...crewByDept.flatMap((d) => d.credits.map((c) => ({ ...c, _kind: "crew", _department: d.department }))),
   ];
-  const knownFor = allCredits.sort((a, b) => scoreKnownFor(b) - scoreKnownFor(a)).slice(0, 10);
+
+  // Déduplique par série : pour chaque série, on garde le crédit du département le plus prioritaire
+  const departmentRank = (dept) => {
+    const idx = PRIORITY_DEPARTMENTS.indexOf(dept);
+    return idx === -1 ? PRIORITY_DEPARTMENTS.length : idx;
+  };
+
+  const bySeriesId = new Map();
+  for (const credit of allCredits) {
+    const existing = bySeriesId.get(credit.tmdbId);
+    if (!existing || departmentRank(credit._department) < departmentRank(existing._department)) {
+      bySeriesId.set(credit.tmdbId, credit);
+    }
+  }
+
+  const knownFor = Array.from(bySeriesId.values())
+    .sort((a, b) => scoreKnownFor(b) - scoreKnownFor(a))
+    .slice(0, 10);
 
   // ─── Filmography par département ──────────────────
   const filmography = sortDepartments([
@@ -168,16 +185,16 @@ export const getPersonFullData = async (personId, userId = null) => {
       seenIds.add(credit.tmdbId);
     }
   }
-  if (heroPosterPaths.length < 8) {
+  if (heroPosterPaths.length < 40) {
     for (const dept of filmography) {
       for (const credit of dept.credits) {
-        if (heroPosterPaths.length >= 16) break;
+        if (heroPosterPaths.length >= 40) break;
         if (credit.posterPath && !seenIds.has(credit.tmdbId)) {
           heroPosterPaths.push(credit.posterPath);
           seenIds.add(credit.tmdbId);
         }
       }
-      if (heroPosterPaths.length >= 16) break;
+      if (heroPosterPaths.length >= 40) break;
     }
   }
 

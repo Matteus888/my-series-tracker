@@ -40,13 +40,15 @@ export default async function PersonPage({ params }) {
   return (
     <div className={styles.container}>
       {/* Hero fixed */}
-      <PersonHeroMosaic posters={heroPosterPaths} blurred={HERO_BLUR} />
+      <PersonHeroMosaic posters={heroPosterPaths} blurred={HERO_BLUR} seed={id} />
 
       {/* Spacer + nom */}
       <div className={styles.heroSpacer} aria-hidden="true">
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>{person.name}</h1>
-          {person.knownForDepartment && <p className={styles.heroSubtitle}>{person.knownForDepartment}</p>}
+          {filmography.length > 0 && (
+            <p className={styles.heroSubtitle}>{filmography.map((d) => d.department).join(" · ")}</p>
+          )}
         </div>
       </div>
 

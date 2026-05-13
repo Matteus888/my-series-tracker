@@ -26,7 +26,15 @@ export default function PersonPresentation({ person, stats }) {
   const isLongBio = bio && bio.length > BIO_TRUNCATE;
   const visibleBio = !bio ? null : isLongBio && !bioExpanded ? bio.slice(0, BIO_TRUNCATE).trimEnd() + "…" : bio;
 
-  const aliases = (person.alsoKnownAs ?? []).slice(0, 3);
+  const isLatinAlias = (str) => {
+    if (!str) return false;
+    const latinChars = str.match(/[A-Za-zÀ-ÖØ-öø-ÿĀ-ſƀ-ɏ]/g) ?? [];
+    const letterChars = str.match(/\p{L}/gu) ?? [];
+    if (letterChars.length === 0) return false;
+    return latinChars.length / letterChars.length >= 0.7;
+  };
+
+  const aliases = (person.alsoKnownAs ?? []).filter(isLatinAlias).slice(0, 3);
 
   const externalLinks = [
     person.externalIds.imdb && {
@@ -84,7 +92,7 @@ export default function PersonPresentation({ person, stats }) {
         <div className={styles.infoWrapper}>
           <div className={styles.info}>
             {/* Métier principal */}
-            {person.knownForDepartment && <div className={styles.department}>{person.knownForDepartment}</div>}
+            {/* {person.knownForDepartment && <div className={styles.department}>{person.knownForDepartment}</div>} */}
 
             {/* Stats */}
             {(stats.totalSeries > 0 || stats.totalEpisodes > 0) && (
