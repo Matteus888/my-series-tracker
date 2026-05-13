@@ -16,6 +16,8 @@ export default function SeriePresentationActions({
   tracked,
   ratings,
   networks = [],
+  tmdbId,
+  imdbId,
   confirmPopover,
   watchlistPopover,
   ratingsPopover,
@@ -67,7 +69,7 @@ export default function SeriePresentationActions({
 
       {/* Badges détaillés par source */}
       <div className={styles.badgesWrapper}>
-        <RatingBadges ratings={ratings} />
+        <RatingBadges ratings={ratings} tmdbId={tmdbId} imdbId={imdbId} />
       </div>
 
       {/* Networks – collés à droite */}

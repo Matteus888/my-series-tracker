@@ -62,6 +62,7 @@ export default async function SeriesPage({ params }) {
     })),
     vote_average: seriesDoc.ratings?.tmdb?.score,
     vote_count: seriesDoc.ratings?.tmdb?.voteCount,
+    imdb_id: seriesDoc.imdbId,
   };
 
   const serieData = {
