@@ -41,14 +41,7 @@ export default function WatchedEpisodeCard({
 
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
-      {!disableTooltip && (
-        <div className="tooltip">
-          {seriesTitle ?? ep.title ?? episodeCode}
-          {ep.watched && watchedTime && (
-            <span className={styles.tooltipMeta}>{showDate ? `${watchedDate} • ${watchedTime}` : watchedTime}</span>
-          )}
-        </div>
-      )}
+      {!disableTooltip && <div className="tooltip">{seriesTitle ?? ep.title ?? episodeCode}</div>}
       <div className={`card ${styles.card} ${!isAired ? styles.notAired : ""}`}>
         {/* Still 16:9 */}
         <Link
@@ -71,6 +64,11 @@ export default function WatchedEpisodeCard({
             </div>
           )}
         </Link>
+
+        {/* Badge date et heure visionnage */}
+        {ep.watched && watchedTime && (
+          <span className={styles.dateBadge}>{showDate ? `${watchedDate} • ${watchedTime}` : watchedTime}</span>
+        )}
 
         {/* Footer */}
         <div className={`card-footer ${styles.footer}`}>

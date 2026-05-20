@@ -27,10 +27,7 @@ export default function ContinueWatchingCard({ item, onCheck }) {
 
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
-      <div className="tooltip">
-        {title}
-        {remainingCount > 0 && <span className={styles.tooltipRemaining}>{remainingCount} left</span>}
-      </div>
+      <div className="tooltip">{title}</div>
       <div className={`card ${styles.card}`}>
         {/* Poster */}
         <div className={styles.imageContainer}>
@@ -50,6 +47,9 @@ export default function ContinueWatchingCard({ item, onCheck }) {
           </Link>
           {/* Bandeau premiere/final */}
           {badge && <div className={`${styles.badge} ${badge.className}`}>{badge.label}</div>}
+
+          {/* Badge épisodes restants */}
+          {remainingCount > 0 && <span className={styles.remainingBadge}>+ {remainingCount}</span>}
 
           {/* Barre de progression */}
           <div className={styles.progressBar}>

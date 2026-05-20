@@ -57,16 +57,16 @@
   opacity: 0.6;
 }
 
-.episodeBadge {
+.dateBadge {
   position: absolute;
-  bottom: 0.4rem;
-  left: 0.4rem;
-  padding: 0.15rem 0.35rem;
-  font-size: 0.7rem;
-  font-weight: 700;
-  line-height: 1;
-  background-color: var(--border);
+  padding: 0.25rem;
+  background: var(--border);
   color: var(--foreground);
+  font-size: 0.65rem;
+  line-height: 1;
+  left: 0.5rem;
+  bottom: calc(0.5rem + 35px);
+  z-index: 2;
 }
 
 .footer {
