@@ -41,7 +41,6 @@ const getTraktEpisodeRating = async (showImdbId, season, episode) => {
 
 (async () => {
   await mongoose.connect(MONGODB_URI);
-  console.log("✓ Connected to MongoDB:", mongoose.connection.db.databaseName);
 
   const SeriesCol = mongoose.connection.collection("series");
   const EpisodesCol = mongoose.connection.collection("episodes");
@@ -50,8 +49,6 @@ const getTraktEpisodeRating = async (showImdbId, season, episode) => {
   const seriesList = await SeriesCol.find({ imdbId: { $ne: null, $exists: true } })
     .project({ _id: 1, imdbId: 1, title: 1 })
     .toArray();
-
-  console.log(`Found ${seriesList.length} series\n`);
 
   // Date d'aujourd'hui pour ne traiter que les épisodes diffusés
   const now = new Date();
@@ -71,11 +68,9 @@ const getTraktEpisodeRating = async (showImdbId, season, episode) => {
       .toArray();
 
     if (episodes.length === 0) {
-      console.log(`  ${series.title}: rien à faire`);
       continue;
     }
 
-    console.log(`\n→ ${series.title} (${episodes.length} épisodes)`);
     let ok = 0;
     let skip = 0;
 
@@ -99,12 +94,10 @@ const getTraktEpisodeRating = async (showImdbId, season, episode) => {
       await new Promise((r) => setTimeout(r, 300)); // throttle Trakt
     }
 
-    console.log(`  ✓ ${ok} avec note, ${skip} sans`);
     totalOk += ok;
     totalSkip += skip;
   }
 
-  console.log(`\n✓ Done. Updated ${totalOk + totalSkip} épisodes (${totalOk} avec note Trakt)`);
   await mongoose.disconnect();
   process.exit(0);
 })().catch((err) => {

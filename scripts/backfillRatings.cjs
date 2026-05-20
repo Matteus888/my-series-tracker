@@ -9,9 +9,6 @@ if (!MONGODB_URI) {
   console.error("✗ MONGODB_URI manquant dans .env.local");
   process.exit(1);
 }
-console.log("OMDB_API_KEY:", OMDB_API_KEY ? "✓ présente" : "✗ manquante");
-console.log("TRAKT_CLIENT_ID:", TRAKT_CLIENT_ID ? "✓ présente" : "✗ manquante");
-
 // --- OMDb ---
 const getOmdbRatings = async (imdbId) => {
   if (!imdbId || !OMDB_API_KEY) return null;
@@ -74,7 +71,6 @@ const getTraktRatings = async (imdbId) => {
 // --- Main ---
 (async () => {
   await mongoose.connect(MONGODB_URI);
-  console.log("✓ Connected to MongoDB:", mongoose.connection.db.databaseName);
 
   // On parle directement à la collection Mongo, sans passer par les modèles Mongoose.
   // Ça évite tous les imports de l'app Next.
@@ -83,8 +79,6 @@ const getTraktRatings = async (imdbId) => {
   const all = await Series.find({ imdbId: { $ne: null, $exists: true } })
     .project({ _id: 1, imdbId: 1, title: 1 })
     .toArray();
-
-  console.log(`Found ${all.length} series with imdbId\n`);
 
   let ok = 0;
   let skip = 0;
@@ -105,24 +99,21 @@ const getTraktRatings = async (imdbId) => {
     }
 
     const sources = [];
-    if (omdb?.imdb) sources.push("IMDB");
+    if (omdb?.imdb) sources.push("IMDb");
     if (omdb?.rottenTomatoes) sources.push("RT");
     if (omdb?.metacritic) sources.push("MC");
     if (trakt) sources.push("Trakt");
 
     if (sources.length === 0) {
-      console.log(`  - ${s.title}: no data`);
       skip++;
     } else {
       await Series.updateOne({ _id: s._id }, { $set: set });
-      console.log(`  ✓ ${s.title}: [${sources.join(", ")}]`);
       ok++;
     }
 
     await new Promise((r) => setTimeout(r, 250)); // throttle léger
   }
 
-  console.log(`\n✓ Done. Updated: ${ok}, skipped: ${skip}`);
   await mongoose.disconnect();
   process.exit(0);
 })().catch((err) => {

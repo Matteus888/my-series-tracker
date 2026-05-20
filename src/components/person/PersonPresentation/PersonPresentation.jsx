@@ -40,7 +40,7 @@ export default function PersonPresentation({ person, stats }) {
     person.externalIds.imdb && {
       href: `https://www.imdb.com/name/${person.externalIds.imdb}/`,
       icon: mdiOpenInNew,
-      label: "IMDB",
+      label: "IMDb",
     },
     person.externalIds.instagram && {
       href: `https://instagram.com/${person.externalIds.instagram}`,

@@ -71,10 +71,8 @@ const resyncSeries = async (series) => {
 
 const main = async () => {
   await dbConnect();
-  console.log("✓ Connected to MongoDB");
 
   const allSeries = await Series.find({}).select("_id tmdbId title releaseTimeOverride").lean();
-  console.log(`✓ Found ${allSeries.length} series to resync\n`);
 
   let success = 0;
   let failed = 0;
@@ -83,7 +81,6 @@ const main = async () => {
     const s = allSeries[i];
     const prefix = `[${i + 1}/${allSeries.length}]`;
     try {
-      console.log(`${prefix} Syncing "${s.title}" (${s.tmdbId})...`);
       await resyncSeries(s);
       success++;
       // Throttle pour ne pas claquer les rate limits TMDB (~50 req/sec max)
@@ -94,7 +91,6 @@ const main = async () => {
     }
   }
 
-  console.log(`\n✓ Done. Success: ${success}, Failed: ${failed}`);
   await mongoose.disconnect();
   process.exit(0);
 };

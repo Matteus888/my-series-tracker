@@ -10,7 +10,7 @@ const SOURCES = [
   },
   {
     key: "imdb",
-    label: "IMDB",
+    label: "IMDb",
     getValue: (r) => (r?.imdb?.score ? `${r.imdb.score.toFixed(1)}/10` : null),
     getUrl: ({ imdbId }) => (imdbId ? `https://www.imdb.com/title/${imdbId}/` : null),
     className: "imdb",
