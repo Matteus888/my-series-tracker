@@ -5,13 +5,12 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { User } from "@/models/user.model";
 import { getUserPublicProfile, getUserStats, getUserProfileAggregations } from "@/lib/api/user.api";
 import { getTrackedSeries, getSeriesProgress } from "@/lib/api/series.api";
-import { getContinueWatching, getRecentlyWatchedFlat } from "@/lib/api/episode.api";
+import { getRecentlyWatchedFlat } from "@/lib/api/episode.api";
 import { APP_NAME } from "@/lib/constants/app.constants";
 import ProfileHero from "@/components/profile/ProfileHero/ProfileHero";
 import ProfilePresentation from "@/components/profile/ProfilePresentation/ProfilePresentation";
 import ProfileRecentlyWatched from "@/components/profile/ProfileRecentlyWatched/ProfileRecentlyWatched";
 import ProfileCurrentlyWatching from "@/components/profile/ProfileCurrentlyWatching/ProfileCurrentlyWatching";
-import ProfileCurrentlyWatchingOwner from "@/components/profile/ProfileCurrentlyWatchingOwner/ProfileCurrentlyWatchingOwner";
 import ProfileFavorites from "@/components/profile/ProfileFavorites/ProfileFavorites";
 import ProfileTrackedSeries from "@/components/profile/ProfileTrackedSeries/ProfileTrackedSeries";
 
@@ -65,12 +64,8 @@ export default async function UserProfilePage({ params }) {
   }
 
   let recentlyWatched = [];
-  let continueWatching = [];
   if (isOwner || profile.publicActivity) {
     recentlyWatched = await getRecentlyWatchedFlat(profile._id);
-    if (!isOwner) {
-      continueWatching = await getContinueWatching(User, profile._id);
-    }
   }
 
   const aggregations = await getUserProfileAggregations(User, profile._id);
@@ -96,11 +91,7 @@ export default async function UserProfilePage({ params }) {
       </div>
 
       <div className={styles.section}>
-        {isOwner ? (
-          <ProfileCurrentlyWatchingOwner username={username} />
-        ) : (
-          <ProfileCurrentlyWatching items={continueWatching} username={username} />
-        )}
+        <ProfileCurrentlyWatching trackedSeries={trackedSeries} progressMap={progressMap} username={username} />
       </div>
 
       <div className={styles.section}>

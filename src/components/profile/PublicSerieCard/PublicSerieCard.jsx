@@ -2,75 +2,74 @@ import styles from "./PublicSerieCard.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "@mdi/react";
-import { mdiHeart, mdiCheckCircle, mdiPauseCircle, mdiCloseCircle, mdiBookmark } from "@mdi/js";
+import { mdiCheck, mdiPause, mdiClose, mdiBookmarkOutline } from "@mdi/js";
+import HeartRating from "@/components/ui/HeartRating/HeartRating";
 
-const STATUS_BADGE = {
-  watching: null, // pas de badge, c'est l'état "neutre"
-  completed: { icon: mdiCheckCircle, label: "Completed", className: "completed" },
-  on_hold: { icon: mdiPauseCircle, label: "On hold", className: "onHold" },
-  dropped: { icon: mdiCloseCircle, label: "Dropped", className: "dropped" },
-  plan_to_watch: { icon: mdiBookmark, label: "Plan to watch", className: "planToWatch" },
+// Indicateur de status — façon "badge coin" reprenant le style du rating.
+// "watching" n'a pas d'indicateur (état neutre).
+const STATUS_INDICATOR = {
+  completed: { icon: mdiCheck, className: "completed", title: "Completed" },
+  on_hold: { icon: mdiPause, className: "onHold", title: "On hold" },
+  dropped: { icon: mdiClose, className: "dropped", title: "Dropped" },
+  plan_to_watch: { icon: mdiBookmarkOutline, className: "planToWatch", title: "Plan to watch" },
 };
 
 export default function PublicSerieCard({ tracked, progress }) {
-  const { series, status, isFavorite, rating } = tracked;
+  const { series, status, rating } = tracked;
   if (!series) return null;
 
   const { tmdbId, title, posterPath } = series;
-  const badge = STATUS_BADGE[status];
+  const indicator = STATUS_INDICATOR[status];
 
   const watched = progress?.watchedCount ?? 0;
   const total = progress?.totalCount ?? series?.numberOfEpisodes ?? 0;
   const percent = total > 0 ? Math.round((watched / total) * 100) : 0;
 
+  // Le rating user est sur 10 → on le convertit en pourcentage pour HeartRating
+  const ratingPercent = rating != null ? rating * 10 : 0;
+
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
       <div className="tooltip">{title}</div>
       <div className={`card ${styles.card}`}>
-        <Link href={`/series/${tmdbId}`} className={styles.imageLink}>
-          {posterPath ? (
-            <Image
-              src={`https://image.tmdb.org/t/p/w342${posterPath}`}
-              alt={title}
-              fill
-              sizes="(max-width: 768px) 45vw, 200px"
-              loading="lazy"
-              className={styles.image}
-            />
-          ) : (
-            <div className={styles.placeholder}>{title}</div>
-          )}
+        <div className={styles.imageContainer}>
+          <Link href={`/series/${tmdbId}`} className={styles.imageLink}>
+            {posterPath ? (
+              <Image
+                src={`https://image.tmdb.org/t/p/w342${posterPath}`}
+                alt={title}
+                fill
+                sizes="(max-width: 768px) 45vw, 200px"
+                loading="lazy"
+                className={styles.image}
+              />
+            ) : (
+              <div className={styles.placeholder}>{title}</div>
+            )}
+          </Link>
 
-          {/* Badge favori */}
-          {isFavorite && (
-            <div className={styles.favoriteBadge} title="Favorite">
-              <Icon path={mdiHeart} size={0.8} />
+          {/* Indicateur de status (coin haut-droite) */}
+          {indicator && (
+            <div className={`${styles.statusIndicator} ${styles[indicator.className]}`} title={indicator.title}>
+              <Icon path={indicator.icon} size={0.7} />
             </div>
           )}
 
-          {/* Badge status (sauf "watching") */}
-          {badge && (
-            <div className={`${styles.statusBadge} ${styles[badge.className]}`} title={badge.label}>
-              <Icon path={badge.icon} size={0.7} />
-              <span>{badge.label}</span>
-            </div>
-          )}
-
-          {/* Rating user */}
+          {/* Rating utilisateur (coin bas-droite) — style HeartRating */}
           {rating != null && (
             <div className={styles.ratingBadge} title={`Rated ${rating}/10`}>
-              <Icon path={mdiHeart} size={0.6} />
-              <span>{rating}</span>
+              <HeartRating percentage={ratingPercent} />
+              <span className={styles.ratingValue}>{rating}</span>
             </div>
           )}
 
-          {/* Barre de progression — seulement pour watching/completed */}
+          {/* Barre de progression — pour watching/completed uniquement */}
           {(status === "watching" || status === "completed") && total > 0 && (
             <div className={styles.progressBar}>
               <div className={styles.progressFill} style={{ width: `${percent}%` }} />
             </div>
           )}
-        </Link>
+        </div>
       </div>
     </div>
   );

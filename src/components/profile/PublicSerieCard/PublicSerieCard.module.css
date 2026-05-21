@@ -1,24 +1,37 @@
 .container {
-  position: relative;
+  flex: 0 0 auto;
   width: 100%;
+  height: 100%;
+  display: flex;
 }
 
 .card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  aspect-ratio: 2 / 3;
-  overflow: hidden;
-  transition: transform 0.2s ease;
+  overflow: visible;
+  border-top: 1px solid var(--border);
 }
 
-.card:hover {
-  transform: scale(1.02);
+.imageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .imageLink {
   position: relative;
-  display: block;
+  display: flex;
   width: 100%;
   height: 100%;
+  transition: transform 0.25s ease;
+}
+
+.card:hover .imageLink {
+  transform: scale(1.04);
 }
 
 .image {
@@ -26,111 +39,83 @@
 }
 
 .placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
+  padding: 0.5rem;
+  font-size: 0.8rem;
   text-align: center;
-  font-weight: 600;
-  background-color: var(--background-third);
+  background: var(--background-third);
   color: var(--foreground);
-  opacity: 0.7;
 }
 
-/* ─── Favori ─── */
-.favoriteBadge {
+/* ─── Indicateur de status (coin haut-droite) ─── */
+.statusIndicator {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 28px;
-  height: 28px;
+  top: 0rem;
+  left: 0rem;
+  z-index: 2;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: var(--red);
-  border-radius: 50%;
+  color: var(--foreground);
+  background-color: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(4px);
-}
-
-/* ─── Status badge ─── */
-.statusBadge {
-  position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem 0.5rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04rem;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-}
-
-.statusBadge span {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .statusBadge span {
-    display: inline;
-  }
 }
 
 .completed {
-  background-color: rgba(75, 181, 67, 0.85);
+  background-color: var(--blue);
 }
 
 .onHold {
-  background-color: rgba(243, 156, 18, 0.85);
+  background-color: var(--yellow);
 }
 
 .dropped {
-  background-color: rgba(192, 57, 43, 0.85);
+  background-color: var(--red);
 }
 
 .planToWatch {
-  background-color: rgba(52, 152, 219, 0.85);
+  background-color: var(--blue);
 }
 
-/* ─── Rating ─── */
+/* ─── Rating utilisateur (coin bas-droite) ─── */
 .ratingBadge {
   position: absolute;
-  bottom: 0.5rem;
-  right: 0.5rem;
+  top: 0rem;
+  right: 0rem;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 0.2rem;
-  padding: 0.2rem 0.4rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.7);
+  padding: 0.15rem 0.25rem;
+  background-color: var(--red);
   backdrop-filter: blur(4px);
 }
 
-.ratingBadge svg {
-  color: var(--red);
+.ratingValue {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--foreground);
 }
 
-/* ─── Progress bar ─── */
+/* ─── Barre de progression (bas, pleine largeur) ─── */
 .progressBar {
   position: absolute;
-  left: 0;
-  right: 0;
   bottom: 0;
-  height: 4px;
-  background-color: rgba(0, 0, 0, 0.5);
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--border);
+  z-index: 1;
 }
 
 .progressFill {
   height: 100%;
-  background-color: var(--blue);
+  background: var(--blue);
   transition: width 0.3s ease;
 }

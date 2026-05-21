@@ -1,29 +1,30 @@
 "use client";
 
-import styles from "./ProfileCurrentlyWatching.module.css";
+import styles from "../ProfileCarousel.module.css";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
-import PublicContinueWatchingCard from "@/components/profile/PublicContinueWatchingCard/PublicContinueWatchingCard";
+import PublicSerieCard from "@/components/profile/PublicSerieCard/PublicSerieCard";
 
-export default function ProfileCurrentlyWatching({ items, username }) {
+export default function ProfileCurrentlyWatching({ trackedSeries, progressMap, username }) {
   const { scrollerRef, canScrollLeft, canScrollRight, scrollBy } = useCarouselArrows();
 
-  if (!items || items.length === 0) return null;
+  const watching = (trackedSeries ?? []).filter((t) => t.status === "watching");
+  if (watching.length === 0) return null;
 
   return (
     <SectionHeader
       title="Currently watching"
-      subtitle={`${items.length} series`}
+      subtitle={`${watching.length} series`}
       storageKey={`profile-${username}-watching-open`}
       defaultOpen
     >
       <div className={styles.carouselContainer}>
         <CarouselArrows canScrollLeft={canScrollLeft} canScrollRight={canScrollRight} onScroll={scrollBy} />
         <div className={styles.track} ref={scrollerRef}>
-          {items.map((item) => (
-            <div key={item.seriesId} className={styles.cardSlot}>
-              <PublicContinueWatchingCard item={item} />
+          {watching.map((t) => (
+            <div key={t.tmdbId} className={styles.cardSlot}>
+              <PublicSerieCard tracked={t} progress={progressMap[String(t.tmdbId)]} />
             </div>
           ))}
         </div>

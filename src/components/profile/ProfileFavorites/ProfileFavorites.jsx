@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./ProfileFavorites.module.css";
+import styles from "../ProfileCarousel.module.css";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";

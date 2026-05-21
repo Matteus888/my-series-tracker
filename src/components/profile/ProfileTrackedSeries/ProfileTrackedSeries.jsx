@@ -40,7 +40,6 @@ export default function ProfileTrackedSeries({ trackedSeries, progressMap, usern
       storageKey={`profile-${username}-tracked-open`}
       defaultOpen
     >
-      {/* Tabs */}
       <div className={styles.tabs}>
         {TABS.map((tab) => (
           <button
@@ -55,7 +54,6 @@ export default function ProfileTrackedSeries({ trackedSeries, progressMap, usern
         ))}
       </div>
 
-      {/* Grid */}
       {filtered.length > 0 ? (
         <div className={styles.grid}>
           {filtered.map((t) => (

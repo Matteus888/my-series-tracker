@@ -26,8 +26,5 @@
 
 .cardSlot {
   flex: 0 0 auto;
-}
-
-.cardSlot:last-child :global(.card) {
-  border-right: none;
+  width: 175px;
 }
