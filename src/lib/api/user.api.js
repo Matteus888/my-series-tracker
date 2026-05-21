@@ -152,3 +152,133 @@ export const getUserStats = async (UserModel, userId) => {
     totalMinutes,
   };
 };
+
+/**
+ * Récupère le profil public d'un user par son username.
+ * Retourne les champs publics + les flags de privacy.
+ * Throw "User not found" si pas trouvé.
+ * Throw "Private profile" si isPublic=false et viewer != owner.
+ */
+export const getUserPublicProfile = async (UserModel, username, viewerUserId = null) => {
+  await dbConnect();
+
+  const user = await UserModel.findOne({ username })
+    .select(
+      "username firstname lastname profilePicture bio birthDate gender isPublic publicLists publicActivity createdAt",
+    )
+    .lean();
+
+  if (!user) throw new Error("User not found.");
+
+  const isOwner = viewerUserId && user._id.toString() === viewerUserId.toString();
+
+  if (!user.isPublic && !isOwner) {
+    throw new Error("Private profile.");
+  }
+
+  return {
+    _id: user._id.toString(),
+    username: user.username,
+    firstname: user.firstname ?? null,
+    lastname: user.lastname ?? null,
+    profilePicture: user.profilePicture ?? null,
+    bio: user.bio ?? null,
+    birthDate: user.birthDate ? user.birthDate.toISOString() : null,
+    gender: user.gender ?? null,
+    isPublic: user.isPublic ?? false,
+    publicLists: user.publicLists ?? false,
+    publicActivity: user.publicActivity ?? false,
+    createdAt: user.createdAt ? user.createdAt.toISOString() : null,
+    isOwner,
+  };
+};
+
+/**
+ * Calcule les agrégations stats visuelles d'un user :
+ * - top genres (avec count)
+ * - top networks (avec count + logoPath)
+ * - décennies (avec count)
+ * - heatmap : map { "YYYY-MM-DD": episodeCount } sur les 365 derniers jours
+ */
+export const getUserProfileAggregations = async (UserModel, userId) => {
+  await dbConnect();
+
+  const user = await UserModel.findById(userId)
+    .select("trackedSeries")
+    .populate({
+      path: "trackedSeries.seriesId",
+      model: "Series",
+      select: "genres networks firstAirDate",
+    })
+    .lean();
+
+  if (!user) throw new Error("User not found.");
+
+  // ─── Genres ───
+  const genreCount = new Map();
+  for (const t of user.trackedSeries) {
+    const genres = t.seriesId?.genres ?? [];
+    for (const g of genres) {
+      genreCount.set(g, (genreCount.get(g) ?? 0) + 1);
+    }
+  }
+  const topGenres = [...genreCount.entries()]
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+
+  // ─── Networks ───
+  const networkMap = new Map(); // id → { id, name, logoPath, count }
+  for (const t of user.trackedSeries) {
+    const networks = t.seriesId?.networks ?? [];
+    for (const n of networks) {
+      if (!n.id) continue;
+      const existing = networkMap.get(n.id);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        networkMap.set(n.id, {
+          id: n.id,
+          name: n.name,
+          logoPath: n.logoPath ?? null,
+          count: 1,
+        });
+      }
+    }
+  }
+  const topNetworks = [...networkMap.values()].sort((a, b) => b.count - a.count).slice(0, 5);
+
+  // ─── Décennies ───
+  const decadeCount = new Map();
+  for (const t of user.trackedSeries) {
+    const firstAir = t.seriesId?.firstAirDate;
+    if (!firstAir) continue;
+    const year = new Date(firstAir).getFullYear();
+    const decade = Math.floor(year / 10) * 10;
+    decadeCount.set(decade, (decadeCount.get(decade) ?? 0) + 1);
+  }
+  const decades = [...decadeCount.entries()]
+    .map(([decade, count]) => ({ decade, count }))
+    .sort((a, b) => a.decade - b.decade);
+
+  // ─── Heatmap (365 derniers jours) ───
+  const oneYearAgo = new Date();
+  oneYearAgo.setDate(oneYearAgo.getDate() - 365);
+
+  const progressList = await EpisodeProgress.find({
+    userId,
+    watched: true,
+    watchedAt: { $gte: oneYearAgo },
+  })
+    .select("watchedAt")
+    .lean();
+
+  const heatmap = {};
+  for (const p of progressList) {
+    if (!p.watchedAt) continue;
+    const key = p.watchedAt.toISOString().slice(0, 10);
+    heatmap[key] = (heatmap[key] ?? 0) + 1;
+  }
+
+  return { topGenres, topNetworks, decades, heatmap };
+};

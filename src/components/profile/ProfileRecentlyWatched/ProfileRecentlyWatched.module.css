@@ -1,0 +1,36 @@
+.carouselContainer {
+  position: relative;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+
+.track {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  scrollbar-gutter: stable;
+  align-items: flex-start;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.track > * {
+  scroll-snap-align: start;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.cardSlot {
+  flex: 0 0 auto;
+  width: 250px;
+}
+
+.cardSlot:last-child :global(.card) {
+  border-right: none;
+}

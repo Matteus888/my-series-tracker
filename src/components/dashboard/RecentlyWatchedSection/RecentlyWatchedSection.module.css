@@ -32,7 +32,7 @@
 }
 
 .carousel::-webkit-scrollbar {
-  height: 4px;
+  display: none;
 }
 .carousel::-webkit-scrollbar-track {
   background: transparent;

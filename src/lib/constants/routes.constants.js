@@ -1,5 +1,4 @@
 export const PROTECTED_ROUTES = [
-  "/profile",
   "/watching",
   "/dashboard",
   "/favorites",
@@ -10,7 +9,7 @@ export const PROTECTED_ROUTES = [
   "/admin",
 ];
 
-export const PUBLIC_ROUTES = ["/login", "/signup", "/verify-email", "/series"];
+export const PUBLIC_ROUTES = ["/login", "/signup", "/verify-email", "/series", "/users"];
 
 export const ADMIN_ROUTES = ["/admin"];
 
@@ -18,6 +17,6 @@ export const AUTH_ROUTES = ["/login", "/signup"];
 
 export const isProtectedRoute = (pathname) => PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
 
-export const isPublicRoute = (pathname) => PUBLIC_ROUTES.includes(pathname);
+export const isPublicRoute = (pathname) => PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
 
 export const isAdminRoute = (pathname) => ADMIN_ROUTES.some((route) => pathname.startsWith(route));

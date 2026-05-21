@@ -1,0 +1,216 @@
+.presentation {
+  position: relative;
+  margin: 2rem auto 0.5rem;
+  max-width: 1400px;
+  width: 100%;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.topRow {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* ─── Avatar ─── */
+.avatarWrapper {
+  flex: 0 0 220px;
+  position: relative;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  font-weight: 700;
+  color: var(--foreground);
+  background-color: var(--background-secondary);
+  opacity: 0.6;
+}
+
+/* ─── Bloc infos ─── */
+.infoWrapper {
+  border: 1px solid var(--border);
+  flex: 1;
+  min-width: 0;
+  background-color: var(--background-secondary);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.info {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ─── Header : username + edit ─── */
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.username {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--foreground);
+  line-height: 1.2;
+}
+
+.fullName {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.65;
+  color: var(--foreground);
+}
+
+.editButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  font-size: 0.85rem;
+  text-decoration: none;
+  background-color: transparent;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.editButton:hover {
+  background-color: var(--background);
+}
+
+/* ─── Stats row ─── */
+.statsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--foreground);
+  opacity: 0.85;
+}
+
+.statItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.statItem::after {
+  content: "•";
+  margin-left: 1rem;
+  opacity: 0.5;
+}
+
+.statItem:last-child::after {
+  content: "";
+  margin-left: 0;
+}
+
+.statItem strong {
+  font-weight: 700;
+  opacity: 1;
+}
+
+/* ─── Bio info ─── */
+.bioInfoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--foreground);
+  opacity: 0.85;
+}
+
+.bioInfoLine {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ageSuffix {
+  opacity: 0.7;
+}
+
+/* ─── Biography ─── */
+.biography {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--foreground);
+  opacity: 0.9;
+}
+
+.biography p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .presentation {
+    padding: 0 1rem;
+    margin-top: 1rem;
+  }
+
+  .topRow {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .avatarWrapper {
+    flex: 0 0 auto;
+    width: 160px;
+  }
+
+  .info {
+    padding: 1rem;
+  }
+
+  .username {
+    font-size: 1.4rem;
+  }
+
+  .headerRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .editButton {
+    justify-content: center;
+  }
+}

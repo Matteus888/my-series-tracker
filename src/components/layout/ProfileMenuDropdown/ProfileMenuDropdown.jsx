@@ -9,17 +9,6 @@ import { useState } from "react";
 import { useToast } from "@/context/ToastContext";
 import { isProtectedRoute } from "@/lib/constants/routes.constants";
 
-const protectedRoutes = [
-  "/profile",
-  "/watching",
-  "/dashboard",
-  "/favorites",
-  "/settings",
-  "/lists",
-  "/history",
-  "/calendar",
-];
-
 export default function ProfileMenuDropdown({ session, popoverRef, onClose, onLoginClick }) {
   const [showConfirmSignOut, setShowConfirmSignOut] = useState(false);
   const { showToast } = useToast();

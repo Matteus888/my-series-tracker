@@ -1,0 +1,131 @@
+.container {
+  flex: 0 0 auto;
+  width: var(--card-width, 100%);
+  min-width: var(--card-width);
+  height: 100%;
+  display: flex;
+}
+
+.card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: visible;
+  border-top: 1px solid var(--border);
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.imageLink {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.25s ease;
+}
+
+.card:hover .imageLink {
+  transform: scale(1.04);
+}
+
+.image {
+  object-fit: cover;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  text-align: center;
+  background: var(--background-third);
+  color: var(--foreground);
+}
+
+.remainingBadge {
+  position: absolute;
+  padding: 0.25rem;
+  background: var(--border);
+  color: var(--foreground);
+  font-size: 0.75rem;
+  line-height: 1;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  z-index: 2;
+}
+
+.progressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--border);
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--blue);
+  transition: width 0.3s ease;
+}
+
+.footer {
+  height: 40px;
+  min-width: 100%;
+  padding: 0 0.4 0 0rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 0.25rem;
+  overflow: hidden;
+}
+
+.episodeInfo {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+.content {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.2rem;
+}
+
+.title {
+  color: var(--foreground);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
+}
+
+.epCode {
+  font-size: 0.65rem;
+  opacity: 0.5;
+  letter-spacing: 0.05rem;
+}
+
+.episodeLabelFallback {
+  font-size: 0.6rem;
+  color: var(--foreground);
+  opacity: 0.4;
+}
