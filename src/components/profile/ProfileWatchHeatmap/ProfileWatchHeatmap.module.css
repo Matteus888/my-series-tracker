@@ -1,0 +1,121 @@
+.wrapper {
+  position: relative;
+}
+
+.scrollArea {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 0.5rem;
+}
+
+/* ─── Mois ─── */
+.monthRow {
+  display: flex;
+  gap: 3px;
+  margin-left: 32px;
+  margin-bottom: 4px;
+}
+
+.monthCell {
+  width: 12px;
+  font-size: 0.65rem;
+  color: var(--foreground);
+  opacity: 0.6;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ─── Grille principale ─── */
+.gridArea {
+  display: flex;
+  gap: 4px;
+}
+
+.weekdayCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.weekdayCell {
+  height: 12px;
+  font-size: 0.6rem;
+  color: var(--foreground);
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+}
+
+.grid {
+  display: flex;
+  gap: 3px;
+}
+
+.weekCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* ─── Niveaux d'intensité ─── */
+.level0 {
+  background-color: var(--background-third);
+}
+
+.level1 {
+  background-color: rgba(0, 130, 206, 0.35);
+}
+
+.level2 {
+  background-color: rgba(0, 130, 206, 0.55);
+}
+
+.level3 {
+  background-color: rgba(0, 130, 206, 0.75);
+}
+
+.level4 {
+  background-color: rgba(0, 130, 206, 1);
+}
+
+/* ─── Légende ─── */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 0.75rem;
+  margin-left: 32px;
+}
+
+.legendLabel {
+  font-size: 0.7rem;
+  color: var(--foreground);
+  opacity: 0.6;
+  margin: 0 0.3rem;
+}
+
+/* ─── Tooltip ─── */
+.tooltip {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  margin-top: -6px;
+  background-color: var(--background-primary);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: var(--z-tooltip, 100);
+  border-radius: 4px;
+}

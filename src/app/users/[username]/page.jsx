@@ -13,6 +13,8 @@ import ProfileRecentlyWatched from "@/components/profile/ProfileRecentlyWatched/
 import ProfileCurrentlyWatching from "@/components/profile/ProfileCurrentlyWatching/ProfileCurrentlyWatching";
 import ProfileFavorites from "@/components/profile/ProfileFavorites/ProfileFavorites";
 import ProfileTrackedSeries from "@/components/profile/ProfileTrackedSeries/ProfileTrackedSeries";
+import ProfileStats from "@/components/profile/ProfileStats/ProfileStats";
+import ProfileWatchHeatmap from "@/components/profile/ProfileWatchHeatmap/ProfileWatchHeatmap";
 
 export async function generateMetadata({ params }) {
   const { username } = await params;
@@ -96,6 +98,14 @@ export default async function UserProfilePage({ params }) {
 
       <div className={styles.section}>
         <ProfileFavorites trackedSeries={trackedSeries} progressMap={progressMap} username={username} />
+      </div>
+
+      <div className={styles.section}>
+        <ProfileStats aggregations={aggregations} username={username} />
+      </div>
+
+      <div className={styles.section}>
+        <ProfileWatchHeatmap heatmap={aggregations.heatmap} username={username} />
       </div>
 
       <div className={styles.section}>
