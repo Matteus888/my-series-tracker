@@ -9,6 +9,7 @@ import {
   mdiPlayCircleOutline,
   mdiClockOutline,
 } from "@mdi/js";
+import { formatLongDuration } from "@/lib/utils/duration.utils";
 import styles from "./ProfilePresentation.module.css";
 
 const formatDate = (isoStr) => {
@@ -25,13 +26,6 @@ const computeAge = (isoStr) => {
   const birth = new Date(isoStr);
   const diff = Date.now() - birth.getTime();
   return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
-};
-
-const formatHours = (minutes) => {
-  if (!minutes) return "0h";
-  const hours = Math.round(minutes / 60);
-  if (hours < 1000) return `${hours}h`;
-  return `${(hours / 1000).toFixed(1)}k h`;
 };
 
 export default function ProfilePresentation({ profile, stats }) {
@@ -66,7 +60,6 @@ export default function ProfilePresentation({ profile, stats }) {
               {isOwner && (
                 <Link href="/settings" className={styles.editButton}>
                   <Icon path={mdiPencil} size={0.8} />
-                  <span>Edit profile</span>
                 </Link>
               )}
             </div>
@@ -83,7 +76,7 @@ export default function ProfilePresentation({ profile, stats }) {
               </span>
               <span className={styles.statItem}>
                 <Icon path={mdiClockOutline} size={0.8} />
-                <strong>{formatHours(stats.totalMinutes)}</strong> watched
+                <strong>{formatLongDuration(stats.totalMinutes) ?? "0min"}</strong> watched
               </span>
             </div>
 

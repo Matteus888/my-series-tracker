@@ -99,18 +99,23 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.5rem 0.9rem;
-  border: 1px solid var(--border);
+  padding: 0.5rem;
+  border: 1px solid var(--foreground);
   color: var(--foreground);
   font-size: 0.85rem;
   text-decoration: none;
-  background-color: transparent;
-  transition: background-color 0.2s;
+  background-color: var(--background-primary);
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
 .editButton:hover {
-  background-color: var(--background);
+  background-color: var(--foreground);
+  color: var(--background-secondary);
+}
+
+.editButton:active svg {
+  transform: scale(0.9);
 }
 
 /* ─── Stats row ─── */

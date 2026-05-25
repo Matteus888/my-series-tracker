@@ -10,7 +10,7 @@ import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import { mdiPlaylistPlus, mdiTelevision, mdiMagnify } from "@mdi/js";
 
-const FILL_THRESHOLD = 4;
+const FILL_THRESHOLD = 5;
 
 export default function StartWatchingSection({ initialSkeletonCount = 0 }) {
   const { items, loading, error, checkFirstEpisode, checkingId } = useStartWatching();
