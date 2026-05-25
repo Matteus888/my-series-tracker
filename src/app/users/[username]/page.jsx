@@ -15,6 +15,8 @@ import ProfileFavorites from "@/components/profile/ProfileFavorites/ProfileFavor
 import ProfileTrackedSeries from "@/components/profile/ProfileTrackedSeries/ProfileTrackedSeries";
 import ProfileStats from "@/components/profile/ProfileStats/ProfileStats";
 import ProfileWatchHeatmap from "@/components/profile/ProfileWatchHeatmap/ProfileWatchHeatmap";
+import ProfileEmptyState from "@/components/profile/ProfileEmptyState/ProfileEmptyState";
+import { mdiTelevisionOff, mdiLock } from "@mdi/js";
 
 export async function generateMetadata({ params }) {
   const { username } = await params;
@@ -82,35 +84,83 @@ export default async function UserProfilePage({ params }) {
     heroPosters.push(...fallback.slice(0, 12 - heroPosters.length));
   }
 
+  // Le visiteur peut-il voir les listes/activité ? (owner ou flags publics)
+  const canSeeLists = isOwner || profile.publicLists;
+  const canSeeActivity = isOwner || profile.publicActivity;
+
+  // Niveau 1 : profil totalement vide (autorisé à voir, mais rien à montrer)
+  const isEmptyProfile = canSeeLists && trackedSeries.length === 0;
+
+  // Niveau 2 : tout est masqué par les privacy settings (pas owner, listes + activité privées)
+  const isFullyPrivate = !isOwner && !profile.publicLists && !profile.publicActivity;
+
   return (
     <div className={styles.container}>
       <ProfileHero posterPaths={heroPosters} />
 
       <ProfilePresentation profile={profile} stats={stats} />
 
-      <div className={styles.section}>
-        <ProfileRecentlyWatched episodes={recentlyWatched} username={username} />
-      </div>
+      {/* ─── Niveau 2 : profil entièrement privé ─── */}
+      {isFullyPrivate && (
+        <div className={styles.section}>
+          <ProfileEmptyState
+            icon={mdiLock}
+            title="Private activity"
+            text={`@${username} keeps their lists and activity private.`}
+          />
+        </div>
+      )}
 
-      <div className={styles.section}>
-        <ProfileCurrentlyWatching trackedSeries={trackedSeries} progressMap={progressMap} username={username} />
-      </div>
+      {/* ─── Niveau 1 : profil vide (autorisé mais rien trackée) ─── */}
+      {isEmptyProfile && (
+        <div className={styles.section}>
+          <ProfileEmptyState
+            icon={mdiTelevisionOff}
+            title={isOwner ? "No series yet" : "Nothing tracked yet"}
+            text={
+              isOwner
+                ? "You haven't started tracking any series. Explore the catalog to get going."
+                : `@${username} hasn't started tracking any series yet.`
+            }
+            action={isOwner ? { href: "/series", label: "Explore series" } : null}
+          />
+        </div>
+      )}
 
-      <div className={styles.section}>
-        <ProfileFavorites trackedSeries={trackedSeries} progressMap={progressMap} username={username} />
-      </div>
-
+      {/* Stats agrégées : toujours visibles si profil public */}
       <div className={styles.section}>
         <ProfileStats aggregations={aggregations} username={username} />
       </div>
 
-      <div className={styles.section}>
-        <ProfileWatchHeatmap heatmap={aggregations.heatmap} username={username} />
-      </div>
+      {/* Heatmap : soumise à publicActivity */}
+      {canSeeActivity && (
+        <div className={styles.section}>
+          <ProfileWatchHeatmap heatmap={aggregations.heatmap} username={username} />
+        </div>
+      )}
 
-      <div className={styles.section}>
-        <ProfileTrackedSeries trackedSeries={trackedSeries} progressMap={progressMap} username={username} />
-      </div>
+      {/* ─── Sections normales ─── */}
+      {canSeeActivity && (
+        <div className={styles.section}>
+          <ProfileRecentlyWatched episodes={recentlyWatched} username={username} />
+        </div>
+      )}
+
+      {canSeeLists && (
+        <>
+          <div className={styles.section}>
+            <ProfileCurrentlyWatching trackedSeries={trackedSeries} progressMap={progressMap} username={username} />
+          </div>
+
+          <div className={styles.section}>
+            <ProfileFavorites trackedSeries={trackedSeries} progressMap={progressMap} username={username} />
+          </div>
+
+          <div className={styles.section}>
+            <ProfileTrackedSeries trackedSeries={trackedSeries} progressMap={progressMap} username={username} />
+          </div>
+        </>
+      )}
     </div>
   );
 }
