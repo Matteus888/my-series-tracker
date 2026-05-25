@@ -2,7 +2,7 @@
 
 import styles from "./ProfileMenuDropdown.module.css";
 import Icon from "@mdi/react";
-import { mdiLogin, mdiLogout, mdiAccountPlus, mdiCog, mdiCheck, mdiCancel } from "@mdi/js";
+import { mdiLogin, mdiLogout, mdiAccountPlus, mdiCog, mdiCheck, mdiCancel, mdiAccountBoxOutline } from "@mdi/js";
 import { signOut } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
@@ -37,6 +37,11 @@ export default function ProfileMenuDropdown({ session, popoverRef, onClose, onLo
     router.push("/settings");
   };
 
+  const handleProfile = () => {
+    onClose();
+    router.push(`/users/${session.user.name}`);
+  };
+
   return (
     <div className={styles.menu} ref={popoverRef}>
       {session ? (
@@ -46,6 +51,10 @@ export default function ProfileMenuDropdown({ session, popoverRef, onClose, onLo
             <span className={styles.email}>{session.user.email}</span>
           </div>
           <div className={styles.divider} />
+          <button className={styles.menuItem} onClick={handleProfile}>
+            <Icon path={mdiAccountBoxOutline} size={0.7} />
+            <span className={styles.menuItemText}>Profile</span>
+          </button>
           <button className={styles.menuItem} onClick={handleSettings}>
             <Icon path={mdiCog} size={0.7} />
             <span className={styles.menuItemText}>Settings</span>
