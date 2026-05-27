@@ -36,7 +36,7 @@ export function useSerieCard(serie, onCheckExternal, externalRatings = null) {
     });
   };
 
-  const handleConfirm = (confirm) => {
+  const handleConfirm = (confirm, watchedAt = null) => {
     if (isTracked) {
       if (isDropped) {
         if (confirm === "resume") markWatching();
@@ -47,7 +47,7 @@ export function useSerieCard(serie, onCheckExternal, externalRatings = null) {
       }
     } else {
       if (confirm === "first") toggle({ markFirstWatched: true, status: "watching" });
-      if (confirm === "all") toggle({ markAllWatched: true, status: "completed" });
+      if (confirm === "all") toggle({ markAllWatched: true, status: "completed", watchedAt });
     }
     confirmPopover.close();
   };

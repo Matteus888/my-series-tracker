@@ -19,6 +19,7 @@ export default function SerieCardPopovers({
       {confirmPopover.isOpen && (
         <ConfirmPopover
           serieName={serie.name}
+          firstAirDate={serie.first_air_date}
           isTracked={isTracked}
           isDropped={isDropped}
           onConfirm={onConfirm}

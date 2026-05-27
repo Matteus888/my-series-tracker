@@ -229,13 +229,19 @@ export const addTrackedSeries = async (UserModel, SeriesModel, userId, tmdbId, s
   // 4. markAllWatched
   if (options.markAllWatched) {
     const now = new Date();
+
+    // Date de visionnage choisie par l'utilisateur (ISO string) ou maintenant.
+    // Clamp anti-date-future par sécurité (le front borne déjà, mais on se protège).
+    const chosen = options.watchedAt ? new Date(options.watchedAt) : now;
+    const watchedAt = isNaN(chosen.getTime()) || chosen > now ? now : chosen;
+
     const progressDocs = episodes
       .filter((ep) => ep.airDate && ep.airDate <= now)
       .map((ep) => ({
         userId,
         episodeId: ep._id,
         watched: true,
-        watchedAt: new Date(),
+        watchedAt,
       }));
 
     if (progressDocs.length > 0) {
