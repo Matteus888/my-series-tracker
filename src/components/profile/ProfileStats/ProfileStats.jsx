@@ -56,13 +56,16 @@ export default function ProfileStats({ aggregations, username }) {
                 <div key={n.id} className={styles.networkRow}>
                   <div className={styles.networkLogo}>
                     {n.logoPath ? (
-                      <Image
-                        src={`https://image.tmdb.org/t/p/w92${n.logoPath}`}
-                        alt={n.name}
-                        width={50}
-                        height={25}
-                        className={styles.networkLogoImg}
-                      />
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={`https://image.tmdb.org/t/p/w92${n.logoPath}`}
+                          alt={n.name}
+                          width={50}
+                          height={25}
+                          className={styles.networkLogoImg}
+                        />
+                      </>
                     ) : (
                       <span className={styles.networkName}>{n.name}</span>
                     )}
