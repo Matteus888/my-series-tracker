@@ -91,32 +91,38 @@ export default async function SeriesPage({ params }) {
     profilePath: c.profilePath,
   }));
 
-  // Fallback TMDB si la base n'a pas (encore) cast ou createdBy
-  if (cast.length === 0 || createdBy.length === 0) {
-    const tmdbSerie = await getSeriesDetails(id);
-    if (tmdbSerie) {
-      if (cast.length === 0 && tmdbSerie.aggregate_credits?.cast?.length > 0) {
-        cast = tmdbSerie.aggregate_credits.cast
-          .sort((a, b) => (b.total_episode_count ?? 0) - (a.total_episode_count ?? 0))
-          .slice(0, 20)
-          .map((c) => ({
-            tmdbId: c.id,
-            name: c.name,
-            character:
-              (c.roles ?? [])
-                .map((r) => r.character)
-                .filter(Boolean)
-                .join(" / ") || null,
-            profilePath: c.profile_path ?? null,
-          }));
-      }
-      if (createdBy.length === 0 && tmdbSerie.created_by?.length > 0) {
-        createdBy = tmdbSerie.created_by.map((c) => ({
+  let logoPath = null;
+
+  // Un seul appel TMDB : pour le logo, et en fallback pour cast/createdBy
+  const tmdbSerie = await getSeriesDetails(id);
+  if (tmdbSerie) {
+    const logos = tmdbSerie.images?.logos ?? [];
+    if (logos.length > 0) {
+      const preferred = logos.find((l) => l.iso_639_1 === "en") ?? logos[0];
+      logoPath = preferred?.file_path ?? null;
+    }
+
+    if (cast.length === 0 && tmdbSerie.aggregate_credits?.cast?.length > 0) {
+      cast = tmdbSerie.aggregate_credits.cast
+        .sort((a, b) => (b.total_episode_count ?? 0) - (a.total_episode_count ?? 0))
+        .slice(0, 20)
+        .map((c) => ({
           tmdbId: c.id,
           name: c.name,
+          character:
+            (c.roles ?? [])
+              .map((r) => r.character)
+              .filter(Boolean)
+              .join(" / ") || null,
           profilePath: c.profile_path ?? null,
         }));
-      }
+    }
+    if (createdBy.length === 0 && tmdbSerie.created_by?.length > 0) {
+      createdBy = tmdbSerie.created_by.map((c) => ({
+        tmdbId: c.id,
+        name: c.name,
+        profilePath: c.profile_path ?? null,
+      }));
     }
   }
 
@@ -171,7 +177,20 @@ export default async function SeriesPage({ params }) {
 
       <div className={styles.heroSpacer} aria-hidden="true">
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>{serie.name}</h1>
+          <h1 className={styles.heroTitle}>
+            {logoPath ? (
+              <Image
+                src={`https://image.tmdb.org/t/p/w300${logoPath}`}
+                alt={`${serie.name} logo`}
+                width={300}
+                height={150}
+                className={styles.heroLogo}
+                priority
+              />
+            ) : (
+              <span>{serie.name}</span>
+            )}
+          </h1>
           {serie.tagline && <p className={styles.heroTagline}>{serie.tagline}</p>}
         </div>
       </div>

@@ -57,6 +57,20 @@
   line-height: 1.1;
   margin-bottom: 0.5rem;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.heroLogo {
+  height: 100px; /* hauteur cible */
+  width: auto;
+  max-width: 280px; /* empêche les logos très larges de déborder */
+  max-height: 150px; /* garde-fou */
+  min-height: 50px; /* évite les logos trop petits */
+  object-fit: contain;
+  object-position: left center;
 }
 
 .heroTagline {
