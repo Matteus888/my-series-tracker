@@ -2,10 +2,11 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 
-export const usePopover = () => {
+export const usePopover = (externalRef = null) => {
   const [isOpen, setIsOpen] = useState(false);
   const justClosedRef = useRef(false);
-  const popoverRef = useRef(null);
+  const internalRef = useRef(null);
+  const popoverRef = externalRef ?? internalRef;
 
   const close = useCallback(() => {
     justClosedRef.current = true;
@@ -49,7 +50,7 @@ export const usePopover = () => {
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen, close]);
+  }, [isOpen, close, popoverRef]);
 
   return { isOpen, open, close, toggle, popoverRef };
 };

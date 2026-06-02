@@ -9,7 +9,7 @@ export function useContinueWatching() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { trackedSeries, incrementWatched, watchedCount } = useTrackedSeries();
+  const { trackedSeries, incrementWatched, watchedCount, updateSeries } = useTrackedSeries();
   const { showToast } = useToast();
 
   // Préserve l'ordre visuel courant lors d'un refresh (ex: après un check)
@@ -107,5 +107,22 @@ export function useContinueWatching() {
     [items, incrementWatched, applyPreservedOrder, showToast],
   );
 
-  return { items, loading, error, checkEpisode };
+  const dropSeries = useCallback(
+    (seriesId) => {
+      const previous = items;
+      // Optimistic UI : la série disparaît immédiatement
+      setItems((current) => current.filter((item) => item.seriesId !== seriesId));
+
+      try {
+        // updateSeries gère le toast "Marked as dropped" et le refetch
+        updateSeries(seriesId, { status: "dropped" });
+      } catch (err) {
+        setItems(previous);
+        setError(err.message);
+      }
+    },
+    [items, updateSeries],
+  );
+
+  return { items, loading, error, checkEpisode, dropSeries };
 }

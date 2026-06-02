@@ -10,7 +10,7 @@ import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import { mdiTelevisionPlay } from "@mdi/js";
 
 export default function ContinueWatchingSection({ initialSkeletonCount = 0 }) {
-  const { items, loading, error, checkEpisode } = useContinueWatching();
+  const { items, loading, error, checkEpisode, dropSeries } = useContinueWatching();
   const { scrollerRef, canScrollLeft, canScrollRight, scrollBy } = useCarouselArrows();
 
   if (error) return <p className={styles.error}>Failed to load.</p>;
@@ -59,7 +59,7 @@ export default function ContinueWatchingSection({ initialSkeletonCount = 0 }) {
           ) : (
             <div className={styles.carousel} ref={scrollerRef}>
               {items.map((item) => (
-                <ContinueWatchingCard key={item.seriesId} item={item} onCheck={checkEpisode} />
+                <ContinueWatchingCard key={item.seriesId} item={item} onCheck={checkEpisode} onDrop={dropSeries} />
               ))}
             </div>
           )}

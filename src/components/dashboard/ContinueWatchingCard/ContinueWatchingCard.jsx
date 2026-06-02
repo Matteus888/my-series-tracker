@@ -4,10 +4,14 @@ import styles from "./ContinueWatchingCard.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "@mdi/react";
-import { mdiCheck } from "@mdi/js";
+import { useRef } from "react";
+import { mdiCheck, mdiDotsVertical, mdiCloseCircleOutline, mdiCancel } from "@mdi/js";
+import { usePopover } from "@/hooks/usePopover";
 
-export default function ContinueWatchingCard({ item, onCheck }) {
+export default function ContinueWatchingCard({ item, onCheck, onDrop }) {
   const { seriesId, tmdbId, title, posterPath, watchedCount, totalCount, remainingCount, nextEpisode } = item;
+  const menuRef = useRef(null);
+  const menuPopover = usePopover(menuRef);
 
   const progressPercent = Math.round((watchedCount / totalCount) * 100);
 
@@ -25,12 +29,35 @@ export default function ContinueWatchingCard({ item, onCheck }) {
       ? { label: "Premiere", className: styles.badgePremiere }
       : null;
 
+  const handleDrop = () => {
+    menuPopover.close();
+    onDrop?.(seriesId);
+  };
+
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>
       <div className="tooltip">{title}</div>
       <div className={`card ${styles.card}`}>
         {/* Poster */}
         <div className={styles.imageContainer}>
+          {/* Menu popover */}
+          {menuPopover.isOpen && (
+            <div className={styles.confirmOverlay} ref={menuRef} role="dialog" aria-label="Drop series confirmation">
+              <p className={styles.confirmText}>
+                Drop <strong>{title}</strong>?
+              </p>
+              <p className={styles.confirmHint}>Watched episodes will be kept.</p>
+              <div className={styles.confirmActions}>
+                <button type="button" className={styles.dropBtn} onClick={handleDrop} title="Drop series">
+                  <Icon path={mdiCloseCircleOutline} size={0.7} />
+                </button>
+                <button type="button" className={styles.cancelBtn} onClick={menuPopover.close} title="Cancel">
+                  <Icon path={mdiCancel} size={0.7} />
+                </button>
+              </div>
+            </div>
+          )}
+
           <Link href={`/series/${tmdbId}`} className={styles.imageLink}>
             {posterPath ? (
               <Image
@@ -80,6 +107,19 @@ export default function ContinueWatchingCard({ item, onCheck }) {
               <span className={styles.episodeLabelFallback}>…</span>
             )}
           </div>
+
+          {/* Bouton kebab */}
+          <button
+            type="button"
+            className={`btn ${styles.menuButton} ${menuPopover.isOpen ? "active" : ""}`}
+            onClick={menuPopover.toggle}
+            title="More actions"
+            aria-label="More actions"
+            aria-haspopup="menu"
+            aria-expanded={menuPopover.isOpen}
+          >
+            <Icon path={mdiDotsVertical} size={0.8} />
+          </button>
         </div>
       </div>
     </div>
