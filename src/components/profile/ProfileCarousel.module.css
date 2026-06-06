@@ -14,10 +14,12 @@
   scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
+  border-left: 1px solid var(--border);
 }
 
 .track > * {
   scroll-snap-align: start;
+  border-bottom: 1px solid var(--border);
 }
 
 .track::-webkit-scrollbar {

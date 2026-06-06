@@ -30,6 +30,9 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
   align-items: stretch;
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
 }
 
 .carousel > * {
