@@ -80,7 +80,8 @@
 }
 
 .planToWatch {
-  background-color: var(--blue);
+  background-color: var(--foreground);
+  color: var(--background-secondary);
 }
 
 /* ─── Rating utilisateur (coin bas-droite) ─── */

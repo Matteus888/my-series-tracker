@@ -1,15 +1,19 @@
 "use client";
 
 import styles from "../ProfileCarousel.module.css";
+import { useMemo } from "react";
 import SectionHeader from "@/components/ui/SectionHeader/SectionHeader";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
 import { useCarouselArrows } from "@/hooks/useCarouselArrows";
 import PublicSerieCard from "@/components/profile/PublicSerieCard/PublicSerieCard";
 
-export default function ProfileCurrentlyWatching({ trackedSeries, progressMap, username }) {
+export default function ProfileCurrentlyWatching({ trackedSeries, progressMap, activelyWatchingTmdbIds, username }) {
   const { scrollerRef, canScrollLeft, canScrollRight, scrollBy } = useCarouselArrows();
 
-  const watching = (trackedSeries ?? []).filter((t) => t.status === "watching");
+  const watching = useMemo(() => {
+    const activeSet = new Set(activelyWatchingTmdbIds);
+    return (trackedSeries ?? []).filter((t) => activeSet.has(t.tmdbId) && t.status !== "dropped");
+  }, [trackedSeries, activelyWatchingTmdbIds]);
   if (watching.length === 0) return null;
 
   return (

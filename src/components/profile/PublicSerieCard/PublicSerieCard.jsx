@@ -2,7 +2,7 @@ import styles from "./PublicSerieCard.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "@mdi/react";
-import { mdiCheck, mdiPause, mdiClose, mdiBookmarkOutline } from "@mdi/js";
+import { mdiCheck, mdiPause, mdiClose, mdiPlaylistPlus } from "@mdi/js";
 import HeartRating from "@/components/ui/HeartRating/HeartRating";
 
 // Indicateur de status — façon "badge coin" reprenant le style du rating.
@@ -11,7 +11,7 @@ const STATUS_INDICATOR = {
   completed: { icon: mdiCheck, className: "completed", title: "Completed" },
   on_hold: { icon: mdiPause, className: "onHold", title: "On hold" },
   dropped: { icon: mdiClose, className: "dropped", title: "Dropped" },
-  plan_to_watch: { icon: mdiBookmarkOutline, className: "planToWatch", title: "Plan to watch" },
+  plan_to_watch: { icon: mdiPlaylistPlus, className: "planToWatch", title: "Plan to watch" },
 };
 
 export default function PublicSerieCard({ tracked, progress }) {

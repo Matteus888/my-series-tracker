@@ -3,9 +3,10 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { User } from "@/models/user.model";
+import { UserList } from "@/models/userList.model";
 import { getUserPublicProfile, getUserStats, getUserProfileAggregations } from "@/lib/api/user.api";
 import { getTrackedSeries, getSeriesProgress } from "@/lib/api/series.api";
-import { getRecentlyWatchedFlat } from "@/lib/api/episode.api";
+import { getRecentlyWatchedFlat, getContinueWatching } from "@/lib/api/episode.api";
 import { APP_NAME } from "@/lib/constants/app.constants";
 import ProfileHero from "@/components/profile/ProfileHero/ProfileHero";
 import ProfilePresentation from "@/components/profile/ProfilePresentation/ProfilePresentation";
@@ -42,6 +43,9 @@ export default async function UserProfilePage({ params }) {
 
   let trackedSeries = [];
   let progressMap = {};
+  let watchlistSeries = [];
+  let activelyWatchingTmdbIds = [];
+
   if (isOwner || profile.publicLists) {
     const tracked = await getTrackedSeries(User, profile._id);
     trackedSeries = tracked.map((t) => ({
@@ -65,6 +69,35 @@ export default async function UserProfilePage({ params }) {
     }));
     const progressArr = await getSeriesProgress(profile._id, User);
     progressMap = Object.fromEntries(progressArr.map((p) => [String(p.tmdbId), p]));
+
+    // Continue Watching = source de vérité pour "actively watching"
+    const continueWatching = await getContinueWatching(User, profile._id);
+    const trackedByMongoId = new Map(trackedSeries.filter((t) => t.series).map((t) => [String(t.series._id), t]));
+    activelyWatchingTmdbIds = continueWatching
+      .map((cw) => trackedByMongoId.get(String(cw.seriesId))?.tmdbId)
+      .filter(Boolean);
+
+    // Watchlist = "Plan to watch"
+    const watchlist = await UserList.findOne({ userId: profile._id, isDefault: true })
+      .populate({ path: "series", model: "Series" })
+      .lean();
+    watchlistSeries = (watchlist?.series ?? []).map((s) => ({
+      tmdbId: s.tmdbId,
+      status: "plan_to_watch",
+      isFavorite: false,
+      rating: null,
+      series: {
+        _id: s._id.toString(),
+        tmdbId: s.tmdbId,
+        title: s.title,
+        posterPath: s.posterPath ?? null,
+        backdropPath: s.backdropPath ?? null,
+        firstAirDate: s.firstAirDate ? s.firstAirDate.toISOString() : null,
+        status: s.status ?? null,
+        numberOfEpisodes: s.numberOfEpisodes ?? null,
+        voteAverage: s.ratings?.tmdb?.score ?? null,
+      },
+    }));
   }
 
   let recentlyWatched = [];
@@ -149,7 +182,12 @@ export default async function UserProfilePage({ params }) {
       {canSeeLists && (
         <>
           <div className={styles.section}>
-            <ProfileCurrentlyWatching trackedSeries={trackedSeries} progressMap={progressMap} username={username} />
+            <ProfileCurrentlyWatching
+              trackedSeries={trackedSeries}
+              progressMap={progressMap}
+              activelyWatchingTmdbIds={activelyWatchingTmdbIds}
+              username={username}
+            />
           </div>
 
           <div className={styles.section}>
@@ -157,7 +195,13 @@ export default async function UserProfilePage({ params }) {
           </div>
 
           <div className={styles.section}>
-            <ProfileTrackedSeries trackedSeries={trackedSeries} progressMap={progressMap} username={username} />
+            <ProfileTrackedSeries
+              trackedSeries={trackedSeries}
+              watchlistSeries={watchlistSeries}
+              progressMap={progressMap}
+              activelyWatchingTmdbIds={activelyWatchingTmdbIds}
+              username={username}
+            />
           </div>
         </>
       )}

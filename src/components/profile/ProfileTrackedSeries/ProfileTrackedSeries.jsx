@@ -9,29 +9,58 @@ const TABS = [
   { id: "all", label: "All" },
   { id: "watching", label: "Watching" },
   { id: "completed", label: "Completed" },
-  { id: "on_hold", label: "On hold" },
   { id: "dropped", label: "Dropped" },
   { id: "plan_to_watch", label: "Plan to watch" },
 ];
 
-export default function ProfileTrackedSeries({ trackedSeries, progressMap, username }) {
+export default function ProfileTrackedSeries({
+  trackedSeries,
+  watchlistSeries = [],
+  progressMap,
+  activelyWatchingTmdbIds,
+  username,
+}) {
   const [activeTab, setActiveTab] = useState("all");
 
+  const activeSet = useMemo(() => new Set(activelyWatchingTmdbIds), [activelyWatchingTmdbIds]);
+
+  // "All" = tracked + watchlist (séries de la watchlist marquées comme plan_to_watch)
+  const allSeries = useMemo(() => [...trackedSeries, ...watchlistSeries], [trackedSeries, watchlistSeries]);
+
   const counts = useMemo(() => {
-    const c = { all: trackedSeries.length };
-    for (const tab of TABS) {
-      if (tab.id === "all") continue;
-      c[tab.id] = trackedSeries.filter((t) => t.status === tab.id).length;
+    const c = {
+      all: allSeries.length,
+      watching: 0,
+      completed: 0,
+      dropped: 0,
+      plan_to_watch: watchlistSeries.length,
+    };
+    for (const t of trackedSeries) {
+      if (t.status === "dropped") c.dropped += 1;
+      else if (activeSet.has(t.tmdbId)) c.watching += 1;
+      else c.completed += 1;
     }
     return c;
-  }, [trackedSeries]);
+  }, [trackedSeries, watchlistSeries, allSeries, activeSet]);
 
   const filtered = useMemo(() => {
-    if (activeTab === "all") return trackedSeries;
-    return trackedSeries.filter((t) => t.status === activeTab);
-  }, [trackedSeries, activeTab]);
+    switch (activeTab) {
+      case "all":
+        return allSeries;
+      case "plan_to_watch":
+        return watchlistSeries;
+      case "dropped":
+        return trackedSeries.filter((t) => t.status === "dropped");
+      case "watching":
+        return trackedSeries.filter((t) => activeSet.has(t.tmdbId) && t.status !== "dropped");
+      case "completed":
+        return trackedSeries.filter((t) => !activeSet.has(t.tmdbId) && t.status !== "dropped");
+      default:
+        return [];
+    }
+  }, [activeTab, trackedSeries, watchlistSeries, allSeries, activeSet]);
 
-  if (trackedSeries.length === 0) return null;
+  if (allSeries.length === 0) return null;
 
   return (
     <SectionHeader
