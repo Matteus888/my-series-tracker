@@ -109,13 +109,16 @@ export function useContinueWatching() {
 
   const dropSeries = useCallback(
     (seriesId) => {
+      const target = items.find((item) => item.seriesId === seriesId);
+      if (!target) return;
+
       const previous = items;
       // Optimistic UI : la série disparaît immédiatement
       setItems((current) => current.filter((item) => item.seriesId !== seriesId));
 
       try {
         // updateSeries gère le toast "Marked as dropped" et le refetch
-        updateSeries(seriesId, { status: "dropped" });
+        updateSeries(target.tmdbId, { status: "dropped" });
       } catch (err) {
         setItems(previous);
         setError(err.message);
