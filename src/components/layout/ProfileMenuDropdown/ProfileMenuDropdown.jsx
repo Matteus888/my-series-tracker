@@ -7,11 +7,13 @@ import { signOut } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 import { useToast } from "@/context/ToastContext";
+import { useNavigationProgress } from "@/context/NavigationProgressContext";
 import { isProtectedRoute } from "@/lib/constants/routes.constants";
 
 export default function ProfileMenuDropdown({ session, popoverRef, onClose, onLoginClick }) {
   const [showConfirmSignOut, setShowConfirmSignOut] = useState(false);
   const { showToast } = useToast();
+  const { start } = useNavigationProgress();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -29,16 +31,19 @@ export default function ProfileMenuDropdown({ session, popoverRef, onClose, onLo
 
   const handleSignUp = () => {
     onClose();
+    start();
     router.push("/signup");
   };
 
   const handleSettings = () => {
     onClose();
+    start();
     router.push("/settings");
   };
 
   const handleProfile = () => {
     onClose();
+    start();
     router.push(`/users/${session.user.name}`);
   };
 

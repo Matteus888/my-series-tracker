@@ -1,0 +1,11 @@
+.bar {
+  position: fixed;
+  top: 0px;
+  left: 0;
+  height: 3px;
+  background: var(--blue);
+  z-index: 9999;
+  pointer-events: none;
+  transform-origin: left;
+  box-shadow: 0 0 8px var(--blue);
+}
