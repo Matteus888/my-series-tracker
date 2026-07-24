@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "@/app/search/page.module.css";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSearch } from "@/context/SearchContext";
 import { searchSeries } from "@/lib/api/tmdb.api";
@@ -14,7 +14,7 @@ import Pagination from "@/components/ui/Pagination/Pagination";
 import EmptyStateCard from "@/components/series/EmptyStateCard/EmptyStateCard";
 import { mdiMagnify } from "@mdi/js";
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
   const pageParam = searchParams.get("page");
@@ -152,5 +152,13 @@ export default function SearchPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={null}>
+      <SearchPageContent />
+    </Suspense>
   );
 }

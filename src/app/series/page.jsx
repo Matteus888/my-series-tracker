@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "@/app/series/page.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getAllSeries, getTrending } from "@/lib/api/tmdb.api";
 import { getTmdbPagesForUiPage, sliceResultsForUiPage, calcTotalUiPages } from "@/lib/utils/pagination.utils";
@@ -11,7 +11,7 @@ import SerieCard from "@/components/series/SerieCard/SerieCard";
 import SerieCardSkeleton from "@/components/series/SerieCardSkeleton/SerieCardSkeleton";
 import Pagination from "@/components/ui/Pagination/Pagination";
 
-export default function AllSeriesPage() {
+function AllSeriesPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pageParam = searchParams.get("page");
@@ -157,5 +157,13 @@ export default function AllSeriesPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function AllSeriesPage() {
+  return (
+    <Suspense fallback={null}>
+      <AllSeriesPageContent />
+    </Suspense>
   );
 }
