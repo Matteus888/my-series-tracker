@@ -4,7 +4,6 @@ import { isProtectedRoute, isPublicRoute, isAdminRoute, AUTH_ROUTES } from "./li
 
 export async function proxy(request) {
   const { pathname } = request.nextUrl;
-  const token = await getToken({ req: request });
 
   if (AUTH_ROUTES.includes(pathname) && token) {
     const from = request.nextUrl.searchParams.get("from");
@@ -18,6 +17,11 @@ export async function proxy(request) {
   if (!isProtectedRoute(pathname)) {
     return NextResponse.next();
   }
+
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
 
   if (!token) {
     const loginUrl = new URL("/login", request.url);
