@@ -8,6 +8,7 @@ export async function proxy(request) {
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
+    cookieName: "next-auth.session-token",
   });
 
   if (AUTH_ROUTES.includes(pathname) && token) {
