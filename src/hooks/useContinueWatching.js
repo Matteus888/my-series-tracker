@@ -56,6 +56,14 @@ export function useContinueWatching() {
       const previous = items;
       const target = items.find((item) => item.seriesId === seriesId);
       const seriesTitle = target?.title;
+      const isSeriesEnded = target?.isSeriesEnded ?? false;
+      const nextEpisode = target?.nextEpisode ?? null;
+
+      // Finale de saison : dernier épisode numéroté de la saison en cours
+      const isSeasonFinale =
+        nextEpisode?.seasonEpisodeCount != null && nextEpisode.episodeNumber === nextEpisode.seasonEpisodeCount;
+      const seasonNumber = nextEpisode?.seasonNumber;
+
       let willComplete = false;
 
       setItems((current) =>
@@ -96,7 +104,11 @@ export function useContinueWatching() {
         setItems(applyPreservedOrder(data.continueWatching));
 
         if (willComplete && seriesTitle) {
-          showToast(`You finished ${seriesTitle}! 🍿`);
+          if (isSeriesEnded) {
+            showToast(`You finished ${seriesTitle}! 🍿`);
+          } else if (isSeasonFinale && seasonNumber != null) {
+            showToast(`You finished season ${seasonNumber} of ${seriesTitle} ✓`);
+          }
         }
       } catch (err) {
         setItems(previous);

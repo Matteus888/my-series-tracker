@@ -35,6 +35,20 @@
   background: var(--background-third);
 }
 
+.relativeDayBadge {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  z-index: 2;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.03rem;
+  background: var(--border);
+  color: var(--foreground);
+  line-height: 1;
+}
+
 .contentSection {
   width: 10.95rem;
   padding: 0.4rem 0;

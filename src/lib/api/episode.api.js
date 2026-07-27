@@ -15,7 +15,7 @@ export const getContinueWatching = async (UserModel, userId) => {
     .populate({
       path: "trackedSeries.seriesId",
       model: "Series",
-      select: "tmdbId title seasons posterPath",
+      select: "tmdbId title seasons posterPath status",
     })
     .lean();
   if (!user) throw new Error("User not found");
@@ -89,11 +89,13 @@ export const getContinueWatching = async (UserModel, userId) => {
 
       const series = tracked.seriesId;
       const seasonData = series.seasons?.find((s) => s.seasonNumber === nextEpisode.seasonNumber);
+      const isSeriesEnded = ["Ended", "Canceled"].includes(series.status);
 
       return {
         seriesId: seriesIdStr,
         tmdbId: tracked.tmdbId,
         title: series.title,
+        isSeriesEnded,
         posterPath: seasonData?.posterPath ?? series.posterPath ?? null,
         watchedCount: watchedIds.size,
         totalCount: episodes.length,
@@ -151,12 +153,17 @@ export const markEpisodeWatched = async (EpisodeModel, userId, episodeId, watche
     });
 
     if (watchedCount === allEpisodes.length) {
-      const user = await User.findById(userId);
-      if (user) {
-        const trackedEntry = user.trackedSeries.find((s) => s.seriesId?.toString() === episode.seriesId.toString());
-        if (trackedEntry && trackedEntry.status === "watching") {
-          trackedEntry.status = "completed";
-          await user.save();
+      const series = await Series.findById(episode.seriesId).select("status").lean();
+      const isSeriesFinished = series && ["Ended", "Canceled"].includes(series.status);
+
+      if (isSeriesFinished) {
+        const user = await User.findById(userId);
+        if (user) {
+          const trackedEntry = user.trackedSeries.find((s) => s.seriesId?.toString() === episode.seriesId.toString());
+          if (trackedEntry && trackedEntry.status === "watching") {
+            trackedEntry.status = "completed";
+            await user.save();
+          }
         }
       }
     }

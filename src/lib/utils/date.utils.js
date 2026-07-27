@@ -8,6 +8,20 @@ export function formatDate(dateStr, locale = "fr-FR") {
 }
 
 /**
+ * Formate une date avec le jour de la semaine.
+ * @param {string} dateStr - date au format YYYY-MM-DD ou ISO
+ * @returns {string} ex: "Monday, 14 April"
+ */
+export const formatWeekdayDate = (dateStr) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+};
+
+/**
  * Formate une date en label lisible.
  * Today, Yesterday, puis "Lundi 14 avril" etc.
  * @param {string} dateStr - date au format YYYY-MM-DD ou ISO

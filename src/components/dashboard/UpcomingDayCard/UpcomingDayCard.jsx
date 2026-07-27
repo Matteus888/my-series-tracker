@@ -3,15 +3,30 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { formatDateLabel } from "@/lib/utils/date.utils";
+import { formatWeekdayDate } from "@/lib/utils/date.utils";
 import { formatDuration } from "@/lib/utils/duration.utils";
 import { formatEpisodeLabel } from "@/lib/utils/episode.utils";
 import { shouldInvertLogo } from "@/lib/utils/network.utils";
 import styles from "./UpcomingDayCard.module.css";
 
+const getRelativeDayLabel = (dateStr) => {
+  const target = new Date(dateStr);
+  target.setHours(0, 0, 0, 0);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const diffDays = Math.round((target - today) / (1000 * 60 * 60 * 24));
+
+  if (diffDays <= 0) return "Today";
+  if (diffDays === 1) return "Tomorrow";
+  return `In ${diffDays} days`;
+};
+
 export default function UpcomingDayCard({ day }) {
   const [hoveredItem, setHoveredItem] = useState(day.episodes[0] ?? null);
-  const dateLabel = formatDateLabel(day.date, { showTomorrow: false });
+  const dateLabel = formatWeekdayDate(day.date);
+  const relativeDayLabel = getRelativeDayLabel(day.date);
 
   const network = hoveredItem?.networks?.[0];
 
@@ -36,6 +51,7 @@ export default function UpcomingDayCard({ day }) {
         ) : (
           <div className={styles.posterPlaceholder} />
         )}
+        <span className={styles.relativeDayBadge}>{relativeDayLabel}</span>
       </div>
       <div className={styles.contentSection}>
         <p className={styles.dateLabel}>{dateLabel}</p>
