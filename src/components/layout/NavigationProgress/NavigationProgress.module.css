@@ -2,7 +2,7 @@
   position: fixed;
   top: 0px;
   left: 0;
-  height: 3px;
+  height: 4px;
   background: var(--blue);
   z-index: 9999;
   pointer-events: none;
