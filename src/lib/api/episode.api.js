@@ -4,6 +4,7 @@ import { UserList } from "@/models/userList.model";
 import { EpisodeProgress } from "@/models/episodeProgress.model";
 import { User } from "@/models/user.model";
 import { getEpisodeDetails } from "./tmdb.api";
+import { after } from "next/server";
 
 const dbConnect = require("@/lib/db/db.connect").default;
 
@@ -128,10 +129,15 @@ export const getContinueWatchingCount = async (UserModel, userId) => {
 export const markEpisodeWatched = async (EpisodeModel, userId, episodeId, watched = true) => {
   await dbConnect();
 
-  const episode = await EpisodeModel.findById(episodeId).lean();
+  let episode = await EpisodeModel.findById(episodeId).lean();
   if (!episode) throw new Error("Episode not found");
 
   if (watched) {
+    // Backfill de l'image en arrière-plan — ne retarde plus la réponse du check
+    after(() =>
+      ensureEpisodeStillPath(episode).catch((err) => console.error("ensureEpisodeStillPath failed:", err.message)),
+    );
+
     await EpisodeProgress.findOneAndUpdate(
       { userId, episodeId },
       { $set: { watched: true, watchedAt: new Date() } },
@@ -495,6 +501,8 @@ const syncEpisodeIfStale = async (episode) => {
     episode._id,
     {
       $set: {
+        stillPath: tmdbData.still_path ?? episode.stillPath ?? null,
+        overview: tmdbData.overview ?? episode.overview ?? null,
         cast: buildEpisodeCastFromTmdb(tmdbData.credits),
         crew: buildEpisodeCrewFromTmdb(tmdbData.credits),
         videos: buildEpisodeVideosFromTmdb(tmdbData.videos),
@@ -502,6 +510,29 @@ const syncEpisodeIfStale = async (episode) => {
       },
     },
     { returnDocument: "after", runValidators: true },
+  ).lean();
+
+  return updated ?? episode;
+};
+
+// Nouvelle fonction, à côté de syncEpisodeIfStale
+/**
+ * Si l'épisode n'a pas encore de stillPath en base (TMDB ne l'avait pas
+ * encore au dernier sync), retente un fetch TMDB immédiat.
+ * Appelée au moment où l'épisode est coché "watched" pour que
+ * ContinueWatching / RecentlyWatched aient l'image sans attendre
+ * un revisit de la page série.
+ */
+const ensureEpisodeStillPath = async (episode) => {
+  if (episode.stillPath) return episode;
+
+  const tmdbData = await getEpisodeDetails(episode.tmdbSeriesId, episode.seasonNumber, episode.episodeNumber);
+  if (!tmdbData?.still_path) return episode;
+
+  const updated = await Episode.findByIdAndUpdate(
+    episode._id,
+    { $set: { stillPath: tmdbData.still_path } },
+    { returnDocument: "after" },
   ).lean();
 
   return updated ?? episode;
