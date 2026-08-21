@@ -184,6 +184,7 @@ export const ensureSeriesInDb = async (SeriesModel, tmdbId) => {
     seasons,
     seriesDetails.networks ?? [],
     updated.releaseTimeOverride ?? null,
+    updated.episodeNumberOffset ?? 0,
   );
 
   return updated;

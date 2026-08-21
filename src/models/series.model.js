@@ -164,6 +164,10 @@ const seriesSchema = new mongoose.Schema(
       dayOffset: { type: Number, min: 0, max: 1 },
       hourUTC: { type: Number, min: 0, max: 23 },
     },
+    episodeNumberOffset: {
+      type: Number,
+      default: 0, // ex: -1 si TMDB compte 1 épisode de trop
+    },
     lastSyncedAt: {
       type: Date,
       default: null,

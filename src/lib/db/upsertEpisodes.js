@@ -11,7 +11,14 @@ import { computeAirDateTime } from "../utils/airDateTime.utils";
  * @param {Array}    networks   - networks de la série (pour ajuster l'airDate)
  * @returns {Promise<Map<number, ObjectId>>}  tmdbEpisodeId → episode._id
  */
-export const upsertEpisodes = async (seriesId, tmdbSeriesId, seasons, networks = [], releaseTimeOverride = null) => {
+export const upsertEpisodes = async (
+  seriesId,
+  tmdbSeriesId,
+  seasons,
+  networks = [],
+  releaseTimeOverride = null,
+  episodeNumberOffset = 0,
+) => {
   const operations = [];
 
   for (const season of seasons) {
@@ -26,7 +33,7 @@ export const upsertEpisodes = async (seriesId, tmdbSeriesId, seasons, networks =
           tmdbSeriesId,
           tmdbEpisodeId: ep.id ?? undefined,
           seasonNumber: season.season_number,
-          episodeNumber: ep.episode_number,
+          episodeNumber: ep.episode_number + episodeNumberOffset,
           title: ep.name ?? null,
           overview: ep.overview ?? null,
           stillPath: ep.still_path ?? null,
