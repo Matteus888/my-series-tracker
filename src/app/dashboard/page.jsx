@@ -40,10 +40,10 @@ export default async function DashboardPage() {
         profilePicture={user.profilePicture}
         stats={stats}
       />
-      <ContinueWatchingSection initialSkeletonCount={cwCount} />
       <UpcomingSection />
-      <RecentlyWatchedSection />
+      <ContinueWatchingSection initialSkeletonCount={cwCount} />
       <StartWatchingSection initialSkeletonCount={swCount} />
+      <RecentlyWatchedSection />
       <SuggestionsSection />
     </div>
   );

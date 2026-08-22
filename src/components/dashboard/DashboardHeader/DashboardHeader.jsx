@@ -13,8 +13,8 @@ export default function DashboardHeader({ username, firstname, lastname, bio, pr
           <Image
             src={profilePicture || "https://api.dicebear.com/7.x/initials/svg?seed=" + username}
             alt={`${username}'s avatar`}
-            width={80}
-            height={80}
+            width={70}
+            height={70}
             loading="eager"
             className={styles.avatar}
             priority

@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding: 1.25rem 3rem;
+  padding: 0.7rem 3rem;
   margin: 0;
   background-color: var(--background-secondary);
   border-top: 1px solid var(--border);
@@ -22,8 +22,8 @@
   flex-shrink: 0;
   border-radius: 50%;
   overflow: hidden;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   border: 2px solid var(--border);
   background-color: var(--background-secondary);
 }
@@ -42,7 +42,7 @@
 }
 
 .fullName {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--foreground);
   margin: 0;
@@ -50,7 +50,7 @@
 }
 
 .username {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--foreground);
   opacity: 0.5;
 }
