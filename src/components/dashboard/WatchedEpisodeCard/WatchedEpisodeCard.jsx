@@ -8,6 +8,7 @@ import { mdiCheck } from "@mdi/js";
 import HeartRating from "@/components/ui/HeartRating/HeartRating";
 import RatingsPopover from "@/components/ui/RatingsPopover/RatingsPopover";
 import { computeAverageScore } from "@/lib/utils/ratings.utils";
+import { formatRecentWatchedLabel } from "@/lib/utils/date.utils";
 import { usePopover } from "@/hooks/usePopover";
 import { useEpisodeRating } from "@/hooks/useEpisodeRating";
 
@@ -35,9 +36,7 @@ export default function WatchedEpisodeCard({
   const watchedTime = ep.watchedAt
     ? new Date(ep.watchedAt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })
     : null;
-  const watchedDate = ep.watchedAt
-    ? new Date(ep.watchedAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "2-digit" })
-    : null;
+  const watchedDate = ep.watchedAt ? formatRecentWatchedLabel(ep.watchedAt) : null;
 
   return (
     <div className={`tooltip-wrapper ${styles.container}`}>

@@ -50,3 +50,34 @@ export const formatDateLabel = (dateStr, { showTomorrow = true } = {}) => {
     year: "numeric",
   });
 };
+
+/**
+ * Formate une date de visionnage récent.
+ * Today, Yesterday, puis "Last Monday" (si < 7 jours), sinon la date complète.
+ * @param {string} dateStr - date au format YYYY-MM-DD ou ISO
+ * @returns {string}
+ */
+export const formatRecentWatchedLabel = (dateStr) => {
+  const date = new Date(dateStr);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const target = new Date(date);
+  target.setHours(0, 0, 0, 0);
+
+  const diffDays = Math.round((today - target) / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "Yesterday";
+
+  if (diffDays > 1 && diffDays < 7) {
+    const weekday = date.toLocaleDateString("en-GB", { weekday: "long" });
+    return `Last ${weekday}`;
+  }
+
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
