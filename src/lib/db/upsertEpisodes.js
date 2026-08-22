@@ -23,9 +23,7 @@ export const upsertEpisodes = async (
 
   for (const season of seasons) {
     for (const ep of season.episodes) {
-      const filter = ep.id
-        ? { tmdbEpisodeId: ep.id }
-        : { seriesId, seasonNumber: season.season_number, episodeNumber: ep.episode_number };
+      const filter = { seriesId, seasonNumber: season.season_number, episodeNumber: ep.episode_number };
 
       const update = {
         $set: {
