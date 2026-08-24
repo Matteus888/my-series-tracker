@@ -42,7 +42,7 @@
 }
 
 .daySection {
-  margin-bottom: 1rem;
+  margin-bottom: 0;
   scroll-margin-top: calc(45px + 1rem);
 }
 

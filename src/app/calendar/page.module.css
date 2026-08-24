@@ -49,7 +49,7 @@
 
 /* ── Sections jour (inchangé) ── */
 .daySection {
-  margin-bottom: 1rem;
+  margin-bottom: 0;
   /* Offset pour que scrollIntoView ne se colle pas au header */
   scroll-margin-top: calc(45px + 1rem);
 }
