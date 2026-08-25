@@ -110,14 +110,18 @@ const buildNetworksFromTmdb = async (rawNetworks = []) => {
  *
  * @returns {Promise<Object|null>} le document Series (lean), ou null si TMDB échoue
  */
-export const ensureSeriesInDb = async (SeriesModel, tmdbId) => {
+export const ensureSeriesInDb = async (SeriesModel, tmdbId, { force = false } = {}) => {
   await dbConnect();
 
   const numericId = Number(tmdbId);
   const existing = await SeriesModel.findOne({ tmdbId: numericId }).lean();
 
   const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
-  const isFresh = existing?.lastSyncedAt && Date.now() - new Date(existing.lastSyncedAt) < SEVEN_DAYS;
+  const ONE_DAY = 24 * 60 * 60 * 1000;
+  const activeStatuses = ["Returning Series", "In Production", " Planned", "Pilot"];
+  const freshnessWindow = activeStatuses.includes(existing?.status) ? ONE_DAY : SEVEN_DAYS;
+
+  const isFresh = !force && existing?.lastSyncedAt && Date.now() - new Date(existing.lastSyncedAt) < freshnessWindow;
   if (isFresh) return existing;
 
   const data = await getAllSeasonsWithEpisodes(numericId);
