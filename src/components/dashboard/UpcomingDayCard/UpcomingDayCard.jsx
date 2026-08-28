@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatWeekdayDate } from "@/lib/utils/date.utils";
@@ -24,7 +24,28 @@ const getRelativeDayLabel = (dateStr) => {
 };
 
 export default function UpcomingDayCard({ day }) {
-  const [hoveredItem, setHoveredItem] = useState(day.episodes[0] ?? null);
+  // const [hoveredItem, setHoveredItem] = useState(day.episodes[0] ?? null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const hoveredItem = day.episodes[activeIndex] ?? day.episodes[0] ?? null;
+
+  // Reset si la liste d'épisodes du jour change (ex: refresh du calendrier)
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [day.episodes]);
+
+  // Rotation automatique toutes les 2s, en pause au survol
+  useEffect(() => {
+    if (isPaused || day.episodes.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % day.episodes.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [isPaused, day.episodes.length]);
+
   const dateLabel = formatWeekdayDate(day.date);
   const relativeDayLabel = getRelativeDayLabel(day.date);
 
@@ -40,13 +61,14 @@ export default function UpcomingDayCard({ day }) {
       <div className={styles.posterSection}>
         {hoveredItem?.posterPath ? (
           <Image
+            key={hoveredItem.posterPath}
             src={`https://image.tmdb.org/t/p/w185${hoveredItem.posterPath}`}
             alt="Season poster"
             width={156}
             height={233}
             sizes="156px"
             loading="eager"
-            className={styles.poster}
+            className={`${styles.poster} ${styles.posterFade}`}
           />
         ) : (
           <div className={styles.posterPlaceholder} />
@@ -56,7 +78,7 @@ export default function UpcomingDayCard({ day }) {
       <div className={styles.contentSection}>
         <p className={styles.dateLabel}>{dateLabel}</p>
         <ul className={styles.episodeList}>
-          {day.episodes.map((item) => {
+          {day.episodes.map((item, index) => {
             const epList = item.episodes;
             const isMulti = epList.length > 1;
             const firstEp = epList[0];
@@ -86,8 +108,11 @@ export default function UpcomingDayCard({ day }) {
               <li
                 key={item.itemKey}
                 className={styles.episodeItem}
-                onMouseEnter={() => setHoveredItem(item)}
-                onMouseLeave={() => setHoveredItem(day.episodes[0] ?? null)}
+                onMouseEnter={() => {
+                  setIsPaused(true);
+                  setActiveIndex(index);
+                }}
+                onMouseLeave={() => setIsPaused(false)}
               >
                 <Link href={`/series/${item.tmdbId}`} className={styles.episodeLink}>
                   <span className={styles.epTitle}>{item.seriesTitle}</span>

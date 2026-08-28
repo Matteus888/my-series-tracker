@@ -29,6 +29,19 @@
   height: 100%;
 }
 
+.posterFade {
+  animation: posterFadeIn 0.5s ease;
+}
+
+@keyframes posterFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .posterPlaceholder {
   width: 100%;
   height: 100%;
