@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatWeekdayDate } from "@/lib/utils/date.utils";
@@ -24,16 +24,20 @@ const getRelativeDayLabel = (dateStr) => {
 };
 
 export default function UpcomingDayCard({ day }) {
-  // const [hoveredItem, setHoveredItem] = useState(day.episodes[0] ?? null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [prevPosterPath, setPrevPosterPath] = useState(null);
 
-  const hoveredItem = day.episodes[activeIndex] ?? day.episodes[0] ?? null;
+  // Modulo pour rester toujours dans les bornes, même si day.episodes
+  // change de taille (évite tout état "hors limites" sans reset explicite)
+  const safeIndex = day.episodes.length > 0 ? activeIndex % day.episodes.length : 0;
+  const hoveredItem = day.episodes[safeIndex] ?? null;
 
-  // Reset si la liste d'épisodes du jour change (ex: refresh du calendrier)
+  // Mémorise le poster affiché juste avant, pour le crossfade
   useEffect(() => {
-    setActiveIndex(0);
-  }, [day.episodes]);
+    setPrevPosterPath(hoveredItem?.posterPath ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hoveredItem?.posterPath]);
 
   // Rotation automatique toutes les 2s, en pause au survol
   useEffect(() => {
@@ -59,6 +63,19 @@ export default function UpcomingDayCard({ day }) {
   return (
     <div className={`card ${styles.dayCard}`}>
       <div className={styles.posterSection}>
+        {/* Ancien poster, en fondu sortant, sous le nouveau */}
+        {prevPosterPath && prevPosterPath !== hoveredItem?.posterPath && (
+          <Image
+            key={`prev-${prevPosterPath}`}
+            src={`https://image.tmdb.org/t/p/w185${prevPosterPath}`}
+            alt=""
+            aria-hidden="true"
+            width={156}
+            height={233}
+            sizes="156px"
+            className={styles.poster}
+          />
+        )}
         {hoveredItem?.posterPath ? (
           <Image
             key={hoveredItem.posterPath}
