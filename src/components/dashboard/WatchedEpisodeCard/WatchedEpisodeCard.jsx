@@ -50,7 +50,7 @@ export default function WatchedEpisodeCard({
         >
           {ep.stillPath ? (
             <Image
-              src={`https://image.tmdb.org/t/p/w185${ep.stillPath}`}
+              src={`https://image.tmdb.org/t/p/w300${ep.stillPath}`}
               alt={ep.title ?? episodeCode}
               fill
               loading="eager"
