@@ -75,8 +75,8 @@ export default function ContinueWatchingCard({ item, onCheck, onDrop }) {
           {/* Bandeau premiere/final */}
           {badge && <div className={`${styles.badge} ${badge.className}`}>{badge.label}</div>}
 
-          {/* Badge épisodes restants */}
-          {remainingCount > 0 && <span className={styles.remainingBadge}>+ {remainingCount}</span>}
+          {/* Badge épisodes restants (en plus du prochain épisode déjà affiché) */}
+          {remainingCount > 1 && <span className={styles.remainingBadge}>+ {remainingCount - 1}</span>}
 
           {/* Barre de progression */}
           <div className={styles.progressBar}>
