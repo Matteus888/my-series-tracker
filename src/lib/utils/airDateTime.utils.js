@@ -5,7 +5,7 @@ const NETWORK_RELEASE_MAP = {
   // Streamers US
   213: { dayOffset: 0, hourUTC: 8, label: "Netflix" },
   2739: { dayOffset: 1, hourUTC: 1, label: "Disney+" },
-  2552: { dayOffset: 1, hourUTC: 1, label: "Apple TV+" },
+  2552: { dayOffset: 0, hourUTC: 7, label: "Apple TV+" },
   1024: { dayOffset: 0, hourUTC: 8, label: "Amazon Prime Video" },
   2703: { dayOffset: 0, hourUTC: 5, label: "Paramount+" },
   453: { dayOffset: 0, hourUTC: 5, label: "Hulu" },
