@@ -10,7 +10,7 @@ const NETWORK_RELEASE_MAP = {
   2703: { dayOffset: 0, hourUTC: 5, label: "Paramount+" },
   453: { dayOffset: 0, hourUTC: 5, label: "Hulu" },
   49: { dayOffset: 1, hourUTC: 2, label: "HBO" },
-  3186: { dayOffset: 1, hourUTC: 2, label: "HBO Max / Max" },
+  3186: { dayOffset: 1, hourUTC: 1, label: "HBO Max" },
   3353: { dayOffset: 0, hourUTC: 5, label: "Peacock" },
 
   // Broadcast US
