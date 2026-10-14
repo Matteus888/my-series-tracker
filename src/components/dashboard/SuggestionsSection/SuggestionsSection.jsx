@@ -7,7 +7,7 @@ import SerieCard from "@/components/series/SerieCard/SerieCard";
 import SectionHeader from "../../ui/SectionHeader/SectionHeader";
 import SectionEmptyState from "../SectionEmptyState/SectionEmptyState";
 import CarouselArrows from "@/components/ui/CarouselArrows/CarouselArrows";
-import { mdiLightbulbOnOutline } from "@mdi/js";
+import { mdiLightbulbOnOutline, mdiLightbulbOutline } from "@mdi/js";
 
 export default function SuggestionsSection() {
   const { items, loading, error } = useSuggestions();
@@ -29,7 +29,7 @@ export default function SuggestionsSection() {
         <div className={styles.carouselWrapper}>
           {loading ? (
             <div className={styles.carousel} ref={scrollerRef}>
-              {Array.from({ length: 6 }).map((_, i) => (
+              {Array.from({ length: 15 }).map((_, i) => (
                 <div key={i} className={styles.skeletonContainer}>
                   <div className={`card ${styles.skeletonCard}`}>
                     <div className={styles.skeletonImage}>

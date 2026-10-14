@@ -2,7 +2,7 @@ import dbConnect from "@/lib/db/db.connect";
 import { getRecommendations } from "./tmdb.api";
 
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24h
-const MAX_SUGGESTIONS = 20;
+const MAX_SUGGESTIONS = 30;
 const MAX_SEED_SERIES = 5; // nb de séries de référence pour fetch les reco
 
 /**

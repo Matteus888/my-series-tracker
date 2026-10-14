@@ -31,7 +31,7 @@ export default function ContinueWatchingSection({ initialSkeletonCount = 0 }) {
           {loading ? (
             initialSkeletonCount === 0 ? null : (
               <div className={styles.carousel} ref={scrollerRef}>
-                {Array.from({ length: Math.min(initialSkeletonCount, 10) }).map((_, i) => (
+                {Array.from({ length: Math.min(initialSkeletonCount, 15) }).map((_, i) => (
                   <div key={i} className={styles.skeletonContainer}>
                     <div className={`card ${styles.skeletonCard}`}>
                       <div className={styles.skeletonImage}>

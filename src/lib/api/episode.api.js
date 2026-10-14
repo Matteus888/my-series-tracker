@@ -258,7 +258,7 @@ export const getStartWatchingCount = async (userId) => {
 export const getRecentlyWatchedFlat = async (userId) => {
   await dbConnect();
   const items = await _fetchWatchedEpisodes(userId);
-  return items.slice(0, 10).map((item) => ({
+  return items.slice(0, 20).map((item) => ({
     ...item,
     watchedAt: item.watchedAt ? item.watchedAt.toISOString() : null,
   }));
