@@ -1,4 +1,5 @@
 import { Episode } from "@/models/episode.model";
+import { EpisodeProgress } from "@/models/episodeProgress.model";
 import { computeAirDateTime } from "../utils/airDateTime.utils";
 
 /**
@@ -53,6 +54,30 @@ export const upsertEpisodes = async (
   if (operations.length === 0) return new Map();
 
   await Episode.bulkWrite(operations, { ordered: false });
+
+  // Purge des épisodes disparus de TMDB (uniquement dans les saisons récupérées et non vides)
+  const fetchedSeasons = seasons.filter((s) => s.episodes?.length > 0);
+  const presentKeys = new Set(
+    fetchedSeasons.flatMap((s) => s.episodes.map((ep) => `${s.season_number}-${ep.episode_number}`)),
+  );
+  const inDb = await Episode.find({
+    seriesId,
+    seasonNumber: { $in: fetchedSeasons.map((s) => s.season_number) },
+  })
+    .select("_id seasonNumber episodeNumber")
+    .lean();
+
+  const orphanIds = inDb.filter((e) => !presentKeys.has(`${e.seasonNumber}-${e.episodeNumber}`)).map((e) => e._id);
+
+  if (orphanIds.length > 0) {
+    const watchedIds = new Set(
+      (await EpisodeProgress.distinct("episodeId", { episodeId: { $in: orphanIds } })).map(String),
+    );
+    const toDelete = orphanIds.filter((id) => !watchedIds.has(String(id)));
+    const toNull = orphanIds.filter((id) => watchedIds.has(String(id)));
+    if (toDelete.length) await Episode.deleteMany({ _id: { $in: toDelete } });
+    if (toNull.length) await Episode.updateMany({ _id: { $in: toNull } }, { $set: { airDate: null } });
+  }
 
   const episodes = await Episode.find({ seriesId }).select("_id tmdbEpisodeId seasonNumber episodeNumber").lean();
 
