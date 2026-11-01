@@ -100,6 +100,11 @@ export default function UpcomingDayCard({ day }) {
             const isMulti = epList.length > 1;
             const firstEp = epList[0];
 
+            const epNums = epList.map((e) => e.episodeNumber);
+            const includesPremiere = epNums.includes(1);
+            // Une saison à 1 épisode est le plus souvent un placeholder TMDB :
+            // on ne peut pas en déduire un "Finale" ni un "Full season".
+
             const isReliableSeasonSize = item.seasonEpisodeCount != null && item.seasonEpisodeCount > 1;
             const includesFinale = isReliableSeasonSize && epNums.includes(item.seasonEpisodeCount);
 
@@ -109,9 +114,6 @@ export default function UpcomingDayCard({ day }) {
                 : isMulti
                   ? `S${String(item.seasonNumber).padStart(2, "0")} • ${formatEpisodeLabel(epList)}`
                   : `S${String(item.seasonNumber).padStart(2, "0")} • E${String(firstEp.episodeNumber).padStart(2, "0")}`;
-
-            const epNums = epList.map((e) => e.episodeNumber);
-            const includesPremiere = epNums.includes(1);
 
             let badge = null;
             if (item.isFullSeason && isReliableSeasonSize) {
