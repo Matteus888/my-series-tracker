@@ -100,20 +100,21 @@ export default function UpcomingDayCard({ day }) {
             const isMulti = epList.length > 1;
             const firstEp = epList[0];
 
-            const epCode = item.isFullSeason
-              ? `Season ${item.seasonNumber}`
-              : isMulti
-                ? `S${String(item.seasonNumber).padStart(2, "0")} • ${formatEpisodeLabel(epList)}`
-                : `S${String(item.seasonNumber).padStart(2, "0")} • E${String(firstEp.episodeNumber).padStart(2, "0")}`;
+            const isReliableSeasonSize = item.seasonEpisodeCount != null && item.seasonEpisodeCount > 1;
+            const includesFinale = isReliableSeasonSize && epNums.includes(item.seasonEpisodeCount);
+
+            const epCode =
+              item.isFullSeason && isReliableSeasonSize
+                ? `Season ${item.seasonNumber}`
+                : isMulti
+                  ? `S${String(item.seasonNumber).padStart(2, "0")} • ${formatEpisodeLabel(epList)}`
+                  : `S${String(item.seasonNumber).padStart(2, "0")} • E${String(firstEp.episodeNumber).padStart(2, "0")}`;
 
             const epNums = epList.map((e) => e.episodeNumber);
             const includesPremiere = epNums.includes(1);
-            const includesFinale = item.seasonEpisodeCount != null && epNums.includes(item.seasonEpisodeCount);
 
             let badge = null;
-            if (item.isFullSeason && item.seasonEpisodeCount === 1) {
-              badge = { label: "Finale", className: styles.badgeFinal };
-            } else if (item.isFullSeason) {
+            if (item.isFullSeason && isReliableSeasonSize) {
               badge = { label: "Full season", className: styles.badgeFullSeason };
             } else if (includesPremiere) {
               badge = { label: "Premiere", className: styles.badgePremiere };
