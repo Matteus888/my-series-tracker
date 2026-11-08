@@ -161,7 +161,7 @@ const seriesSchema = new mongoose.Schema(
       trim: true,
     },
     releaseTimeOverride: {
-      dayOffset: { type: Number, min: 0, max: 1 },
+      dayOffset: { type: Number, min: -3, max: 1 },
       hourUTC: { type: Number, min: 0, max: 23 },
     },
     episodeNumberOffset: {
