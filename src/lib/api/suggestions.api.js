@@ -4,6 +4,19 @@ import { getRecommendations } from "./tmdb.api";
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24h
 const MAX_SUGGESTIONS = 30;
 const MAX_SEED_SERIES = 5; // nb de séries de référence pour fetch les reco
+const RECENCY_MAX_BONUS = 3; // équivaut à une apparition supplémentaire dans les reco
+const RECENCY_HALF_LIFE_YEARS = 4; // à 4 ans, le bonus est divisé par 2
+
+/**
+ * Bonus de récence : décroissance exponentielle selon l'âge de la série.
+ * Sortie cette année ≈ 3, 4 ans ≈ 1.5, 8 ans ≈ 0.75, etc.
+ */
+const computeRecencyBonus = (firstAirDate) => {
+  if (!firstAirDate) return 0;
+  const ageYears = (Date.now() - new Date(firstAirDate).getTime()) / (365.25 * 24 * 3600 * 1000);
+  if (Number.isNaN(ageYears)) return 0;
+  return RECENCY_MAX_BONUS * Math.pow(0.5, Math.max(0, ageYears) / RECENCY_HALF_LIFE_YEARS);
+};
 
 /**
  * Sélectionne les "seed series" : les séries préférées de l'user
@@ -67,7 +80,8 @@ const generateSuggestions = async (trackedSeries) => {
     const voteAvg = serie.vote_average ?? 0;
     const voteCount = serie.vote_count ?? 0;
     const popularityBonus = voteCount > 1000 ? 1 : voteCount > 200 ? 0.5 : 0;
-    const score = count * 3 + voteAvg * 0.5 + popularityBonus;
+    const recencyBonus = computeRecencyBonus(serie.first_air_date);
+    const score = count * 3 + voteAvg * 0.5 + popularityBonus + recencyBonus;
     return { serie, score };
   });
 
